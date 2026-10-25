@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Português">
+<meta name="theme-color" content="#0b7a3e">
+<title>Aprende Portugués Básico</title>
+<style>
+  :root {
+    --verde: #0b7a3e;
+    --verde-claro: #e6f4ec;
+    --amarillo: #ffd23f;
+    --azul: #1d3c8f;
+    --texto: #1f2933;
+    --gris: #6b7785;
+    --fondo: #f5f7f6;
+    --blanco: #fff;
+    --error: #c62828;
+    --error-claro: #fdecea;
+    --radio: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    line-height: 1.45;
+    -webkit-tap-highlight-color: transparent;
+  }
+  header {
+    background: var(--verde);
+    color: var(--blanco);
+    padding: calc(14px + env(safe-area-inset-top)) 18px 16px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .barra-top { display: flex; align-items: center; gap: 10px; }
+  header h1 { font-size: 1.25rem; margin: 0; flex: 1; }
+  .btn-icono {
+    background: rgba(255,255,255,.18); color: var(--blanco); border: 0;
+    border-radius: 10px; padding: 8px 12px; font-size: .95rem; cursor: pointer;
+  }
+  .progreso { margin-top: 10px; font-size: .85rem; }
+  .barra { background: rgba(255,255,255,.25); border-radius: 99px; height: 8px; margin-top: 5px; overflow: hidden; }
+  .barra > div { background: var(--amarillo); height: 100%; transition: width .4s; }
+  main { max-width: 720px; margin: 0 auto; padding: 16px 14px 60px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .tarjeta-leccion {
+    background: var(--blanco); border-radius: var(--radio); padding: 16px 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08); cursor: pointer; position: relative;
+    border: 2px solid transparent; transition: transform .1s;
+  }
+  .tarjeta-leccion:active { transform: scale(.97); }
+  .tarjeta-leccion.hecha { border-color: var(--verde); }
+  .tarjeta-leccion .ico { font-size: 2rem; }
+  .tarjeta-leccion h3 { margin: 6px 0 2px; font-size: 1rem; }
+  .tarjeta-leccion small { color: var(--gris); }
+  .insignia {
+    position: absolute; top: 10px; right: 10px; background: var(--verde); color: var(--blanco);
+    font-size: .75rem; border-radius: 99px; padding: 2px 8px;
+  }
+  .repaso { background: var(--azul); color: var(--blanco); }
+  .repaso small { color: #cfd8f5; }
+
+  .volver { background: none; border: 0; color: var(--verde); font-size: 1rem; padding: 4px 0; cursor: pointer; }
+  .intro { background: var(--verde-claro); border-radius: var(--radio); padding: 12px 14px; margin: 10px 0 14px; font-size: .95rem; }
+  .pestanas { display: flex; gap: 6px; background: #e3e8e5; padding: 4px; border-radius: 12px; margin-bottom: 14px; }
+  .pestanas button {
+    flex: 1; border: 0; background: none; padding: 10px 4px; border-radius: 9px;
+    font-size: .95rem; cursor: pointer; color: var(--texto);
+  }
+  .pestanas button.activa { background: var(--blanco); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+
+  .lista { display: flex; flex-direction: column; gap: 8px; }
+  .fila {
+    display: flex; align-items: center; gap: 12px; background: var(--blanco);
+    border-radius: 12px; padding: 12px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+  .fila:active { background: var(--verde-claro); }
+  .altavoz {
+    flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0;
+    background: var(--verde-claro); font-size: 1.1rem; cursor: pointer;
+  }
+  .fila .pt { font-weight: 600; font-size: 1.05rem; }
+  .fila .es { color: var(--gris); }
+  .fila .nota { font-size: .82rem; color: var(--azul); margin-top: 2px; }
+
+  .flash {
+    background: var(--blanco); border-radius: 20px; min-height: 230px; padding: 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,.1); cursor: pointer; user-select: none;
+  }
+  .flash .grande { font-size: 1.8rem; font-weight: 700; }
+  .flash .ayuda { color: var(--gris); font-size: .85rem; margin-top: 14px; }
+  .flash.volteada { background: var(--verde-claro); }
+  .controles { display: flex; gap: 8px; margin-top: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    border: 0; border-radius: 12px; padding: 12px 18px; font-size: 1rem; cursor: pointer;
+    background: var(--verde); color: var(--blanco); font-weight: 600;
+  }
+  .btn.sec { background: #e3e8e5; color: var(--texto); }
+  .contador { text-align: center; color: var(--gris); margin-top: 10px; font-size: .9rem; }
+
+  .pregunta { background: var(--blanco); border-radius: var(--radio); padding: 18px; text-align: center; margin-bottom: 12px; }
+  .pregunta .tipo { color: var(--gris); font-size: .85rem; }
+  .pregunta .grande { font-size: 1.5rem; font-weight: 700; margin: 6px 0; }
+  .opciones { display: flex; flex-direction: column; gap: 8px; }
+  .opcion {
+    background: var(--blanco); border: 2px solid #dde3e0; border-radius: 12px; padding: 14px;
+    font-size: 1rem; text-align: left; cursor: pointer; color: var(--texto);
+  }
+  .opcion.bien { border-color: var(--verde); background: var(--verde-claro); }
+  .opcion.mal { border-color: var(--error); background: var(--error-claro); }
+  .resultado { text-align: center; background: var(--blanco); border-radius: var(--radio); padding: 26px 18px; }
+  .resultado .pct { font-size: 3rem; font-weight: 800; color: var(--verde); }
+  footer { text-align: center; color: var(--gris); font-size: .8rem; margin-top: 30px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="barra-top">
+    <h1>🇧🇷 Aprende Portugués</h1>
+    <button class="btn-icono" id="btnVelocidad" onclick="cambiarVelocidad()">🐇 Normal</button>
+  </div>
+  <div class="progreso">
+    <span id="txtProgreso"></span>
+    <div class="barra"><div id="barraProgreso" style="width:0"></div></div>
+  </div>
+</header>
+<main id="app"></main>
+
+<script>
+// ---------------------------------------------------------------
+// CONTENIDO: para agregar palabras, añade objetos {pt, es, n}
+// pt = portugués, es = español, n = nota opcional
+// ---------------------------------------------------------------
+const LECCIONES = [
+  {
+    id: "pronuncia", icono: "🗣️", titulo: "Pronunciación",
+    intro: "El portugués de Brasil se parece al español, pero tiene sonidos nuevos. Toca cada palabra para escucharla y repítela en voz alta.",
+    items: [
+      { pt: "não", es: "no", n: "ão = suena 'aun' por la nariz" },
+      { pt: "pão", es: "pan", n: "ão nasal, como 'paun'" },
+      { pt: "mãe", es: "madre", n: "ãe = 'ain' nasal" },
+      { pt: "lições", es: "lecciones", n: "õe = 'oin' nasal" },
+      { pt: "filho", es: "hijo", n: "lh = como 'li' rápido: 'filio'" },
+      { pt: "vinho", es: "vino", n: "nh = ñ: 'viño'" },
+      { pt: "coração", es: "corazón", n: "ç = s" },
+      { pt: "Rio", es: "Río", n: "r al inicio = j suave" },
+      { pt: "carro", es: "carro / auto", n: "rr = j suave: 'cajo'" },
+      { pt: "leite", es: "leche", n: "te al final suena 'chi': 'leichi'" },
+      { pt: "cidade", es: "ciudad", n: "de al final suena 'yi': 'sidadyi'" },
+      { pt: "obrigado", es: "gracias", n: "o al final suena 'u': 'obrigadu'" },
+      { pt: "casa", es: "casa", n: "s entre vocales suena 'z' zumbando" },
+      { pt: "chave", es: "llave", n: "ch = 'sh' de show" },
+      { pt: "janela", es: "ventana", n: "j = 'y' argentina / 'zh'" }
+    ]
+  },
+  {
+    id: "saludos", icono: "👋", titulo: "Saludos",
+    intro: "En Brasil se usa mucho 'Oi' (hola informal) y 'Tudo bem?' (¿todo bien?).",
+    items: [
+      { pt: "Olá", es: "Hola" },
+      { pt: "Oi", es: "Hola (informal)" },
+      { pt: "Bom dia", es: "Buenos días" },
+      { pt: "Boa tarde", es: "Buenas tardes" },
+      { pt: "Boa noite", es: "Buenas noches" },
+      { pt: "Tudo bem?", es: "¿Todo bien? / ¿Qué tal?" },
+      { pt: "Tudo bom", es: "Todo bien", n: "Respuesta típica a 'Tudo bem?'" },
+      { pt: "Como vai?", es: "¿Cómo te va?" },
+      { pt: "Tchau", es: "Chau / Adiós" },
+      { pt: "Até logo", es: "Hasta luego" },
+      { pt: "Até amanhã", es: "Hasta mañana" },
+      { pt: "Prazer em conhecer", es: "Mucho gusto" },
+      { pt: "Obrigado", es: "Gracias (lo dice un hombre)" },
+      { pt: "Obrigada", es: "Gracias (lo dice una mujer)" },
+      { pt: "De nada", es: "De nada" },
+      { pt: "Por favor", es: "Por favor" },
+      { pt: "Desculpa", es: "Perdón / Disculpa" },
+      { pt: "Com licença", es: "Con permiso" }
+    ]
+  },
+  {
+    id: "numeros", icono: "🔢", titulo: "Números",
+    intro: "Ojo: 'dois' es dos y 'duas' se usa con palabras femeninas (duas casas). 'Seis' a veces se dice 'meia' al dictar números de teléfono.",
+    items: [
+      { pt: "zero", es: "0" }, { pt: "um", es: "1" }, { pt: "dois", es: "2" },
+      { pt: "três", es: "3" }, { pt: "quatro", es: "4" }, { pt: "cinco", es: "5" },
+      { pt: "seis", es: "6" }, { pt: "sete", es: "7" }, { pt: "oito", es: "8" },
+      { pt: "nove", es: "9" }, { pt: "dez", es: "10" }, { pt: "onze", es: "11" },
+      { pt: "doze", es: "12" }, { pt: "treze", es: "13" }, { pt: "catorze", es: "14" },
+      { pt: "quinze", es: "15" }, { pt: "dezesseis", es: "16" }, { pt: "dezessete", es: "17" },
+      { pt: "dezoito", es: "18" }, { pt: "dezenove", es: "19" }, { pt: "vinte", es: "20" },
+      { pt: "trinta", es: "30" }, { pt: "cem", es: "100" }, { pt: "mil", es: "1000" }
+    ]
+  },
+  {
+    id: "colores", icono: "🎨", titulo: "Colores",
+    intro: "Varios colores cambian bastante respecto al español: preto (negro), roxo (morado), cinza (gris).",
+    items: [
+      { pt: "vermelho", es: "rojo" }, { pt: "azul", es: "azul" },
+      { pt: "verde", es: "verde" }, { pt: "amarelo", es: "amarillo" },
+      { pt: "preto", es: "negro" }, { pt: "branco", es: "blanco" },
+      { pt: "laranja", es: "naranja" }, { pt: "roxo", es: "morado" },
+      { pt: "rosa", es: "rosado" }, { pt: "cinza", es: "gris" },
+      { pt: "marrom", es: "marrón" }
+    ]
+  },
+  {
+    id: "familia", icono: "👨‍👩‍👧", titulo: "Familia",
+    intro: "Las tildes importan: avô (abuelo) suena cerrado y avó (abuela) suena abierto.",
+    items: [
+      { pt: "mãe", es: "madre" }, { pt: "pai", es: "padre" },
+      { pt: "irmão", es: "hermano" }, { pt: "irmã", es: "hermana" },
+      { pt: "filho", es: "hijo" }, { pt: "filha", es: "hija" },
+      { pt: "avô", es: "abuelo" }, { pt: "avó", es: "abuela" },
+      { pt: "tio", es: "tío" }, { pt: "tia", es: "tía" },
+      { pt: "primo", es: "primo" }, { pt: "marido", es: "esposo" },
+      { pt: "esposa", es: "esposa" }, { pt: "namorado", es: "novio / enamorado" },
+      { pt: "namorada", es: "novia / enamorada" }
+    ]
+  },
+  {
+    id: "verbos", icono: "⚙️", titulo: "Verbos básicos",
+    intro: "En Brasil se usa 'você' para decir 'tú/usted', y se conjuga como 'él'. 'A gente' (= nosotros) es muy común al hablar.",
+    items: [
+      { pt: "eu sou", es: "yo soy" }, { pt: "você é", es: "tú eres" },
+      { pt: "nós somos", es: "nosotros somos" }, { pt: "eles são", es: "ellos son" },
+      { pt: "eu estou", es: "yo estoy" }, { pt: "você está", es: "tú estás" },
+      { pt: "nós estamos", es: "nosotros estamos" },
+      { pt: "eu tenho", es: "yo tengo" }, { pt: "você tem", es: "tú tienes" },
+      { pt: "nós temos", es: "nosotros tenemos" },
+      { pt: "eu vou", es: "yo voy" }, { pt: "você vai", es: "tú vas" },
+      { pt: "nós vamos", es: "nosotros vamos" },
+      { pt: "eu quero", es: "yo quiero" },
+      { pt: "eu gosto de", es: "me gusta", n: "Siempre con 'de': eu gosto de café" },
+      { pt: "eu posso", es: "yo puedo" }
+    ]
+  },
+  {
+    id: "frases", icono: "💬", titulo: "Frases útiles",
+    intro: "Frases para sobrevivir en un viaje o una primera conversación.",
+    items: [
+      { pt: "Meu nome é...", es: "Mi nombre es..." },
+      { pt: "Qual é o seu nome?", es: "¿Cuál es tu nombre?" },
+      { pt: "De onde você é?", es: "¿De dónde eres?" },
+      { pt: "Eu não entendo", es: "No entiendo" },
+      { pt: "Você fala espanhol?", es: "¿Hablas español?" },
+      { pt: "Pode repetir, por favor?", es: "¿Puedes repetir, por favor?" },
+      { pt: "Fala mais devagar, por favor", es: "Habla más despacio, por favor" },
+      { pt: "Quanto custa?", es: "¿Cuánto cuesta?" },
+      { pt: "Onde fica o banheiro?", es: "¿Dónde queda el baño?" },
+      { pt: "Eu gostaria de...", es: "Me gustaría..." },
+      { pt: "A conta, por favor", es: "La cuenta, por favor" },
+      { pt: "Socorro!", es: "¡Auxilio!" }
+    ]
+  },
+  {
+    id: "comida", icono: "🍽️", titulo: "Comida",
+    intro: "El 'arroz com feijão' (arroz con frejoles) es la base de la comida brasileña.",
+    items: [
+      { pt: "água", es: "agua" }, { pt: "pão", es: "pan" },
+      { pt: "café", es: "café" }, { pt: "leite", es: "leche" },
+      { pt: "carne", es: "carne" }, { pt: "frango", es: "pollo" },
+      { pt: "peixe", es: "pescado" }, { pt: "arroz", es: "arroz" },
+      { pt: "feijão", es: "frejol / frijol" }, { pt: "ovo", es: "huevo" },
+      { pt: "queijo", es: "queso" }, { pt: "suco", es: "jugo" },
+      { pt: "sorvete", es: "helado" }, { pt: "cerveja", es: "cerveza" }
+    ]
+  },
+  {
+    id: "dias", icono: "📅", titulo: "Días y tiempo",
+    intro: "De lunes a viernes se cuentan con números: segunda-feira (lunes), terça-feira (martes)... Muchas veces solo dicen 'segunda', 'terça'.",
+    items: [
+      { pt: "segunda-feira", es: "lunes" }, { pt: "terça-feira", es: "martes" },
+      { pt: "quarta-feira", es: "miércoles" }, { pt: "quinta-feira", es: "jueves" },
+      { pt: "sexta-feira", es: "viernes" }, { pt: "sábado", es: "sábado" },
+      { pt: "domingo", es: "domingo" }, { pt: "hoje", es: "hoy" },
+      { pt: "amanhã", es: "mañana" }, { pt: "ontem", es: "ayer" },
+      { pt: "semana", es: "semana" }, { pt: "agora", es: "ahora" }
+    ]
+  },
+  {
+    id: "falsos", icono: "⚠️", titulo: "Falsos amigos",
+    intro: "Palabras que parecen español pero significan otra cosa. ¡Las más peligrosas para hispanohablantes!",
+    items: [
+      { pt: "esquisito", es: "raro / extraño", n: "No es 'exquisito' (eso es 'delicioso')" },
+      { pt: "embaraçada", es: "avergonzada", n: "Embarazada se dice 'grávida'" },
+      { pt: "polvo", es: "pulpo", n: "Polvo se dice 'pó'" },
+      { pt: "borracha", es: "borrador / goma", n: "Borracha se dice 'bêbada'" },
+      { pt: "apelido", es: "apodo", n: "Apellido se dice 'sobrenome'" },
+      { pt: "cadeira", es: "silla", n: "Cadera se dice 'quadril'" },
+      { pt: "ligar", es: "llamar por teléfono" },
+      { pt: "pegar", es: "agarrar / tomar", n: "Pegar (golpear) se dice 'bater'" },
+      { pt: "rato", es: "ratón", n: "Un rato se dice 'um tempinho'" },
+      { pt: "oficina", es: "taller", n: "Oficina se dice 'escritório'" },
+      { pt: "largo", es: "ancho", n: "Largo se dice 'comprido'" },
+      { pt: "todavia", es: "sin embargo", n: "Todavía se dice 'ainda'" },
+      { pt: "assinatura", es: "firma", n: "Y 'firma' en portugués es empresa" },
+      { pt: "salada", es: "ensalada", n: "Salada (con sal) se dice 'salgada'" }
+    ]
+  }
+];
+
+const APROBADO = 70; // % mínimo en el quiz para marcar la lección como completada
+const CLAVE = "pt-progreso";
+
+let progreso = JSON.parse(localStorage.getItem(CLAVE) || "{}");
+let velocidadLenta = localStorage.getItem("pt-lento") === "1";
+
+let leccion = null;   // lección abierta
+let pestana = "aprender";
+let tarjetaIdx = 0, volteada = false, mazo = [];
+let quiz = null;
+
+// ---------- utilidades ----------
+const $app = document.getElementById("app");
+const mezclar = arr => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// ---------- voz ----------
+function vozPortugues() {
+  const voces = speechSynthesis.getVoices();
+  return voces.find(v => v.lang === "pt-BR" || v.lang === "pt_BR") ||
+         voces.find(v => v.lang.startsWith("pt"));
+}
+function hablar(texto) {
+  if (!("speechSynthesis" in window)) { alert("Tu navegador no permite reproducir voz."); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texto.replace("...", ""));
+  u.lang = "pt-BR";
+  const v = vozPortugues();
+  if (v) u.voice = v;
+  u.rate = velocidadLenta ? 0.6 : 0.9;
+  speechSynthesis.speak(u);
+}
+if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => {};
+
+function cambiarVelocidad() {
+  velocidadLenta = !velocidadLenta;
+  localStorage.setItem("pt-lento", velocidadLenta ? "1" : "0");
+  pintarVelocidad();
+}
+function pintarVelocidad() {
+  document.getElementById("btnVelocidad").textContent = velocidadLenta ? "🐢 Lento" : "🐇 Normal";
+}
+
+// ---------- progreso ----------
+function guardarNota(id, pct) {
+  if (pct > (progreso[id] || 0)) {
+    progreso[id] = pct;
+    localStorage.setItem(CLAVE, JSON.stringify(progreso));
+  }
+  pintarProgreso();
+}
+function pintarProgreso() {
+  const hechas = LECCIONES.filter(l => (progreso[l.id] || 0) >= APROBADO).length;
+  document.getElementById("txtProgreso").textContent = `Lecciones completadas: ${hechas} de ${LECCIONES.length}`;
+  document.getElementById("barraProgreso").style.width = (hechas / LECCIONES.length * 100) + "%";
+}
+
+// ---------- navegación ----------
+function ruta() {
+  const m = location.hash.match(/^#\/l\/(\w+)/);
+  if (m) {
+    leccion = m[1] === "repaso"
+      ? { id: "repaso", icono: "🏆", titulo: "Repaso general",
+          intro: "Preguntas mezcladas de todas las lecciones.",
+          items: LECCIONES.flatMap(l => l.items) }
+      : LECCIONES.find(l => l.id === m[1]);
+    if (leccion) {
+      pestana = leccion.id === "repaso" ? "quiz" : "aprender";
+      prepararPestana();
+      pintarLeccion();
+      window.scrollTo(0, 0);
+      return;
+    }
+  }
+  leccion = null;
+  pintarInicio();
+}
+window.addEventListener("hashchange", ruta);
+
+function prepararPestana() {
+  if (pestana === "tarjetas") { mazo = leccion.items.map((_, i) => i); tarjetaIdx = 0; volteada = false; }
+  if (pestana === "quiz") quiz = crearQuiz(leccion.items);
+}
+function cambiarPestana(p) { pestana = p; prepararPestana(); pintarLeccion(); }
+
+// ---------- pantallas ----------
+function pintarInicio() {
+  let html = `<div class="grid">`;
+  for (const l of LECCIONES) {
+    const nota = progreso[l.id] || 0;
+    const hecha = nota >= APROBADO;
+    html += `
+      <div class="tarjeta-leccion ${hecha ? "hecha" : ""}" onclick="location.hash='#/l/${l.id}'">
+        ${nota ? `<span class="insignia">${hecha ? "✓ " : ""}${nota}%</span>` : ""}
+        <div class="ico">${l.icono}</div>
+        <h3>${esc(l.titulo)}</h3>
+        <small>${l.items.length} palabras</small>
+      </div>`;
+  }
+  const notaRepaso = progreso.repaso || 0;
+  html += `
+      <div class="tarjeta-leccion repaso" onclick="location.hash='#/l/repaso'">
+        ${notaRepaso ? `<span class="insignia">${notaRepaso}%</span>` : ""}
+        <div class="ico">🏆</div>
+        <h3>Repaso general</h3>
+        <small>Quiz de todo</small>
+      </div>
+    </div>
+    <footer>Tu progreso se guarda en este navegador.<br>
+      <a href="#" onclick="if(confirm('¿Borrar todo tu progreso?')){localStorage.removeItem(CLAVE);progreso={};pintarProgreso();pintarInicio();}return false;">Reiniciar progreso</a>
+    </footer>`;
+  $app.innerHTML = html;
+}
+
+function pintarLeccion() {
+  const pestanas = leccion.id === "repaso" ? "" : `
+    <div class="pestanas">
+      <button class="${pestana === "aprender" ? "activa" : ""}" onclick="cambiarPestana('aprender')">📖 Aprender</button>
+      <button class="${pestana === "tarjetas" ? "activa" : ""}" onclick="cambiarPestana('tarjetas')">🃏 Tarjetas</button>
+      <button class="${pestana === "quiz" ? "activa" : ""}" onclick="cambiarPestana('quiz')">✅ Quiz</button>
+    </div>`;
+  let cuerpo = "";
+  if (pestana === "aprender") cuerpo = htmlAprender();
+  if (pestana === "tarjetas") cuerpo = htmlTarjetas();
+  if (pestana === "quiz") cuerpo = htmlQuiz();
+  $app.innerHTML = `
+    <button class="volver" onclick="location.hash='#/'">← Lecciones</button>
+    <h2 style="margin:6px 0 0">${leccion.icono} ${esc(leccion.titulo)}</h2>
+    <div class="intro">${esc(leccion.intro)}</div>
+    ${pestanas}
+    ${cuerpo}`;
+}
+
+// Aprender
+function htmlAprender() {
+  return `<div class="lista">` + leccion.items.map((it, i) => `
+    <div class="fila" onclick="hablar(leccion.items[${i}].pt)">
+      <button class="altavoz" aria-label="Escuchar">🔊</button>
+      <div>
+        <div class="pt">${esc(it.pt)}</div>
+        <div class="es">${esc(it.es)}</div>
+        ${it.n ? `<div class="nota">💡 ${esc(it.n)}</div>` : ""}
+      </div>
+    </div>`).join("") + `</div>
+    <div class="controles"><button class="btn" onclick="cambiarPestana('quiz')">Hacer el quiz →</button></div>`;
+}
+
+// Tarjetas
+function htmlTarjetas() {
+  const it = leccion.items[mazo[tarjetaIdx]];
+  return `
+    <div class="flash ${volteada ? "volteada" : ""}" onclick="voltear()">
+      <div class="grande">${esc(volteada ? it.es : it.pt)}</div>
+      ${volteada && it.n ? `<div class="nota" style="margin-top:8px">💡 ${esc(it.n)}</div>` : ""}
+      <div class="ayuda">${volteada ? "Toca para ver en portugués" : "¿Qué significa? Toca para voltear"}</div>
+    </div>
+    <div class="contador">${tarjetaIdx + 1} / ${mazo.length}</div>
+    <div class="controles">
+      <button class="btn sec" onclick="moverTarjeta(-1)">◀</button>
+      <button class="btn sec" onclick="hablar(leccion.items[mazo[tarjetaIdx]].pt)">🔊 Escuchar</button>
+      <button class="btn sec" onclick="mezclar(mazo);tarjetaIdx=0;volteada=false;pintarLeccion()">🔀</button>
+      <button class="btn" onclick="moverTarjeta(1)">▶</button>
+    </div>`;
+}
+function voltear() { volteada = !volteada; pintarLeccion(); }
+function moverTarjeta(d) {
+  tarjetaIdx = (tarjetaIdx + d + mazo.length) % mazo.length;
+  volteada = false;
+  pintarLeccion();
+}
+
+// Quiz
+function crearQuiz(items) {
+  const elegidos = mezclar(items.slice()).slice(0, Math.min(10, items.length));
+  const preguntas = elegidos.map(it => {
+    const desdePt = Math.random() < 0.5;
+    const campo = desdePt ? "es" : "pt";
+    const correcta = it[campo];
+    const otras = [...new Set(items.map(x => x[campo]).filter(x => x !== correcta))];
+    return {
+      it, desdePt, correcta,
+      opciones: mezclar([correcta, ...mezclar(otras).slice(0, 3)])
+    };
+  });
+  return { preguntas, i: 0, aciertos: 0, elegida: null };
+}
+function htmlQuiz() {
+  const q = quiz;
+  if (q.i >= q.preguntas.length) {
+    const pct = Math.round(q.aciertos / q.preguntas.length * 100);
+    guardarNota(leccion.id, pct);
+    const msg = pct === 100 ? "¡Perfeito! 🎉" : pct >= APROBADO ? "Muito bem! 👏 Lección completada" : "Quase lá… ¡inténtalo otra vez! 💪";
+    return `
+      <div class="resultado">
+        <div class="pct">${pct}%</div>
+        <p>${q.aciertos} de ${q.preguntas.length} correctas</p>
+        <p><strong>${msg}</strong></p>
+        <div class="controles">
+          <button class="btn sec" onclick="location.hash='#/'">Lecciones</button>
+          <button class="btn" onclick="cambiarPestana('quiz')">Repetir quiz</button>
+        </div>
+      </div>`;
+  }
+  const p = q.preguntas[q.i];
+  const pregunta = p.desdePt ? p.it.pt : p.it.es;
+  const opciones = p.opciones.map((op, k) => {
+    let clase = "";
+    if (q.elegida !== null) {
+      if (op === p.correcta) clase = "bien";
+      else if (k === q.elegida) clase = "mal";
+    }
+    return `<button class="opcion ${clase}" onclick="responder(${k})">${esc(op)}</button>`;
+  }).join("");
+  return `
+    <div class="contador" style="margin:0 0 8px">Pregunta ${q.i + 1} de ${q.preguntas.length} · Aciertos: ${q.aciertos}</div>
+    <div class="pregunta">
+      <div class="tipo">${p.desdePt ? "¿Qué significa en español?" : "¿Cómo se dice en portugués?"}</div>
+      <div class="grande">${esc(pregunta)}</div>
+      ${p.desdePt ? `<button class="altavoz" onclick="hablar(quiz.preguntas[quiz.i].it.pt)">🔊</button>` : ""}
+    </div>
+    <div class="opciones">${opciones}</div>
+    ${q.elegida !== null ? `<div class="controles"><button class="btn" onclick="siguiente()">Siguiente →</button></div>` : ""}`;
+}
+function responder(k) {
+  if (quiz.elegida !== null) return;
+  const p = quiz.preguntas[quiz.i];
+  quiz.elegida = k;
+  if (p.opciones[k] === p.correcta) quiz.aciertos++;
+  hablar(p.it.pt);
+  pintarLeccion();
+}
+function siguiente() {
+  quiz.i++;
+  quiz.elegida = null;
+  pintarLeccion();
+  window.scrollTo(0, 0);
+}
+
+// ---------- inicio ----------
+pintarVelocidad();
+pintarProgreso();
+ruta();
+</script>
+</body>
+</html>
