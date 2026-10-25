@@ -190,6 +190,36 @@
   .resultado { text-align: center; background: var(--blanco); border-radius: var(--radio); padding: 26px 18px; }
   .resultado .pct { font-size: 3rem; font-weight: 800; color: var(--verde); }
   footer { text-align: center; color: var(--gris); font-size: .8rem; margin-top: 30px; }
+
+  /* Práctica sin fin */
+  .practica-card {
+    background: linear-gradient(135deg, var(--verde), #13a356); color: var(--blanco); border-radius: var(--radio);
+    padding: 16px; cursor: pointer; display: flex; align-items: center; gap: 14px; box-shadow: 0 3px 10px rgba(11,122,62,.3);
+  }
+  .practica-card .ico { font-size: 2.4rem; }
+  .practica-card h3 { margin: 0; font-size: 1.1rem; }
+  .practica-card small { opacity: .9; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 6px; margin: 10px 0 4px; -webkit-overflow-scrolling: touch; }
+  .chip {
+    flex: none; border: 0; border-radius: 99px; padding: 8px 12px; background: #e3e8e5;
+    color: var(--texto); font-size: .85rem; cursor: pointer;
+  }
+  .chip.activa { background: var(--verde); color: var(--blanco); font-weight: 600; }
+  .modo { display: flex; gap: 6px; margin-bottom: 10px; }
+  .stats {
+    display: flex; justify-content: space-between; background: var(--azul); color: var(--blanco);
+    border-radius: 12px; padding: 9px 14px; font-size: .9rem; margin-bottom: 10px;
+  }
+  .btn-escuchar {
+    font-size: 2rem; width: 80px; height: 80px; border-radius: 50%; border: 0; margin: 6px auto;
+    background: var(--verde-claro); cursor: pointer; display: block;
+  }
+  .escribir { display: flex; gap: 8px; align-items: center; }
+  .escribir input.hueco { flex: 1; font-size: 18px; padding: 10px; border-radius: 10px 10px 0 0; }
+  .pr-res { background: var(--blanco); border-radius: 12px; padding: 12px 14px; margin-top: 10px; }
+  .pr-res .frase-oir { font-weight: 600; margin-top: 6px; }
+  .pr-res .trad { color: var(--gris); font-size: .9rem; }
+  .btn.ancho { width: 100%; padding: 16px; font-size: 1.1rem; }
 </style>
 </head>
 <body>
@@ -1219,6 +1249,12 @@ function pintarProgreso() {
 // ---------- navegación ----------
 // Rutas: #/  ·  #/l/<lección>  ·  #/l/<lección>/<pestaña>
 function ruta() {
+  const mp = location.hash.match(/^#\/practica(?:\/(\w+))?/);
+  if (mp) {
+    leccion = null;
+    abrirPractica(CATEGORIAS.some(c => c.id === mp[1]) ? mp[1] : "todo");
+    return;
+  }
   const m = location.hash.match(/^#\/l\/(\w+)(?:\/(\w+))?/);
   if (m) {
     leccion = m[1] === "repaso"
@@ -1272,6 +1308,13 @@ function tarjetaLeccion(l) {
 function pintarInicio() {
   const notaRepaso = progreso.repaso || 0;
   $app.innerHTML = `
+    <div class="practica-card" onclick="location.hash='#/practica'">
+      <div class="ico">🚌</div>
+      <div>
+        <h3>Práctica sin fin</h3>
+        <small>Preguntas infinitas, una por una. Ideal para el transporte.${errores().length ? ` · 🔁 ${errores().length} errores por repasar` : ""}</small>
+      </div>
+    </div>
     <h2 class="seccion">📘 Mi curso</h2>
     <div class="grid">${LECCIONES.filter(l => l.grupo === "curso").map(tarjetaLeccion).join("")}</div>
     <h2 class="seccion">➕ Práctica extra</h2>
@@ -1375,7 +1418,10 @@ function htmlEjercicios() {
     <div class="lista">
       ${leccion.ejercicios.map((e, i) => e.tipo === "marcar" ? htmlMarcar(e, i) : htmlCompletar(e, i)).join("")}
     </div>
-    <div class="controles"><button class="btn sec" onclick="cambiarPestana('ejercicios')">↺ Reiniciar ejercicios</button></div>`;
+    <div class="controles">
+      <button class="btn sec" onclick="cambiarPestana('ejercicios')">↺ Reiniciar ejercicios</button>
+      <button class="btn" onclick="location.hash='#/practica/${CATEGORIA_DE_LECCION[leccion.id] || "todo"}'">🚌 Seguir practicando (sin fin)</button>
+    </div>`;
 }
 function htmlCompletar(e, i) {
   const partes = e.frase.split("___");
@@ -1541,6 +1587,482 @@ function siguiente() {
   quiz.elegida = null;
   pintarLeccion();
   window.scrollTo(0, 0);
+}
+
+// =====================================================================
+// PRÁCTICA SIN FIN: preguntas generadas al azar, una por una
+// Cada pregunta: {pregunta, sub, opciones, resp, oir, escucha, traduccion, explica, escribible, validas, clave}
+// =====================================================================
+const VERBOS = [
+  { inf: "ser", es: "ser", f: ["sou", "é", "somos", "são"], comp: ["de Lima", "do Peru", "da Argentina", "de São Paulo"] },
+  { inf: "estar", es: "estar", f: ["estou", "está", "estamos", "estão"], comp: ["em casa", "no Brasil", "bem", "na praia", "no escritório"] },
+  { inf: "ter", es: "tener", f: ["tenho", "tem", "temos", "têm"], comp: ["um cachorro", "dois irmãos", "fome", "muitos amigos", "aula hoje"] },
+  { inf: "falar", es: "hablar", f: ["falo", "fala", "falamos", "falam"], comp: ["português", "espanhol", "muito", "inglês"] },
+  { inf: "gostar", es: "gustar", f: ["gosto", "gosta", "gostamos", "gostam"], comp: ["de café", "do Brasil", "de viajar", "da praia", "dos doces"] },
+  { inf: "morar", es: "vivir", f: ["moro", "mora", "moramos", "moram"], comp: ["em Lima", "no Brasil", "perto da praia", "com a família"] },
+  { inf: "trabalhar", es: "trabajar", f: ["trabalho", "trabalha", "trabalhamos", "trabalham"], comp: ["no escritório", "muito", "em um restaurante"] },
+  { inf: "estudar", es: "estudiar", f: ["estudo", "estuda", "estudamos", "estudam"], comp: ["português", "na Ciunac", "à noite"] },
+  { inf: "dançar", es: "bailar", f: ["danço", "dança", "dançamos", "dançam"], comp: ["samba", "muito bem", "na festa"] },
+  { inf: "viajar", es: "viajar", f: ["viajo", "viaja", "viajamos", "viajam"], comp: ["para o Brasil", "muito", "de ônibus"] },
+  { inf: "fazer", es: "hacer", f: ["faço", "faz", "fazemos", "fazem"], comp: ["exercício", "o almoço", "aniversário em outubro"] },
+  { inf: "chamar-se", es: "llamarse", f: ["me chamo", "se chama", "nos chamamos", "se chamam"], comp: ["Alex"], soloSing: true }
+];
+const SUJETOS = [["Eu", 0], ["Você", 1], ["Ele", 1], ["Ela", 1], ["A gente", 1], ["A Ana", 1], ["O meu pai", 1],
+                 ["Nós", 2], ["Vocês", 3], ["Eles", 3], ["Elas", 3], ["Os meus amigos", 3]];
+
+// Bancos de preguntas de contexto: {f: frase, o: opciones, r: correcta, x: explicación, pt: las opciones son portugués, s: pista}
+const BANCO_VERBOS = [
+  { f: "Ela ___ médica.", o: ["é", "está"], r: 0, x: "Profesión → **ser**." },
+  { f: "Eu ___ cansado hoje.", o: ["sou", "estou"], r: 1, x: "Cómo estás hoy → **estar**." },
+  { f: "Nós ___ do Peru.", o: ["somos", "estamos"], r: 0, x: "Origen → **ser**." },
+  { f: "O café ___ quente.", o: ["é", "está"], r: 1, x: "Cómo está ahora → **estar**." },
+  { f: "Vocês ___ em casa?", o: ["são", "estão"], r: 1, x: "Dónde están ahora → **estar**." },
+  { f: "Ele ___ alto e magro.", o: ["é", "está"], r: 0, x: "Característica física → **ser**." },
+  { f: "Hoje eu ___ muito feliz!", o: ["sou", "estou"], r: 1, x: "*Hoje* indica algo temporal → **estar**." },
+  { f: "A minha mãe ___ professora.", o: ["é", "está"], r: 0, x: "Profesión → **ser**." },
+  { f: "O José ___ no escritório.", o: ["é", "está"], r: 1, x: "Dónde está ahora → **estar**." },
+  { f: "Eles ___ brasileiros.", o: ["são", "estão"], r: 0, x: "Nacionalidad → **ser**." },
+  { f: "A sopa ___ fria.", o: ["é", "está"], r: 1, x: "Cómo está la sopa ahora → **estar**." },
+  { f: "Eu ___ peruano, mas ___ no Brasil.", o: ["sou … estou", "estou … sou", "sou … sou"], r: 0,
+    x: "Nacionalidad → **ser**; dónde estás ahora → **estar**." },
+  { f: "Ela ___ vinte anos.", o: ["é", "está", "tem"], r: 2, x: "La edad → **ter**." },
+  { f: "Nós ___ um cachorro.", o: ["somos", "estamos", "temos"], r: 2, x: "Posesión → **ter**." },
+  { f: "Eu ___ fome.", o: ["sou", "estou", "tenho"], r: 2, x: "Tener hambre = **ter fome**." },
+  { f: "Ele ___ cabelo cacheado.", o: ["é", "está", "tem"], r: 2, x: "Partes del cuerpo → **ter**." },
+  { f: "Ela ___ bronzeada depois da praia.", o: ["é", "está"], r: 1, x: "Estado temporal → **estar**." },
+  { f: "O Brasil ___ muito grande.", o: ["é", "está"], r: 0, x: "Característica permanente → **ser**." },
+  { f: "Meu carro ___ com problemas.", o: ["é", "está"], r: 1, x: "Situación temporal → **estar**." },
+  { f: "Eles ___ olhos verdes.", o: ["são", "estão", "têm"], r: 2, x: "Partes del cuerpo → **ter** (eles **têm**)." },
+  { f: "Eu ___ estudante.", o: ["sou", "estou"], r: 0, x: "Ocupación → **ser**." },
+  { f: "Onde ___ a Ana agora?", o: ["é", "está"], r: 1, x: "*agora* → **estar**." },
+  { f: "Nós ___ aprendendo português.", o: ["somos", "estamos"], r: 1, x: "Acción en curso: **estar** + gerundio." },
+  { f: "Ela ___ muito engraçada.", o: ["é", "está"], r: 0, x: "Personalidad → **ser**." },
+  { f: "Vocês ___ dois filhos?", o: ["são", "estão", "têm"], r: 2, x: "Posesión → **ter** (vocês **têm**)." },
+  { f: "A gente ___ no Brasil agora.", o: ["é", "está"], r: 1, x: "*a gente* se conjuga como *ele*; lugar de ahora → **está**." },
+  { f: "O João ___ nervoso porque tem prova.", o: ["é", "está"], r: 1, x: "Nervioso por algo puntual → **estar**." },
+  { f: "Eu gosto ___ chocolate.", o: ["de", "do", "da"], r: 0, x: "Algo en general, sin artículo → **de**." },
+  { f: "Ela gosta ___ Brasil.", o: ["de", "do", "da"], r: 1, x: "*o Brasil* → de + o = **do**." },
+  { f: "Vocês gostam ___ praia?", o: ["de", "do", "da"], r: 2, x: "*a praia* → de + a = **da**." },
+  { f: "Nós gostamos ___ viajar.", o: ["de", "do", "da"], r: 0, x: "Antes de un verbo → **de**." },
+  { f: "Eles gostam ___ doces.", o: ["dos", "das", "de os"], r: 0, x: "*os doces* → de + os = **dos**." },
+  { f: "Paula gosta ___ caipirinha.", o: ["do", "da", "das"], r: 1, x: "*a caipirinha* → de + a = **da**." },
+  { f: "Ele ___ fala muito.", o: ["não", "nem", "sem"], r: 0, x: "La negación **não** va antes del verbo." },
+  { f: "— Você fala inglês? — ___, sim!", o: ["Falo", "Fala", "Falamos"], r: 0, x: "En Brasil se responde repitiendo el verbo: **Falo**." },
+  { f: "Ela está ___ português agora.", o: ["aprendendo", "aprender", "aprende"], r: 0, x: "Acción en curso: **estar + gerundio** (-ndo)." },
+  { f: "Nós estamos ___ muito.", o: ["praticando", "praticar", "pratica"], r: 0, x: "**estar + gerundio**: pratica**r** → pratica**ndo**." }
+];
+const BANCO_PRESENTARSE = [
+  { f: "___ você mora? — Em Lima.", o: ["Onde", "Quando", "Quem"], r: 0 },
+  { f: "___ anos você tem? — Vinte e cinco.", o: ["Quantos", "Quais", "Como"], r: 0 },
+  { f: "___ você se chama? — Carlos.", o: ["Como", "Onde", "Quem"], r: 0 },
+  { f: "___ mora com você? — A minha família.", o: ["Quem", "Qual", "Quando"], r: 0 },
+  { f: "___ você faz aniversário? — Em outubro.", o: ["Quando", "Onde", "Quanto"], r: 0 },
+  { f: "___ é o seu nome?", o: ["Qual", "Quem", "Quantos"], r: 0, x: "¿**Cuál** es tu nombre? → **Qual**." },
+  { f: "De ___ você é? — Do Peru.", o: ["onde", "quando", "quem"], r: 0 },
+  { f: "___ você faz da vida? — Sou professor.", o: ["O que", "Quem", "Onde"], r: 0 },
+  { f: "___ são os seus interesses?", o: ["Quais", "Qual", "Quem"], r: 0, x: "Plural → **Quais**." },
+  { f: "Qual é o seu ___? — Silva.", o: ["sobrenome", "apelido", "nome"], r: 0, x: "Apellido = **sobrenome** (*apelido* es apodo)." },
+  { f: "Qual é o seu ___? — Me chamam de Zé.", o: ["apelido", "sobrenome", "endereço"], r: 0, x: "Apodo = **apelido**." },
+  { f: "Qual é o seu ___? — Rua Santa Maria, 34.", o: ["endereço", "nome", "telefone"], r: 0, x: "Dirección = **endereço**." },
+  { f: "Eu ___ em Lima, mas sou de Arequipa.", o: ["moro", "sou", "estou"], r: 0, x: "Dónde vives → **morar**." },
+  { f: "Eu trabalho ___ professor.", o: ["como", "com", "para"], r: 0 },
+  { f: "Eu ___ chamo Ana.", o: ["me", "se", "te"], r: 0, x: "eu **me** chamo · ele **se** chama." },
+  { f: "Ele ___ chama Pedro.", o: ["se", "me", "nos"], r: 0, x: "eu **me** chamo · ele **se** chama." },
+  { f: "Prazer em conhecê-___!", s: "Se lo dices a una mujer", o: ["la", "lo"], r: 0, x: "**-la** para una mujer, **-lo** para un hombre." },
+  { f: "Son las 7 de la mañana. Saludas:", o: ["Bom dia!", "Boa tarde!", "Boa noite!"], r: 0, pt: true },
+  { f: "Son las 4 de la tarde. Saludas:", o: ["Bom dia!", "Boa tarde!", "Boa noite!"], r: 1, pt: true },
+  { f: "Son las 10 de la noche. Saludas:", o: ["Bom dia!", "Boa tarde!", "Boa noite!"], r: 2, pt: true },
+  { f: "Una mujer agradece:", o: ["Obrigado!", "Obrigada!"], r: 1, pt: true, x: "Depende de quién habla: mujer → **obrigada**." },
+  { f: "Un hombre agradece:", o: ["Obrigado!", "Obrigada!"], r: 0, pt: true, x: "Depende de quién habla: hombre → **obrigado**." },
+  { f: "Te dicen *Obrigado!* Respondes:", o: ["De nada!", "Por favor!", "Tchau!"], r: 0, pt: true },
+  { f: "Te dicen *Prazer em conhecê-lo!* Respondes:", o: ["O prazer é meu!", "Até logo!", "De nada!"], r: 0, pt: true },
+  { f: "Te despides hasta mañana:", o: ["Até amanhã!", "Bom dia!", "Tudo bem?"], r: 0, pt: true },
+  { f: "Saludas a un amigo de forma informal:", o: ["Oi! Tudo bem?", "Boa noite, senhor.", "Com licença."], r: 0, pt: true },
+  { f: "— Tudo bem? — ___", o: ["Tudo bem, e você?", "De nada.", "Até logo."], r: 0 },
+  { f: "Quieres pasar entre la gente en el bus:", o: ["Com licença.", "Obrigado.", "Tchau."], r: 0, pt: true },
+  { f: "No entendiste. Pides que repitan:", o: ["Pode repetir, por favor?", "Até logo!", "Muito prazer!"], r: 0, pt: true },
+  { f: "Te hablan muy rápido:", o: ["Fala mais devagar, por favor.", "Fala mais alto.", "Tudo bem."], r: 0, pt: true },
+  { f: "Pides perdón:", o: ["Desculpa!", "De nada!", "Obrigado!"], r: 0, pt: true }
+];
+// Contracciones: [frase, sustantivo con su artículo]
+const FRASES_EM = [
+  ["Eu estou ___ escola.", "a escola"], ["Ela trabalha ___ escritório.", "o escritório"], ["Nós estamos ___ praia.", "a praia"],
+  ["Ele mora ___ Brasil.", "o Brasil"], ["Eu moro ___ Rio de Janeiro.", "o Rio de Janeiro"], ["Elas estão ___ Bahia.", "a Bahia"],
+  ["Nós almoçamos ___ restaurante.", "o restaurante"], ["O dinheiro está ___ bolsa.", "a bolsa"], ["O livro está ___ mesa.", "a mesa"],
+  ["Eles estão ___ supermercado.", "o supermercado"], ["A família assiste à televisão ___ sala.", "a sala"], ["Eu trabalho ___ banco.", "o banco"],
+  ["As chaves estão ___ gavetas.", "as gavetas"], ["Há muitas pessoas ___ ruas.", "as ruas"], ["Os turistas estão ___ hotéis.", "os hotéis"],
+  ["Os documentos estão ___ pastas.", "as pastas"], ["Ela está ___ hospital.", "o hospital"], ["Eu estudo ___ Ciunac.", "a Ciunac"],
+  ["O gato está ___ cozinha.", "a cozinha"], ["Há livros ___ quartos.", "os quartos"], ["Ela entra ___ escritório às oito.", "o escritório"],
+  ["Nós vamos passar o verão ___ casa de praia.", "a casa de praia"], ["Eles estão ___ ponto de ônibus.", "o ponto de ônibus"]
+];
+const FRASES_DE = [
+  ["O carro ___ João é novo.", "o João"], ["A casa ___ Ana é grande.", "a Ana"], ["Eu sou ___ Peru.", "o Peru"],
+  ["Ela é ___ Argentina.", "a Argentina"], ["Eu gosto ___ Brasil.", "o Brasil"], ["Nós gostamos ___ praia.", "a praia"],
+  ["Eles gostam ___ doces.", "os doces"], ["Ela gosta ___ flores.", "as flores"], ["O livro ___ professor está aqui.", "o professor"],
+  ["A bolsa ___ professora é preta.", "a professora"], ["Os planos ___ arquitetos estão prontos.", "os arquitetos"],
+  ["As chaves ___ portas estão aqui.", "as portas"], ["Ela chega às oito ___ manhã.", "a manhã"], ["O cabelo ___ minha mãe é curto.", "a minha mãe"],
+  ["O nome ___ meu pai é José.", "o meu pai"], ["A cor ___ carro é azul.", "o carro"], ["Os brinquedos ___ meninos.", "os meninos"],
+  ["As bonecas ___ meninas.", "as meninas"], ["Ela é ___ Chile.", "o Chile"], ["Vocês gostam ___ Brasil?", "o Brasil"],
+  ["A casa ___ tio de Fernando é grande.", "o tio de Fernando"]
+];
+// Sustantivos: [singular, plural, género, español, truco]
+const SUSTANTIVOS = [
+  ["livro", "livros", "m", "libro"], ["casa", "casas", "f", "casa"], ["carro", "carros", "m", "auto"], ["mesa", "mesas", "f", "mesa"],
+  ["cachorro", "cachorros", "m", "perro"], ["gata", "gatas", "f", "gata"], ["menino", "meninos", "m", "niño"], ["menina", "meninas", "f", "niña"],
+  ["professor", "professores", "m", "profesor"], ["cidade", "cidades", "f", "ciudad"], ["canção", "canções", "f", "canción"],
+  ["avião", "aviões", "m", "avión"], ["pergunta", "perguntas", "f", "pregunta"], ["bolsa", "bolsas", "f", "cartera"],
+  ["olho", "olhos", "m", "ojo"], ["ilha", "ilhas", "f", "isla"], ["pessoa", "pessoas", "f", "persona"], ["computador", "computadores", "m", "computadora"],
+  ["chave", "chaves", "f", "llave"], ["porta", "portas", "f", "puerta"], ["pão", "pães", "m", "pan"], ["sapato", "sapatos", "m", "zapato"],
+  ["saia", "saias", "f", "falda"], ["praia", "praias", "f", "playa"], ["restaurante", "restaurantes", "m", "restaurante"],
+  ["irmão", "irmãos", "m", "hermano"], ["irmã", "irmãs", "f", "hermana"], ["mão", "mãos", "f", "mano"],
+  ["viagem", "viagens", "f", "viaje", "las palabras en **-agem** son femeninas"], ["mensagem", "mensagens", "f", "mensaje", "las palabras en **-agem** son femeninas"],
+  ["garagem", "garagens", "f", "garaje", "las palabras en **-agem** son femeninas"], ["paisagem", "paisagens", "f", "paisaje", "las palabras en **-agem** son femeninas"],
+  ["cor", "cores", "f", "color", "en portugués es femenino"], ["dor", "dores", "f", "dolor", "en portugués es femenino"],
+  ["árvore", "árvores", "f", "árbol", "en portugués es femenino"], ["leite", null, "m", "leche", "en portugués es masculino"],
+  ["nariz", "narizes", "m", "nariz", "en portugués es masculino"], ["sal", null, "m", "sal", "en portugués es masculino"],
+  ["mel", null, "m", "miel", "en portugués es masculino"], ["sangue", null, "m", "sangre", "en portugués es masculino"],
+  ["costume", "costumes", "m", "costumbre", "las palabras en **-ume** (español *-umbre*) son masculinas"],
+  ["legume", "legumes", "m", "legumbre", "las palabras en **-ume** (español *-umbre*) son masculinas"],
+  ["mapa", "mapas", "m", "mapa", "termina en -a pero es masculino"], ["dia", "dias", "m", "día", "termina en -a pero es masculino"],
+  ["problema", "problemas", "m", "problema", "termina en -a pero es masculino"]
+];
+// Adjetivos: [masc, fem, masc. plural, fem. plural, español]
+const ADJETIVOS = [
+  ["alto", "alta", "altos", "altas", "alto"], ["baixo", "baixa", "baixos", "baixas", "bajo"], ["magro", "magra", "magros", "magras", "delgado"],
+  ["gordo", "gorda", "gordos", "gordas", "gordo"], ["engraçado", "engraçada", "engraçados", "engraçadas", "chistoso"],
+  ["loiro", "loira", "loiros", "loiras", "rubio"], ["ruivo", "ruiva", "ruivos", "ruivas", "pelirrojo"],
+  ["simpático", "simpática", "simpáticos", "simpáticas", "simpático"], ["corajoso", "corajosa", "corajosos", "corajosas", "valiente"],
+  ["chato", "chata", "chatos", "chatas", "aburrido, pesado"], ["invejoso", "invejosa", "invejosos", "invejosas", "envidioso"],
+  ["metido", "metida", "metidos", "metidas", "creído"], ["forte", "forte", "fortes", "fortes", "fuerte"],
+  ["jovem", "jovem", "jovens", "jovens", "joven"], ["legal", "legal", "legais", "legais", "chévere"],
+  ["responsável", "responsável", "responsáveis", "responsáveis", "responsable"], ["amável", "amável", "amáveis", "amáveis", "amable"],
+  ["inteligente", "inteligente", "inteligentes", "inteligentes", "inteligente"]
+];
+const SUJETOS_ADJ = [["O meu pai", "é", 0], ["A minha irmã", "é", 1], ["Os meus amigos", "são", 2], ["As minhas tias", "são", 3],
+                     ["O professor", "é", 0], ["A Ana", "é", 1], ["Eles", "são", 2], ["Elas", "são", 3]];
+// Nacionalidades: [masculino, femenino, país, artículo del país]
+const NACIONES = [
+  ["peruano", "peruana", "Peru", "o"], ["brasileiro", "brasileira", "Brasil", "o"], ["argentino", "argentina", "Argentina", "a"],
+  ["chileno", "chilena", "Chile", "o"], ["colombiano", "colombiana", "Colômbia", "a"], ["mexicano", "mexicana", "México", "o"],
+  ["angolano", "angolana", "Angola", ""], ["português", "portuguesa", "Portugal", ""], ["inglês", "inglesa", "Inglaterra", "a"],
+  ["espanhol", "espanhola", "Espanha", "a"], ["francês", "francesa", "França", "a"], ["japonês", "japonesa", "Japão", "o"],
+  ["italiano", "italiana", "Itália", "a"], ["boliviano", "boliviana", "Bolívia", "a"], ["equatoriano", "equatoriana", "Equador", "o"]
+];
+const DIAS = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo"];
+const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+const UNIDADES = ["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze",
+                  "catorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];
+const DECENAS = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
+const numeroPt = n => n === 100 ? "cem" : n < 20 ? UNIDADES[n] : DECENAS[Math.floor(n / 10)] + (n % 10 ? " e " + UNIDADES[n % 10] : "");
+
+const azar = arr => arr[Math.floor(Math.random() * arr.length)];
+function armar(correcta, distractores) {
+  const otras = mezclar([...new Set(distractores.filter(d => d !== correcta))]).slice(0, 3);
+  const opciones = mezclar([correcta, ...otras]);
+  return { opciones, resp: opciones.indexOf(correcta) };
+}
+const rellenar = (frase, texto) => texto.split(" … ").reduce((f, parte) => f.replace("___", parte), frase);
+const ITEMS_TODOS = LECCIONES.flatMap(l => l.items.map(it => ({ ...it, lec: l.id })));
+const FRASES = LECCIONES.flatMap(l => (l.apuntes || []).flatMap(a => [
+    ...(a.ej || []).map(x => ({ pt: x[0], es: x[1] })), ...(a.dialogo || []).map(x => ({ pt: x[1], es: x[2] }))]))
+  .map(f => ({ pt: f.pt, es: f.es.split(" → ")[0] }))
+  .filter(f => f.pt.includes(" ") && !f.pt.includes("..."));
+
+// ---------- generadores ----------
+function genConjugacion() {
+  const v = azar(VERBOS);
+  const sujetos = v.soloSing ? SUJETOS.filter(s => ["Eu", "Você", "Ele", "Ela"].includes(s[0])) : SUJETOS;
+  const [suj, p] = azar(sujetos);
+  const comp = azar(v.comp);
+  const tabla = `**${v.inf}**: eu ${v.f[0]} · você/ele ${v.f[1]} · nós ${v.f[2]} · eles ${v.f[3]}`;
+  if (!v.soloSing && Math.random() < 0.25) {
+    const pronombres = ["Eu", "Ela", "Nós", "Eles"];
+    const pp = Math.floor(Math.random() * 4);
+    return { clave: `pron-${v.inf}-${pp}`, sub: "¿Qué pronombre va?", pregunta: `___ ${v.f[pp]} ${comp}.`,
+             ...armar(pronombres[pp], pronombres), oir: `${pronombres[pp]} ${v.f[pp]} ${comp}.`, explica: tabla };
+  }
+  return { clave: `conj-${v.inf}-${p}`, sub: `${v.inf} = ${v.es}`, pregunta: `${suj} ___ ${comp}.`, ...armar(v.f[p], v.f),
+           oir: `${suj} ${v.f[p]} ${comp}.`, explica: tabla, escribible: true };
+}
+function genBanco(banco) {
+  const e = azar(banco);
+  const correcta = e.o[e.r];
+  const opciones = mezclar(e.o.slice());
+  const oir = e.f.includes("___") ? rellenar(e.f, correcta) : e.pt ? correcta : null;
+  return { clave: "banco-" + e.f, sub: e.s, pregunta: e.f, opciones, resp: opciones.indexOf(correcta), oir, explica: e.x,
+           escribible: e.f.includes("___") && !correcta.includes("…") && !correcta.includes(" ") };
+}
+function genContraccion() {
+  const em = Math.random() < 0.5;
+  const [frase, sust] = azar(em ? FRASES_EM : FRASES_DE);
+  const art = sust.split(" ")[0];
+  const prep = em ? "em" : "de";
+  const tabla = em ? { o: "no", a: "na", os: "nos", as: "nas" } : { o: "do", a: "da", os: "dos", as: "das" };
+  const genero = { o: "masculino singular", a: "femenino singular", os: "masculino plural", as: "femenino plural" }[art];
+  return { clave: "contr-" + frase, sub: `${prep} + artículo`, pregunta: frase, ...armar(tabla[art], Object.values(tabla)),
+           oir: rellenar(frase, tabla[art]), escribible: true,
+           explica: `*${sust}* es ${genero} → ${prep} + ${art} = **${tabla[art]}**.` };
+}
+function genArticulo() {
+  const [sing, plur, g, es, truco] = azar(SUSTANTIVOS);
+  const plural = plur && Math.random() < 0.4;
+  const definido = Math.random() < 0.6;
+  const formas = definido ? ["o", "a", "os", "as"] : ["um", "uma", "uns", "umas"];
+  const correcta = formas[(g === "m" ? 0 : 1) + (plural ? 2 : 0)];
+  const palabra = plural ? plur : sing;
+  return { clave: `art-${sing}-${plural}-${definido}`, sub: `Artículo ${definido ? "definido" : "indefinido"} · ${es}${plural ? " (plural)" : ""}`,
+           pregunta: `___ ${palabra}`, ...armar(correcta, formas), oir: `${correcta} ${palabra}`, escribible: true,
+           explica: `*${sing}* es **${g === "m" ? "masculino" : "femenino"}**${truco ? ": " + truco : ""}.` };
+}
+function genAdjetivo() {
+  const a = azar(ADJETIVOS);
+  const [suj, verbo, k] = azar(SUJETOS_ADJ);
+  const invariable = a[0] === a[1];
+  return { clave: `adj-${a[0]}-${k}`, sub: `${a[0]} = ${a[4]}`, pregunta: `${suj} ${verbo} ___.`, ...armar(a[k], a.slice(0, 4)),
+           oir: `${suj} ${verbo} ${a[k]}.`, escribible: true,
+           explica: invariable ? `*${a[0]}* es igual en masculino y femenino; plural: **${a[2]}**.`
+                               : `${a[0]} (masc.) · ${a[1]} (fem.) · ${a[2]} · ${a[3]} (plurales).` };
+}
+function genNacionalidad() {
+  const [masc, fem, pais, art] = azar(NACIONES);
+  const dePais = (art === "o" ? "do " : art === "a" ? "da " : "de ") + pais;
+  if (Math.random() < 0.4) {
+    const correcta = dePais.split(" ")[0];
+    return { clave: `pais-${pais}`, sub: "¿do, da o de?", pregunta: `Eu sou ___ ${pais}.`, ...armar(correcta, ["do", "da", "de"]),
+             oir: `Eu sou ${dePais}.`, escribible: true,
+             explica: art ? `*${art} ${pais}* → de + ${art} = **${correcta}**.` : `*${pais}* no lleva artículo → **de**.` };
+  }
+  const mujer = Math.random() < 0.5;
+  const correcta = mujer ? fem : masc;
+  const otras = NACIONES.map(n => mujer ? n[1] : n[0]);
+  return { clave: `nac-${masc}-${mujer}`, sub: `Nacionalidad (${mujer ? "femenino" : "masculino"})`,
+           pregunta: `${mujer ? "Ela" : "Ele"} é ${dePais}. ${mujer ? "Ela" : "Ele"} é ___.`, ...armar(correcta, otras),
+           oir: `${mujer ? "Ela" : "Ele"} é ${dePais}. ${mujer ? "Ela" : "Ele"} é ${correcta}.`, escribible: true,
+           explica: `${masc} (masc.) · ${fem} (fem.)` };
+}
+function genNumero() {
+  const n = Math.random() < 0.5 ? Math.floor(Math.random() * 21) : Math.floor(Math.random() * 101);
+  const cercanos = [n + 1, n - 1, n + 10, n - 10, n + 2, ({ 16: 17, 17: 16, 60: 70, 70: 60, 13: 3, 3: 13, 12: 2, 2: 12 })[n]]
+    .filter(x => x !== undefined && x >= 0 && x <= 100);
+  const palabra = numeroPt(n);
+  const explica = n > 20 && n % 10 ? "Decenas + **e** + unidades: " + palabra : null;
+  const tipo = Math.floor(Math.random() * 3);
+  if (tipo === 0) return { clave: `num-${n}-a`, sub: "¿Cómo se dice?", pregunta: `**${n}**`, ...armar(palabra, cercanos.map(numeroPt)),
+                           oir: palabra, explica, escribible: true, validas: n === 14 ? ["catorze", "quatorze"] : [palabra] };
+  if (tipo === 1) return { clave: `num-${n}-b`, sub: "¿Qué número es?", pregunta: `**${palabra}**`, ...armar(String(n), cercanos.map(String)),
+                           oir: palabra, explica };
+  return { clave: `num-${n}-c`, sub: "🎧 ¿Qué número escuchaste?", escucha: palabra, pregunta: "", ...armar(String(n), cercanos.map(String)), explica };
+}
+function genDiaMes() {
+  const lista = Math.random() < 0.5 ? DIAS : MESES;
+  const i = Math.floor(Math.random() * lista.length);
+  const antes = Math.random() < 0.3;
+  const correcta = antes ? lista[(i - 1 + lista.length) % lista.length] : lista[(i + 1) % lista.length];
+  return { clave: `dm-${lista[i]}-${antes}`, sub: lista === DIAS ? "Días de la semana" : "Meses del año",
+           pregunta: `${antes ? "Antes" : "Depois"} de ${lista[i]} vem ___.`, ...armar(correcta, lista),
+           oir: `${antes ? "Antes" : "Depois"} de ${lista[i]} vem ${correcta}.`, escribible: true,
+           validas: [correcta, correcta.replace("-feira", "")] };
+}
+function genVocab(lecciones) {
+  const pool = lecciones ? ITEMS_TODOS.filter(it => lecciones.includes(it.lec)) : ITEMS_TODOS;
+  const it = azar(pool);
+  const vecinos = ITEMS_TODOS.filter(x => x.lec === it.lec && x.pt !== it.pt);
+  if (Math.random() < 0.5) {
+    return { clave: `voc-${it.pt}-pt`, sub: "¿Qué significa?", pregunta: it.pt, ...armar(it.es, vecinos.map(x => x.es)), oir: it.pt };
+  }
+  return { clave: `voc-${it.pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: it.es, ...armar(it.pt, vecinos.map(x => x.pt)),
+           oir: it.pt, escribible: true };
+}
+// Distractores de largo parecido, para que el tamaño no delate la respuesta
+const parecidas = (f, lista) => lista.filter(x => x.pt !== f.pt)
+  .sort((a, b) => Math.abs(a.pt.length - f.pt.length) - Math.abs(b.pt.length - f.pt.length)).slice(0, 8);
+function genFrase() {
+  const f = azar(FRASES);
+  const otras = parecidas(f, FRASES);
+  if (Math.random() < 0.6) {
+    return { clave: `fr-${f.pt}-pt`, sub: "¿Qué significa?", pregunta: f.pt, ...armar(f.es, otras.map(x => x.es)), oir: f.pt };
+  }
+  return { clave: `fr-${f.pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: f.es, ...armar(f.pt, otras.map(x => x.pt)), oir: f.pt };
+}
+function genEscucha() {
+  const r = Math.random();
+  if (r < 0.65) {
+    const it = azar(ITEMS_TODOS.filter(x => x.pt.length >= 3));
+    const vecinos = ITEMS_TODOS.filter(x => x.lec === it.lec && x.pt !== it.pt && x.pt.length >= 3);
+    if (r < 0.4) return { clave: `esc-${it.pt}-a`, sub: "🎧 ¿Qué escuchaste?", escucha: it.pt, pregunta: "",
+                          ...armar(it.pt, vecinos.map(x => x.pt)), traduccion: it.es };
+    return { clave: `esc-${it.pt}-b`, sub: "🎧 ¿Qué significa lo que escuchaste?", escucha: it.pt, pregunta: "",
+             ...armar(it.es, vecinos.map(x => x.es)) };
+  }
+  if (r < 0.85) {
+    const cortas = FRASES.filter(x => x.pt.length < 45);
+    const f = azar(cortas);
+    return { clave: `esc-${f.pt}-f`, sub: "🎧 ¿Qué frase escuchaste?", escucha: f.pt, pregunta: "",
+             ...armar(f.pt, parecidas(f, cortas).map(x => x.pt)), traduccion: f.es };
+  }
+  const q = genNumero();
+  return q.escucha ? q : genEscucha();
+}
+function genCurso(lecciones) {
+  const l = azar(LECCIONES.filter(x => !lecciones || lecciones.includes(x.id)));
+  const i = Math.floor(Math.random() * l.ejercicios.length);
+  const e = l.ejercicios[i];
+  if (e.tipo === "marcar") {
+    const correcta = e.opciones[e.resp];
+    const opciones = mezclar(e.opciones.slice());
+    return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${l.titulo}`, pregunta: e.frase, opciones, resp: opciones.indexOf(correcta),
+             oir: e.oir || (e.frase.includes("___") ? e.frase.replace("___", correcta) : null), explica: e.explica };
+  }
+  if (!modoEscribir || e.resp.length !== 1) return null;   // los de completar solo en modo escribir
+  return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${e.pista || l.titulo}`, pregunta: e.frase, soloEscribir: true,
+           validas: [].concat(e.resp[0]), oir: e.frase === "___" ? null : fraseCompleta(e), explica: e.explica };
+}
+function genError() {
+  const lista = errores();
+  if (!lista.length) return null;
+  const q = JSON.parse(JSON.stringify(azar(lista)));
+  if (q.opciones) { const c = q.opciones[q.resp]; q.opciones = mezclar(q.opciones); q.resp = q.opciones.indexOf(c); }
+  q.deErrores = true;
+  q.sub = "🔁 Repaso de un error · " + (q.sub || "");
+  return q;
+}
+
+const CATEGORIAS = [
+  { id: "todo", t: "🎲 Todo" },
+  { id: "verbos", t: "⚙️ Verbos", g: [genConjugacion, genConjugacion, genConjugacion, () => genBanco(BANCO_VERBOS), () => genBanco(BANCO_VERBOS), () => genCurso(["serestar", "verbosar"])] },
+  { id: "articulos", t: "📌 Artículos", g: [genArticulo, genArticulo, genContraccion, genContraccion, () => genCurso(["articulos"])] },
+  { id: "presentarse", t: "🙋 Presentarse", g: [genNacionalidad, () => genBanco(BANCO_PRESENTARSE), () => genBanco(BANCO_PRESENTARSE), () => genVocab(["saludos", "presentarse"]), () => genCurso(["saludos", "presentarse"])] },
+  { id: "descripciones", t: "🧑 Descripciones", g: [genAdjetivo, genAdjetivo, () => genVocab(["descripciones", "colores", "familia"]), () => genCurso(["descripciones"])] },
+  { id: "vocab", t: "📖 Vocabulario", g: [() => genVocab(null)] },
+  { id: "frases", t: "💬 Frases", g: [genFrase] },
+  { id: "escucha", t: "🎧 Escucha", g: [genEscucha] },
+  { id: "numeros", t: "🔢 Números y fechas", g: [genNumero, genNumero, genDiaMes, () => genVocab(["numeros", "dias"])] },
+  { id: "errores", t: "🔁 Mis errores", g: [genError] }
+];
+CATEGORIAS[0].g = CATEGORIAS.slice(1, -1).flatMap(c => c.g).concat([() => genCurso(null), genError]);
+const CATEGORIA_DE_LECCION = {
+  alfabeto: "escucha", saludos: "presentarse", presentarse: "presentarse", serestar: "verbos", verbosar: "verbos",
+  descripciones: "descripciones", articulos: "articulos", numeros: "numeros", dias: "numeros"
+};
+
+// ---------- estado y pantalla ----------
+const ERR_CLAVE = "pt-errores", STATS_CLAVE = "pt-practica";
+const errores = () => JSON.parse(localStorage.getItem(ERR_CLAVE) || "[]");
+function guardarError(q) {
+  const lista = errores().filter(x => x.clave !== q.clave);
+  lista.push(q);
+  localStorage.setItem(ERR_CLAVE, JSON.stringify(lista.slice(-80)));
+}
+function quitarError(clave) { localStorage.setItem(ERR_CLAVE, JSON.stringify(errores().filter(x => x.clave !== clave))); }
+let modoEscribir = localStorage.getItem("pt-escribir") === "1";
+let statsPr = JSON.parse(localStorage.getItem(STATS_CLAVE) || '{"total":0,"bien":0,"record":0}');
+let pr = null;
+
+function abrirPractica(cat) {
+  if (!pr || pr.cat !== cat) pr = { cat, sesion: { bien: 0, mal: 0, racha: 0 }, q: null };
+  nuevaPregunta();
+}
+function nuevaPregunta() {
+  const gens = CATEGORIAS.find(c => c.id === pr.cat).g;
+  let q = null;
+  for (let intento = 0; intento < 40 && !q; intento++) {
+    q = azar(gens)();
+    if (q && pr.q && q.clave === pr.q.clave && intento < 20) q = null;   // no repetir la misma pregunta seguida
+  }
+  Object.assign(pr, { q, respondida: false, elegida: null, ok: false, casi: false, escrito: "" });
+  pintarPractica();
+  window.scrollTo(0, 0);
+  if (q && q.escucha) hablar(q.escucha);
+}
+function cambiarModo(escribir) {
+  modoEscribir = escribir;
+  localStorage.setItem("pt-escribir", escribir ? "1" : "0");
+  nuevaPregunta();
+}
+function responderPractica(k) {
+  if (pr.respondida) return;
+  pr.elegida = k;
+  pr.ok = k === pr.q.resp;
+  registrarRespuesta();
+}
+function comprobarPractica() {
+  if (pr.respondida) return;
+  const valor = document.getElementById("prInput").value;
+  if (!valor.trim()) return;
+  const validas = (pr.q.validas || [pr.q.opciones[pr.q.resp]]).map(normalizar);
+  const v = normalizar(valor);
+  pr.escrito = valor;
+  pr.ok = validas.includes(v);
+  pr.casi = !pr.ok && validas.some(a => sinTildes(a) === sinTildes(v));
+  registrarRespuesta();
+}
+function registrarRespuesta() {
+  const q = pr.q, s = pr.sesion;
+  pr.respondida = true;
+  statsPr.total++;
+  if (pr.ok) {
+    s.bien++; s.racha++; statsPr.bien++;
+    statsPr.record = Math.max(statsPr.record, s.racha);
+    if (pr.cat === "errores" || q.deErrores) quitarError(q.clave);
+  } else {
+    s.mal++; s.racha = 0;
+    guardarError(q);
+  }
+  localStorage.setItem(STATS_CLAVE, JSON.stringify(statsPr));
+  pintarPractica();
+  const texto = q.oir || q.escucha;
+  if (texto) hablar(texto);
+}
+function pintarPractica() {
+  const q = pr.q, s = pr.sesion;
+  const nErr = errores().length;
+  const chips = CATEGORIAS.map(c => `<button class="chip ${pr.cat === c.id ? "activa" : ""}" onclick="location.hash='#/practica/${c.id}'">${c.t}${c.id === "errores" ? ` (${nErr})` : ""}</button>`).join("");
+  let cuerpo;
+  if (!q) {
+    cuerpo = `<div class="resultado"><p>${pr.cat === "errores" ? "🎉 ¡No tienes errores pendientes! Practica en otra categoría y aquí aparecerá lo que falles." : "No hay preguntas en esta categoría."}</p></div>`;
+  } else {
+    const escribir = q.soloEscribir || (modoEscribir && q.escribible);
+    const correcta = escribir ? (q.validas || [q.opciones[q.resp]])[0] : q.opciones[q.resp];
+    cuerpo = `
+      <div class="pregunta">
+        ${q.sub ? `<div class="tipo">${md(q.sub)}</div>` : ""}
+        ${q.escucha ? `<button class="btn-escuchar" onclick="hablar(pr.q.escucha)" aria-label="Escuchar">🔊</button>` : ""}
+        ${q.pregunta ? `<div class="grande">${md(q.pregunta)}</div>` : ""}
+      </div>`;
+    if (escribir) {
+      cuerpo += `
+        <div class="escribir">
+          <input id="prInput" class="hueco ${pr.respondida ? (pr.ok ? "bien" : pr.casi ? "casi" : "mal") : ""}" value="${esc(pr.escrito)}"
+            ${pr.respondida ? "disabled" : ""} autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+            placeholder="Escribe aquí..." onkeydown="if(event.key==='Enter')comprobarPractica()">
+          ${pr.respondida ? "" : `<button class="btn" onclick="comprobarPractica()">OK</button>`}
+        </div>`;
+    } else {
+      cuerpo += `<div class="opciones">${q.opciones.map((o, k) => {
+        const clase = !pr.respondida ? "" : k === q.resp ? "bien" : k === pr.elegida ? "mal" : "";
+        return `<button class="opcion ${clase}" ${pr.respondida ? "disabled" : ""} onclick="responderPractica(${k})">${esc(o)}</button>`;
+      }).join("")}</div>`;
+    }
+    if (pr.respondida) {
+      const texto = q.oir || q.escucha;
+      let msg = pr.ok ? "✅ ¡Correcto!" : pr.casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>` : `❌ Correcta: <strong>${esc(correcta)}</strong>`;
+      if (texto) msg += `<div class="frase-oir">${esc(texto)}</div><div class="pron">🗣️ ${esc(pron(texto))}</div>`;
+      if (q.traduccion) msg += `<div class="trad">${esc(q.traduccion)}</div>`;
+      if (q.explica) msg += `<div class="explica">💡 ${md(q.explica)}</div>`;
+      cuerpo += `<div class="res pr-res">${msg}</div>
+        <div class="controles"><button class="btn ancho" onclick="nuevaPregunta()">Siguiente →</button></div>`;
+    }
+  }
+  $app.innerHTML = `
+    <button class="volver" onclick="location.hash='#/'">← Inicio</button>
+    <h2 style="margin:6px 0 0">🚌 Práctica sin fin</h2>
+    <div class="chips">${chips}</div>
+    <div class="modo">
+      <button class="chip ${modoEscribir ? "" : "activa"}" onclick="cambiarModo(false)">👆 Elegir</button>
+      <button class="chip ${modoEscribir ? "activa" : ""}" onclick="cambiarModo(true)">✍️ Escribir</button>
+    </div>
+    <div class="stats"><span>✅ ${s.bien} · ❌ ${s.mal}</span><span>🔥 Racha ${s.racha}</span><span>🏆 ${statsPr.record}</span></div>
+    ${cuerpo}`;
 }
 
 // ---------- inicio ----------
