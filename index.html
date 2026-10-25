@@ -1290,6 +1290,40 @@ const LECCIONES = [
         consejos: ["Paso a paso con *estudar*: quita **-ar** → *estud-* → eu estud**o**, ele estud**a**, nós estud**amos**, eles estud**am**.",
                    "Con *beber*: quita **-er** → *beb-* → eu beb**o**, ele beb**e**, nós beb**emos**, eles beb**em**.",
                    "Con *abrir*: quita **-ir** → *abr-* → eu abr**o**, ele abr**e**, nós abr**imos**, eles abr**em**."] },
+      { t: "¿Cómo sé qué terminación usar?",
+        p: "La clave está en **cómo termina el verbo en infinitivo** (la forma del diccionario). Mira sus **dos últimas letras**:",
+        tabla: { cab: ["Pronombre", "verbos ‑AR", "verbos ‑ER", "verbos ‑IR"], filas: [
+          ["eu", "‑o", "‑o", "‑o"],
+          ["ele / ela / você / a gente", "**‑a**", "**‑e**", "**‑e**"],
+          ["nós", "‑amos", "‑emos", "**‑imos**"],
+          ["eles / elas / vocês", "‑am", "‑em", "‑em"],
+          ["Ejemplo", "fal**ar** → ele fal**a**", "beb**er** → ele beb**e**", "abr**ir** → ele abr**e**"]] },
+        lista: ["**eu** siempre termina en **-o**, sea cual sea el verbo.",
+                "En las demás personas **se repite la vocal del infinitivo**: trabalh**a**r → **a** · com**e**r → **e**.",
+                "Los verbos **-IR** son iguales a los **-ER**, salvo en **nós**: **-imos**."] },
+      { t: "Ejemplo paso a paso",
+        tabla: { cab: ["Paso", "Qué haces", "Ela ___ água. (beber)"], filas: [
+          ["1", "Mira cómo termina el verbo", "be**ber** → termina en **-ER**"],
+          ["2", "Quita esas dos letras: te queda la raíz", "**beb-**"],
+          ["3", "Mira quién hace la acción", "**ela**"],
+          ["4", "Busca en la tabla: -ER + ela", "**-e** → ela **bebe**"]] },
+        ej: [["Ela bebe água.", "Ella toma agua. · beber (-ER): beb + e"],
+             ["Você fala inglês?", "¿Hablas inglés? · falar (-AR): fal + a"],
+             ["Nós abrimos a porta.", "Abrimos la puerta. · abrir (-IR): abr + imos"],
+             ["Eles comem pizza.", "Ellos comen pizza. · comer (-ER): com + em"],
+             ["Eu estudo português.", "Estudio portugués. · estudar (-AR): estud + o"],
+             ["Nós aprendemos muito.", "Aprendemos mucho. · aprender (-ER): aprend + emos"],
+             ["Vocês assistem TV?", "¿Ustedes ven televisión? · assistir (-IR): assist + em"],
+             ["A gente mora em Lima.", "Vivimos en Lima. · morar (-AR): mor + a (a gente = como ele)"]] },
+      { t: "¡Es igual que en español!",
+        p: "Ya haces esto en español sin darte cuenta. Compara:",
+        tabla: { cab: ["Español", "Português"], filas: [
+          ["él habl**a** (habl**ar**)", "ele fal**a** (fal**ar**)"], ["él com**e** (com**er**)", "ele com**e** (com**er**)"],
+          ["él part**e** (part**ir**)", "ele part**e** (part**ir**)"], ["nosotros habl**amos**", "nós fal**amos**"],
+          ["nosotros com**emos**", "nós com**emos**"], ["nosotros part**imos**", "nós part**imos**"],
+          ["ellos habl**an**", "eles fal**am**"], ["ellos com**en**", "eles com**em**"]] },
+        porque: "La única diferencia: en *eles / vocês* el español termina en **-n** (habl**an**, com**en**) y el portugués en **-m** (fal**am**, com**em**). Si dudas, piensa cómo lo dirías en español y cambia la *n* final por *m*.",
+        consejos: ["Ojo: algunos verbos cambian de grupo entre los dos idiomas. *vivir* es -IR en español, pero **viver** es **-ER** en portugués: *nós viv**emos*** (no *vivimos*)."] },
       { t: "TRABALHAR (trabajar) — modelo -AR",
         tabla: { cab: ["Pronombre", "Português", "Español"], pron: [1], filas: [
           ["eu", "trabalho", "yo trabajo"], ["ele / ela / você / a gente", "trabalha", "él / ella trabaja · tú trabajas"],
@@ -1384,6 +1418,19 @@ const LECCIONES = [
       { pt: "às vezes", es: "a veces" }, { pt: "duas vezes por semana", es: "dos veces por semana" }, { pt: "o relatório", es: "el informe" }
     ],
     ejercicios: [
+      { tipo: "marcar", frase: "*escrever* es un verbo:", opciones: ["-AR", "-ER", "-IR"], resp: 1, explica: "escrev**er** → termina en **-ER**: ele escreve, nós escrevemos." },
+      { tipo: "marcar", frase: "*dividir* es un verbo:", opciones: ["-AR", "-ER", "-IR"], resp: 2, explica: "divid**ir** → **-IR**: ele divide, nós dividimos." },
+      { tipo: "marcar", frase: "*cantar* es un verbo:", opciones: ["-AR", "-ER", "-IR"], resp: 0, explica: "cant**ar** → **-AR**: ele canta, nós cantamos." },
+      { tipo: "marcar", frase: "Ela ___ (escrever) uma carta.", opciones: ["escreve", "escreva", "escrevo"], resp: 0, explica: "-ER + ela → **-e**: escrev + e." },
+      { tipo: "marcar", frase: "Você ___ (cantar) muito bem.", opciones: ["canta", "cante", "canto"], resp: 0, explica: "-AR + você → **-a**: cant + a." },
+      { tipo: "marcar", frase: "Nós ___ (dividir) a conta.", opciones: ["dividimos", "dividemos", "dividamos"], resp: 0, explica: "-IR + nós → **-imos**." },
+      { tipo: "marcar", frase: "Nós ___ (vender) frutas.", opciones: ["vendemos", "vendimos", "vendamos"], resp: 0, explica: "-ER + nós → **-emos**." },
+      { tipo: "marcar", frase: "Eles ___ (falar) espanhol.", opciones: ["falam", "falan", "falem"], resp: 0, explica: "-AR + eles → **-am** (en español sería *-an*)." },
+      { tipo: "marcar", frase: "Nós ___ (viver) em Lima.", opciones: ["vivemos", "vivimos"], resp: 0, explica: "En portugués **viver** es -ER → **vivemos** (en español *vivimos*)." },
+      { tipo: "completar", frase: "Ela ___ água.", resp: ["bebe"], pista: "beber (-ER + ela)" },
+      { tipo: "completar", frase: "Você ___ inglês?", resp: ["fala"], pista: "falar (-AR + você)" },
+      { tipo: "completar", frase: "Eles ___ a porta.", resp: ["abrem"], pista: "abrir (-IR + eles)" },
+      { tipo: "completar", frase: "Eu ___ no parque.", resp: ["corro"], pista: "correr (eu → -o)" },
       { tipo: "completar", frase: "Eu ___ de segunda a sexta.", resp: ["trabalho"], pista: "trabalhar" },
       { tipo: "completar", frase: "Eles ___ no centro da cidade.", resp: ["trabalham"], pista: "trabalhar" },
       { tipo: "completar", frase: "A gente ___ de manhã.", resp: ["trabalha"], pista: "trabalhar (a gente = como ele)" },
@@ -1822,6 +1869,7 @@ const md = s => esc(s)
 const normalizar = s => s.toLowerCase().trim().replace(/[.!?¿¡,;:]+$/g, "").replace(/\s+/g, " ");
 const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
 const sinMd = s => String(s).replace(/\\?\*/g, "");
+const sinParentesis = s => s && s.replace(/\s*\([^)]*\)/g, "");   // las pistas entre paréntesis no se leen en voz alta
 const filaAudio = (pt, es, nota, quien, pr) => `
   <div class="fila" data-pt="${esc(pt)}" onclick="hablar(this.dataset.pt)">
     <button class="altavoz" aria-label="Escuchar">🔊</button>
@@ -2312,7 +2360,7 @@ function marcar(i, k) {
     else if (j === k) b.classList.add("mal");
     b.disabled = true;
   });
-  const oir = e.oir || (e.frase.includes("___") ? e.frase.replace("___", e.opciones[e.resp]) : null);
+  const oir = e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", e.opciones[e.resp]) : null);
   let msg = ok ? "✅ ¡Correcto!" : `❌ La correcta es: <strong>${esc(e.opciones[e.resp])}</strong>`;
   if (oir) msg += `<div class="pron">🗣️ ${esc(pron(oir))}</div>`;
   if (e.explica) msg += `<div class="explica">💡 ${md(e.explica)}</div>`;
@@ -2749,7 +2797,7 @@ function genBanco(banco) {
   const e = azar(banco);
   const correcta = e.o[e.r];
   const opciones = mezclar(e.o.slice());
-  const oir = e.f.includes("___") ? rellenar(e.f, correcta) : e.pt ? correcta : null;
+  const oir = sinParentesis(e.f.includes("___") ? rellenar(e.f, correcta) : e.pt ? correcta : null);
   return { clave: "banco-" + e.f, sub: e.s, pregunta: e.f, opciones, resp: opciones.indexOf(correcta), oir, explica: e.x,
            escribible: e.f.includes("___") && !correcta.includes("…") && !correcta.includes(" ") };
 }
@@ -2911,7 +2959,7 @@ function genCurso(lecciones) {
     const correcta = e.opciones[e.resp];
     const opciones = mezclar(e.opciones.slice());
     return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${l.titulo}`, pregunta: e.frase, opciones, resp: opciones.indexOf(correcta),
-             oir: e.oir || (e.frase.includes("___") ? e.frase.replace("___", correcta) : null), explica: e.explica };
+             oir: e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", correcta) : null), explica: e.explica };
   }
   if (!modoEscribir || e.resp.length !== 1) return null;   // los de completar solo en modo escribir
   return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${e.pista || l.titulo}`, pregunta: e.frase, soloEscribir: true,
