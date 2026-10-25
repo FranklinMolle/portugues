@@ -7,23 +7,56 @@
 <meta name="apple-mobile-web-app-title" content="Português">
 <meta name="theme-color" content="#0b7a3e">
 <title>Aprende Portugués Básico</title>
+<script>
+  // Aplica el tema antes de dibujar la página (evita el parpadeo blanco de noche)
+  document.documentElement.dataset.tema = localStorage.getItem("pt-tema") ||
+    (matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro");
+</script>
 <style>
   :root {
+    color-scheme: light;
     --verde: #0b7a3e;
     --verde-claro: #e6f4ec;
     --amarillo: #ffd23f;
     --amarillo-claro: #fff8e1;
-    --azul: #1d3c8f;
+    --azul: #1d3c8f;          /* texto azul */
+    --azul-fondo: #1d3c8f;    /* fondos azules con texto blanco */
     --texto: #1f2933;
     --gris: #6b7785;
     --fondo: #f5f7f6;
-    --blanco: #fff;
+    --tarjeta: #fff;          /* fondo de tarjetas */
+    --suave: #e3e8e5;         /* botones secundarios, pestañas */
+    --borde: #dde3e0;
+    --pron: #8a5a00;          /* guía de pronunciación */
+    --bien-fuerte: #c8ecd6;
+    --blanco: #fff;           /* texto sobre fondos de color */
     --error: #c62828;
     --error-claro: #fdecea;
     --casi: #e0a800;
     --casi-claro: #fff6d6;
     --radio: 14px;
   }
+  :root[data-tema="oscuro"] {
+    color-scheme: dark;
+    --verde: #12924d;
+    --verde-claro: #1c3328;
+    --amarillo-claro: #352d14;
+    --azul: #9db8ff;
+    --azul-fondo: #2b4a9e;
+    --texto: #e4ebe7;
+    --gris: #9aa8a0;
+    --fondo: #101613;
+    --tarjeta: #1b231f;
+    --suave: #2a3530;
+    --borde: #36433c;
+    --pron: #e8b864;
+    --bien-fuerte: #23573a;
+    --error: #ef6b6b;
+    --error-claro: #3b1e1e;
+    --casi: #f0c040;
+    --casi-claro: #3a3015;
+  }
+  a { color: var(--azul); }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -45,6 +78,10 @@
     background: rgba(255,255,255,.18); color: var(--blanco); border: 0;
     border-radius: 10px; padding: 8px 12px; font-size: .95rem; cursor: pointer;
   }
+  @media (max-width: 420px) {
+    header h1 { font-size: 1.05rem; white-space: nowrap; }
+    .btn-icono { padding: 7px 9px; font-size: .88rem; }
+  }
   .progreso { margin-top: 10px; font-size: .85rem; }
   .barra { background: rgba(255,255,255,.25); border-radius: 99px; height: 8px; margin-top: 5px; overflow: hidden; }
   .barra > div { background: var(--amarillo); height: 100%; transition: width .4s; }
@@ -54,7 +91,7 @@
   .seccion:first-child { margin-top: 0; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   .tarjeta-leccion {
-    background: var(--blanco); border-radius: var(--radio); padding: 16px 14px;
+    background: var(--tarjeta); border-radius: var(--radio); padding: 16px 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,.08); cursor: pointer; position: relative;
     border: 2px solid transparent; transition: transform .1s;
   }
@@ -67,25 +104,25 @@
     position: absolute; top: 10px; right: 10px; background: var(--verde); color: var(--blanco);
     font-size: .75rem; border-radius: 99px; padding: 2px 8px;
   }
-  .repaso { background: var(--azul); color: var(--blanco); }
+  .repaso { background: var(--azul-fondo); color: var(--blanco); }
   .repaso small { color: #cfd8f5; }
 
   .volver { background: none; border: 0; color: var(--verde); font-size: 1rem; padding: 4px 0; cursor: pointer; }
   .intro { background: var(--verde-claro); border-radius: var(--radio); padding: 12px 14px; margin: 10px 0 14px; font-size: .95rem; }
   .pestanas {
     display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px;
-    background: #e3e8e5; padding: 4px; border-radius: 12px; margin-bottom: 14px;
+    background: var(--suave); padding: 4px; border-radius: 12px; margin-bottom: 14px;
   }
   .pestanas button {
     border: 0; background: none; padding: 7px 2px; border-radius: 9px; cursor: pointer;
     color: var(--texto); font-size: .72rem; display: flex; flex-direction: column; align-items: center; gap: 1px;
   }
   .pestanas button span { font-size: 1.15rem; }
-  .pestanas button.activa { background: var(--blanco); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .pestanas button.activa { background: var(--tarjeta); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
   .lista { display: flex; flex-direction: column; gap: 8px; }
   .fila {
-    display: flex; align-items: center; gap: 12px; background: var(--blanco);
+    display: flex; align-items: center; gap: 12px; background: var(--tarjeta);
     border-radius: 12px; padding: 12px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.06);
   }
   .fila:active { background: var(--verde-claro); }
@@ -96,12 +133,12 @@
   .fila .quien { font-size: .78rem; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: .5px; }
   .fila .pt { font-weight: 600; font-size: 1.05rem; }
   .fila .es { color: var(--gris); }
-  .pron { font-size: .88rem; color: #8a5a00; font-style: italic; }
+  .pron { font-size: .88rem; color: var(--pron); font-style: italic; }
   .nota { font-size: .82rem; color: var(--azul); margin-top: 2px; }
 
   /* Teoría */
   .apunte {
-    background: var(--blanco); border-radius: var(--radio); padding: 14px 16px;
+    background: var(--tarjeta); border-radius: var(--radio); padding: 14px 16px;
     margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08);
   }
   .apunte h3 { margin: 0 0 6px; color: var(--verde); font-size: 1.05rem; }
@@ -113,7 +150,7 @@
   .apunte .fila .pt { font-size: 1rem; }
   .apunte .altavoz { width: 34px; height: 34px; font-size: .95rem; }
   .etiqueta-extra {
-    font-size: .68rem; background: var(--azul); color: var(--blanco); border-radius: 99px;
+    font-size: .68rem; background: var(--azul-fondo); color: var(--blanco); border-radius: 99px;
     padding: 2px 8px; margin-left: 6px; vertical-align: middle; font-weight: 600; white-space: nowrap;
   }
   .porque, .ojo, .consejo { border-radius: 8px; padding: 8px 12px; margin-top: 10px; font-size: .92rem; }
@@ -124,7 +161,7 @@
   .ojo { background: var(--error-claro); border-left: 4px solid var(--error); }
   .tabla-wrap { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: .92rem; margin: 6px 0; }
-  th, td { border: 1px solid #dde3e0; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th, td { border: 1px solid var(--borde); padding: 6px 8px; text-align: left; vertical-align: top; }
   th { background: var(--verde-claro); }
   @media (max-width: 480px) {
     .apunte { padding: 12px 10px; }
@@ -134,7 +171,7 @@
 
   /* Tarjetas */
   .flash {
-    background: var(--blanco); border-radius: 20px; min-height: 230px; padding: 24px;
+    background: var(--tarjeta); border-radius: 20px; min-height: 230px; padding: 24px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,.1); cursor: pointer; user-select: none;
   }
@@ -147,16 +184,16 @@
     border: 0; border-radius: 12px; padding: 12px 18px; font-size: 1rem; cursor: pointer;
     background: var(--verde); color: var(--blanco); font-weight: 600;
   }
-  .btn.sec { background: #e3e8e5; color: var(--texto); }
+  .btn.sec { background: var(--suave); color: var(--texto); }
   .btn.peq { padding: 8px 14px; font-size: .9rem; }
   .contador { text-align: center; color: var(--gris); margin-top: 10px; font-size: .9rem; }
 
   /* Ejercicios */
   .marcador {
-    background: var(--azul); color: var(--blanco); border-radius: 12px;
+    background: var(--azul-fondo); color: var(--blanco); border-radius: 12px;
     padding: 10px 14px; margin-bottom: 12px; font-size: .92rem;
   }
-  .ej { background: var(--blanco); border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .ej { background: var(--tarjeta); border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
   .ej .tipo { font-size: .8rem; color: var(--gris); margin-bottom: 4px; }
   .ej .frase { font-size: 1.1rem; line-height: 2.1; }
   .ej .trad { font-size: .85rem; color: var(--gris); }
@@ -168,7 +205,7 @@
     border-radius: 6px 6px 0 0; padding: 3px 6px; margin: 0 3px; max-width: 100%;
   }
   input.hueco:disabled { opacity: 1; -webkit-text-fill-color: var(--texto); }
-  input.hueco.bien { background: #c8ecd6; }
+  input.hueco.bien { background: var(--bien-fuerte); }
   input.hueco.mal { border-color: var(--error); background: var(--error-claro); }
   input.hueco.casi { border-color: var(--casi); background: var(--casi-claro); }
   .res { margin-top: 8px; font-size: .95rem; }
@@ -176,18 +213,18 @@
   .res .aviso { color: var(--casi); }
 
   /* Quiz */
-  .pregunta { background: var(--blanco); border-radius: var(--radio); padding: 18px; text-align: center; margin-bottom: 12px; }
+  .pregunta { background: var(--tarjeta); border-radius: var(--radio); padding: 18px; text-align: center; margin-bottom: 12px; }
   .pregunta .tipo { color: var(--gris); font-size: .85rem; }
   .pregunta .grande { font-size: 1.5rem; font-weight: 700; margin: 6px 0; }
   .opciones { display: flex; flex-direction: column; gap: 8px; }
   .opcion {
-    background: var(--blanco); border: 2px solid #dde3e0; border-radius: 12px; padding: 14px;
+    background: var(--tarjeta); border: 2px solid var(--borde); border-radius: 12px; padding: 14px;
     font-size: 1rem; text-align: left; cursor: pointer; color: var(--texto);
   }
   .opcion:disabled { opacity: 1; color: var(--texto); cursor: default; }
   .opcion.bien { border-color: var(--verde); background: var(--verde-claro); }
   .opcion.mal { border-color: var(--error); background: var(--error-claro); }
-  .resultado { text-align: center; background: var(--blanco); border-radius: var(--radio); padding: 26px 18px; }
+  .resultado { text-align: center; background: var(--tarjeta); border-radius: var(--radio); padding: 26px 18px; }
   .resultado .pct { font-size: 3rem; font-weight: 800; color: var(--verde); }
   footer { text-align: center; color: var(--gris); font-size: .8rem; margin-top: 30px; }
 
@@ -201,13 +238,13 @@
   .practica-card small { opacity: .9; }
   .chips { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 6px; margin: 10px 0 4px; -webkit-overflow-scrolling: touch; }
   .chip {
-    flex: none; border: 0; border-radius: 99px; padding: 8px 12px; background: #e3e8e5;
+    flex: none; border: 0; border-radius: 99px; padding: 8px 12px; background: var(--suave);
     color: var(--texto); font-size: .85rem; cursor: pointer;
   }
   .chip.activa { background: var(--verde); color: var(--blanco); font-weight: 600; }
   .modo { display: flex; gap: 6px; margin-bottom: 10px; }
   .stats {
-    display: flex; justify-content: space-between; background: var(--azul); color: var(--blanco);
+    display: flex; justify-content: space-between; background: var(--azul-fondo); color: var(--blanco);
     border-radius: 12px; padding: 9px 14px; font-size: .9rem; margin-bottom: 10px;
   }
   .btn-escuchar {
@@ -216,7 +253,7 @@
   }
   .escribir { display: flex; gap: 8px; align-items: center; }
   .escribir input.hueco { flex: 1; font-size: 18px; padding: 10px; border-radius: 10px 10px 0 0; }
-  .pr-res { background: var(--blanco); border-radius: 12px; padding: 12px 14px; margin-top: 10px; }
+  .pr-res { background: var(--tarjeta); border-radius: 12px; padding: 12px 14px; margin-top: 10px; }
   .pr-res .frase-oir { font-weight: 600; margin-top: 6px; }
   .pr-res .trad { color: var(--gris); font-size: .9rem; }
   .btn.ancho { width: 100%; padding: 16px; font-size: 1.1rem; }
@@ -227,6 +264,7 @@
   <div class="barra-top">
     <h1>🇧🇷 Aprende Portugués</h1>
     <button class="btn-icono" id="btnVelocidad" onclick="cambiarVelocidad()">🐇 Normal</button>
+    <button class="btn-icono" id="btnTema" onclick="cambiarTema()" aria-label="Cambiar tema">🌙</button>
   </div>
   <div class="progreso">
     <span id="txtProgreso"></span>
@@ -1941,6 +1979,19 @@ function pintarVelocidad() {
   document.getElementById("btnVelocidad").textContent = velocidadLenta ? "🐢 Lento" : "🐇 Normal";
 }
 
+// ---------- tema claro / oscuro ----------
+function cambiarTema() {
+  const nuevo = document.documentElement.dataset.tema === "oscuro" ? "claro" : "oscuro";
+  document.documentElement.dataset.tema = nuevo;
+  localStorage.setItem("pt-tema", nuevo);
+  pintarTema();
+}
+function pintarTema() {
+  const oscuro = document.documentElement.dataset.tema === "oscuro";
+  document.getElementById("btnTema").textContent = oscuro ? "☀️" : "🌙";
+  document.querySelector('meta[name="theme-color"]').content = oscuro ? "#0a5c2f" : "#0b7a3e";
+}
+
 // ---------- progreso ----------
 function guardarNota(id, pct) {
   if (pct > (progreso[id] || 0)) {
@@ -3021,6 +3072,7 @@ function pintarPractica() {
 
 // ---------- inicio ----------
 pintarVelocidad();
+pintarTema();
 pintarProgreso();
 ruta();
 </script>
