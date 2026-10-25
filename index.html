@@ -12,6 +12,7 @@
     --verde: #0b7a3e;
     --verde-claro: #e6f4ec;
     --amarillo: #ffd23f;
+    --amarillo-claro: #fff8e1;
     --azul: #1d3c8f;
     --texto: #1f2933;
     --gris: #6b7785;
@@ -19,6 +20,8 @@
     --blanco: #fff;
     --error: #c62828;
     --error-claro: #fdecea;
+    --casi: #e0a800;
+    --casi-claro: #fff6d6;
     --radio: 14px;
   }
   * { box-sizing: border-box; }
@@ -47,6 +50,8 @@
   .barra > div { background: var(--amarillo); height: 100%; transition: width .4s; }
   main { max-width: 720px; margin: 0 auto; padding: 16px 14px 60px; }
 
+  .seccion { font-size: 1.05rem; margin: 18px 0 10px; }
+  .seccion:first-child { margin-top: 0; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   .tarjeta-leccion {
     background: var(--blanco); border-radius: var(--radio); padding: 16px 14px;
@@ -57,7 +62,7 @@
   .tarjeta-leccion.hecha { border-color: var(--verde); }
   .tarjeta-leccion .ico { font-size: 2rem; }
   .tarjeta-leccion h3 { margin: 6px 0 2px; font-size: 1rem; }
-  .tarjeta-leccion small { color: var(--gris); }
+  .tarjeta-leccion small { color: var(--gris); display: block; }
   .insignia {
     position: absolute; top: 10px; right: 10px; background: var(--verde); color: var(--blanco);
     font-size: .75rem; border-radius: 99px; padding: 2px 8px;
@@ -67,11 +72,15 @@
 
   .volver { background: none; border: 0; color: var(--verde); font-size: 1rem; padding: 4px 0; cursor: pointer; }
   .intro { background: var(--verde-claro); border-radius: var(--radio); padding: 12px 14px; margin: 10px 0 14px; font-size: .95rem; }
-  .pestanas { display: flex; gap: 6px; background: #e3e8e5; padding: 4px; border-radius: 12px; margin-bottom: 14px; }
-  .pestanas button {
-    flex: 1; border: 0; background: none; padding: 10px 4px; border-radius: 9px;
-    font-size: .95rem; cursor: pointer; color: var(--texto);
+  .pestanas {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px;
+    background: #e3e8e5; padding: 4px; border-radius: 12px; margin-bottom: 14px;
   }
+  .pestanas button {
+    border: 0; background: none; padding: 7px 2px; border-radius: 9px; cursor: pointer;
+    color: var(--texto); font-size: .72rem; display: flex; flex-direction: column; align-items: center; gap: 1px;
+  }
+  .pestanas button span { font-size: 1.15rem; }
   .pestanas button.activa { background: var(--blanco); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
   .lista { display: flex; flex-direction: column; gap: 8px; }
@@ -84,10 +93,46 @@
     flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0;
     background: var(--verde-claro); font-size: 1.1rem; cursor: pointer;
   }
+  .fila .quien { font-size: .78rem; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: .5px; }
   .fila .pt { font-weight: 600; font-size: 1.05rem; }
   .fila .es { color: var(--gris); }
-  .fila .nota { font-size: .82rem; color: var(--azul); margin-top: 2px; }
+  .pron { font-size: .88rem; color: #8a5a00; font-style: italic; }
+  .nota { font-size: .82rem; color: var(--azul); margin-top: 2px; }
 
+  /* Teoría */
+  .apunte {
+    background: var(--blanco); border-radius: var(--radio); padding: 14px 16px;
+    margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .apunte h3 { margin: 0 0 6px; color: var(--verde); font-size: 1.05rem; }
+  .apunte p { margin: 6px 0; }
+  .apunte ul { margin: 6px 0; padding-left: 20px; }
+  .apunte li { margin: 3px 0; }
+  .apunte .lista { margin-top: 8px; gap: 6px; }
+  .apunte .fila { box-shadow: none; background: var(--fondo); padding: 8px 10px; }
+  .apunte .fila .pt { font-size: 1rem; }
+  .apunte .altavoz { width: 34px; height: 34px; font-size: .95rem; }
+  .etiqueta-extra {
+    font-size: .68rem; background: var(--azul); color: var(--blanco); border-radius: 99px;
+    padding: 2px 8px; margin-left: 6px; vertical-align: middle; font-weight: 600; white-space: nowrap;
+  }
+  .porque, .ojo, .consejo { border-radius: 8px; padding: 8px 12px; margin-top: 10px; font-size: .92rem; }
+  .porque { background: var(--amarillo-claro); border-left: 4px solid var(--amarillo); }
+  .consejo { background: var(--verde-claro); border-left: 4px solid var(--verde); }
+  .consejo ul { margin: 4px 0 0; }
+  td .pron { font-size: .85rem; }
+  .ojo { background: var(--error-claro); border-left: 4px solid var(--error); }
+  .tabla-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; margin: 6px 0; }
+  th, td { border: 1px solid #dde3e0; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--verde-claro); }
+  @media (max-width: 480px) {
+    .apunte { padding: 12px 10px; }
+    table { font-size: .82rem; }
+    th, td { padding: 5px 5px; }
+  }
+
+  /* Tarjetas */
   .flash {
     background: var(--blanco); border-radius: 20px; min-height: 230px; padding: 24px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -97,13 +142,40 @@
   .flash .ayuda { color: var(--gris); font-size: .85rem; margin-top: 14px; }
   .flash.volteada { background: var(--verde-claro); }
   .controles { display: flex; gap: 8px; margin-top: 14px; justify-content: center; flex-wrap: wrap; }
+  .controles.izq { justify-content: flex-start; margin-top: 10px; }
   .btn {
     border: 0; border-radius: 12px; padding: 12px 18px; font-size: 1rem; cursor: pointer;
     background: var(--verde); color: var(--blanco); font-weight: 600;
   }
   .btn.sec { background: #e3e8e5; color: var(--texto); }
+  .btn.peq { padding: 8px 14px; font-size: .9rem; }
   .contador { text-align: center; color: var(--gris); margin-top: 10px; font-size: .9rem; }
 
+  /* Ejercicios */
+  .marcador {
+    background: var(--azul); color: var(--blanco); border-radius: 12px;
+    padding: 10px 14px; margin-bottom: 12px; font-size: .92rem;
+  }
+  .ej { background: var(--blanco); border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .ej .tipo { font-size: .8rem; color: var(--gris); margin-bottom: 4px; }
+  .ej .frase { font-size: 1.1rem; line-height: 2.1; }
+  .ej .trad { font-size: .85rem; color: var(--gris); }
+  .ej .opciones { margin-top: 8px; }
+  .hueco-txt { color: var(--verde); font-weight: 700; letter-spacing: 1px; }
+  input.hueco {
+    font-size: 16px; font-family: inherit; color: var(--texto); text-align: center;
+    border: 0; border-bottom: 2px solid var(--verde); background: var(--verde-claro);
+    border-radius: 6px 6px 0 0; padding: 3px 6px; margin: 0 3px; max-width: 100%;
+  }
+  input.hueco:disabled { opacity: 1; -webkit-text-fill-color: var(--texto); }
+  input.hueco.bien { background: #c8ecd6; }
+  input.hueco.mal { border-color: var(--error); background: var(--error-claro); }
+  input.hueco.casi { border-color: var(--casi); background: var(--casi-claro); }
+  .res { margin-top: 8px; font-size: .95rem; }
+  .res .explica { color: var(--azul); font-size: .88rem; margin-top: 4px; }
+  .res .aviso { color: var(--casi); }
+
+  /* Quiz */
   .pregunta { background: var(--blanco); border-radius: var(--radio); padding: 18px; text-align: center; margin-bottom: 12px; }
   .pregunta .tipo { color: var(--gris); font-size: .85rem; }
   .pregunta .grande { font-size: 1.5rem; font-weight: 700; margin: 6px 0; }
@@ -112,6 +184,7 @@
     background: var(--blanco); border: 2px solid #dde3e0; border-radius: 12px; padding: 14px;
     font-size: 1rem; text-align: left; cursor: pointer; color: var(--texto);
   }
+  .opcion:disabled { opacity: 1; color: var(--texto); cursor: default; }
   .opcion.bien { border-color: var(--verde); background: var(--verde-claro); }
   .opcion.mal { border-color: var(--error); background: var(--error-claro); }
   .resultado { text-align: center; background: var(--blanco); border-radius: var(--radio); padding: 26px 18px; }
@@ -134,179 +207,836 @@
 
 <script>
 // ---------------------------------------------------------------
-// CONTENIDO: para agregar palabras, añade objetos {pt, es, n}
-// pt = portugués, es = español, n = nota opcional
+// CONTENIDO
+// Cada lección tiene:
+//   grupo:      "curso" (de mis clases) o "extra" (práctica adicional)
+//   apuntes:    bloques de teoría {t, p, tabla: {cab, filas}, lista, ej: [[pt, es]], dialogo: [[quién, pt, es]],
+//               porque, ojo, extra: true}   ·  **negrita**  *cursiva*
+//   items:      vocabulario {pt, es, n}  (n = nota opcional)
+//   ejercicios: {tipo: "completar", frase: "Eu ___ estudante.", resp: ["sou"], pista, trad, explica}
+//               {tipo: "marcar", frase: "...", opciones: [...], resp: índice (desde 0), explica, oir}
+//               En "completar", cada ___ es un hueco y resp lleva una respuesta por hueco
+//               (o una lista de respuestas válidas: [["bem", "bom"]]).
 // ---------------------------------------------------------------
 const LECCIONES = [
+  // =============================== MI CURSO ===============================
   {
-    id: "pronuncia", icono: "🗣️", titulo: "Pronunciación",
-    intro: "El portugués de Brasil se parece al español, pero tiene sonidos nuevos. Toca cada palabra para escucharla y repítela en voz alta.",
+    id: "alfabeto", grupo: "curso", icono: "🔤", titulo: "Alfabeto y pronunciación",
+    intro: "Antes de hablar hay que reconocer los sonidos. El portugués de Brasil se escribe parecido al español, pero varias letras suenan distinto.",
+    apuntes: [
+      { t: "Cómo leer la pronunciación 🗣️", extra: true,
+        p: "En toda la página, debajo de cada palabra en portugués verás cómo se pronuncia, escrito para que lo leas como en español:",
+        tabla: { cab: ["Si ves...", "Pronúncialo como...", "Ejemplo"], filas: [
+          ["**zh**", "la *j* del francés o la *y* argentina", "janela → *zhanéla*"],
+          ["**sh**", "la *sh* del inglés (*show*)", "chave → *shávi*"],
+          ["**j**", "una *j* suave, casi aspirada", "Rio → *Jíu*"],
+          ["**dyi** / **chi**", "*de, di* / *te, ti* del portugués", "cidade → *sidádyi*, leite → *léichi*"],
+          ["**lli** / **ñ**", "*lh* / *nh*", "filho → *fílliu*, vinho → *víñu*"],
+          ["**aun, ain, oin, ein**", "vocales nasales (el aire sale también por la nariz)", "não → *naun*, homem → *ómein*"],
+          ["**z**", "una *s* que zumba (como una abeja)", "casa → *káza*"],
+          ["tilde (á, é...)", "la sílaba que suena más fuerte", "obrigado → *obrigádu*"]] },
+        porque: "Es una **aproximación** para ayudarte a leer: la referencia real es el audio 🔊. Escucha siempre y repite." },
+      { t: "O alfabeto",
+        p: "Tiene 26 letras, como el español, pero **sin la ñ** (se escribe **nh**). Así se llaman las letras:",
+        tabla: { cab: ["Letra", "Nombre", "Letra", "Nombre"], filas: [
+          ["A", "á", "N", "êni"], ["B", "bê", "O", "ó"], ["C", "cê", "P", "pê"], ["D", "dê", "Q", "quê"],
+          ["E", "é", "R", "érre (éje)"], ["F", "éfi", "S", "ési"], ["G", "gê", "T", "tê"], ["H", "agá", "U", "u"],
+          ["I", "i", "V", "vê"], ["J", "jóta", "W", "dáblio"], ["K", "cá", "X", "xis"], ["L", "éli", "Y", "ípsilon"],
+          ["M", "êmi", "Z", "zê"], ["", "", "", ""]] },
+        ej: [["Como se escreve o seu nome?", "¿Cómo se escribe tu nombre?"], ["agá", "H"], ["jota", "J"], ["dáblio", "W"], ["xis", "X"], ["ípsilon", "Y"]],
+        porque: "Sirve para **deletrear** tu nombre, apellido o correo. En Brasil te lo van a preguntar mucho: *Como se escreve?* (¿Cómo se escribe?)." },
+      { t: "Fonética: los sonidos peculiares",
+        p: "Estos son los sonidos que más cambian respecto al español:",
+        tabla: { cab: ["Se escribe", "Suena como", "Ejemplo"], filas: [
+          ["j, ge, gi", "**zh** (la j del francés)", "**J**úlio é um jovem **gi**gante."],
+          ["de, di", "**dyi** (como *yi*)", "Bom **di**a, Cláu**di**a."],
+          ["r inicial, rr", "**j** suave", "O **R**ei; o ca**rr**o"],
+          ["te, ti", "**chi**", "O lei**te** está quen**te**."],
+          ["ch, x", "**sh** del inglés", "Ela toma **ch**á na **x**ícara."],
+          ["lh", "**lli** (una 'li' rápida)", "O mo**lh**o fica me**lh**or com a**lh**o."],
+          ["ce, ci, s, ss, ç", "**s**", "A**ç**úcar ou ado**ç**ante?"],
+          ["nh", "**ñ**", "Eu so**nh**ei com a Nicole."],
+          ["z, s entre vocales", "**z** zumbada", "Teresa tem uma bele**z**a de ca**s**a."],
+          ["v", "**v** (dientes sobre el labio)", "**V**amos **v**iajar."]] },
+        ej: [["Júlio é um jovem gigante.", "Julio es un joven gigante."], ["Bom dia, Cláudia.", "Buen día, Claudia."],
+             ["A verdade dói.", "La verdad duele."], ["O carro daquele cara é caro.", "El auto de ese tipo es caro."],
+             ["O leite está quente.", "La leche está caliente."], ["Acho que vai chover.", "Creo que va a llover."],
+             ["O molho fica melhor com alho.", "La salsa queda mejor con ajo."], ["Não tenho dinheiro nenhum.", "No tengo nada de dinero."],
+             ["Vamos viajar para Nova Iorque.", "Vamos a viajar a Nueva York."]],
+        porque: "En español la **b** y la **v** suenan igual, pero en portugués **no**: la v vibra con los dientes sobre el labio inferior. Por eso *vinho* y *bom* empiezan distinto." },
+      { t: "El uso de la Ç (cedilha)",
+        p: "La **ç** solo va antes de **a, o, u**, y hace que la c suene **/s/** en vez de **/k/**:",
+        ej: [["cabeça", "cabeza"], ["pescoço", "cuello"], ["açúcar", "azúcar"], ["coração", "corazón"]],
+        porque: "Sin cedilla, **ca, co, cu** suenan *ka, ko, ku*. Antes de **e, i** no hace falta porque la c ya suena s (*cidade, cebola*). Por eso **nunca** verás *çe* ni *çi*." },
+      { t: "Sonidos nasales",
+        p: "La **~** (til) y las terminaciones **-am, -em** hacen que el aire salga también por la nariz:",
+        tabla: { cab: ["Escritura", "Ejemplos"], filas: [
+          ["ão, -am", "mão, São Paulo, foram, falam"], ["ãe, ães", "mãe, pães"], ["õe, ões", "põe, limões, canções"],
+          ["-em, -ens", "jovem, também, homem"], ["ui", "muito (suena *muinto*)"]] },
+        ej: [["A mãe não está.", "La madre no está."], ["Põe mais três limões verdes.", "Pon tres limones verdes más."],
+             ["Ele é um homem de bem.", "Él es un hombre de bien."], ["São amigos do coração.", "Son amigos del alma."]],
+        consejos: ["En **homem** la *h* no suena y el final **-em** es nasal: *ómein*. Lo mismo en *também* (*tambéin*) y *jovem* (*zhóvein*).",
+                   "La **h** al inicio nunca suena: *hoje* → *ózhi*, *hora* → *óra*."],
+        porque: "Muchos verbos en plural terminan en **-am** (eles falam, eles gostam) y suenan nasales, como *fálaun*. Si los pronuncias con una m normal, cuesta entenderte." },
+      { t: "La O: cerrada, abierta y débil",
+        tabla: { cab: ["Sonido", "Ejemplo"], filas: [
+          ["**ô** cerrada", "Meu av**ô** morreu novo. (abuelo)"], ["**ó** abierta", "Minha av**ó** não tomava sol. (abuela)"],
+          ["o final débil → **u**", "O sapat**o** d**o** Manuel. (*sapatu du*)"], ["om, on nasal", "**On**tem o s**om** estava b**om**."]] },
+        porque: "El acento cambia el significado: **avô** (abuelo) y **avó** (abuela) solo se diferencian en si la o es cerrada o abierta." }
+    ],
     items: [
-      { pt: "não", es: "no", n: "ão = suena 'aun' por la nariz" },
-      { pt: "pão", es: "pan", n: "ão nasal, como 'paun'" },
-      { pt: "mãe", es: "madre", n: "ãe = 'ain' nasal" },
-      { pt: "lições", es: "lecciones", n: "õe = 'oin' nasal" },
-      { pt: "filho", es: "hijo", n: "lh = como 'li' rápido: 'filio'" },
-      { pt: "vinho", es: "vino", n: "nh = ñ: 'viño'" },
-      { pt: "coração", es: "corazón", n: "ç = s" },
-      { pt: "Rio", es: "Río", n: "r al inicio = j suave" },
-      { pt: "carro", es: "carro / auto", n: "rr = j suave: 'cajo'" },
-      { pt: "leite", es: "leche", n: "te al final suena 'chi': 'leichi'" },
-      { pt: "cidade", es: "ciudad", n: "de al final suena 'yi': 'sidadyi'" },
-      { pt: "obrigado", es: "gracias", n: "o al final suena 'u': 'obrigadu'" },
-      { pt: "casa", es: "casa", n: "s entre vocales suena 'z' zumbando" },
-      { pt: "chave", es: "llave", n: "ch = 'sh' de show" },
-      { pt: "janela", es: "ventana", n: "j = 'y' argentina / 'zh'" }
+      { pt: "não", es: "no", n: "ão nasal: 'naun'" }, { pt: "mãe", es: "madre", n: "ãe nasal" },
+      { pt: "mão", es: "mano" }, { pt: "filho", es: "hijo", n: "lh = 'li' rápida" },
+      { pt: "vinho", es: "vino", n: "nh = ñ" }, { pt: "coração", es: "corazón", n: "ç = s" },
+      { pt: "cabeça", es: "cabeza" }, { pt: "pescoço", es: "cuello" }, { pt: "açúcar", es: "azúcar" },
+      { pt: "chave", es: "llave", n: "ch = sh" }, { pt: "xícara", es: "taza", n: "x = sh" },
+      { pt: "janela", es: "ventana", n: "j = zh" }, { pt: "leite", es: "leche", n: "te = chi" },
+      { pt: "dia", es: "día", n: "di = dyi" }, { pt: "carro", es: "auto / carro", n: "rr = j suave" },
+      { pt: "alho", es: "ajo" }, { pt: "muito", es: "mucho", n: "suena 'muinto'" },
+      { pt: "avô", es: "abuelo", n: "ô cerrada" }, { pt: "avó", es: "abuela", n: "ó abierta" }
+    ],
+    ejercicios: [
+      { tipo: "marcar", frase: "¿Cómo se llama la letra **H**?", opciones: ["agá", "ache", "rê"], resp: 0, oir: "agá" },
+      { tipo: "marcar", frase: "La letra **X** se llama:", opciones: ["equis", "xis", "shi"], resp: 1, oir: "xis" },
+      { tipo: "marcar", frase: "La letra **J** se llama:", opciones: ["jóta", "gê", "ji"], resp: 0, oir: "jota" },
+      { tipo: "marcar", frase: "En *dia*, la **d** suena:", opciones: ["d", "dyi (yi)", "t"], resp: 1, oir: "dia" },
+      { tipo: "marcar", frase: "En *quente*, el **te** final suena:", opciones: ["te", "ti", "chi"], resp: 2, oir: "quente" },
+      { tipo: "marcar", frase: "En *chá* y *xícara*, la **ch** y la **x** suenan:", opciones: ["ch de chocolate", "sh del inglés", "k"], resp: 1, oir: "chá, xícara" },
+      { tipo: "marcar", frase: "La **rr** de *carro* suena como:", opciones: ["r fuerte del español", "j suave"], resp: 1, oir: "carro" },
+      { tipo: "marcar", frase: "¿Cuál está bien escrita?", opciones: ["cabeça", "cabeca", "cabesa"], resp: 0,
+        explica: "La **ç** hace que la c suene s antes de **a**." },
+      { tipo: "marcar", frase: "¿Cuál está bien escrita?", opciones: ["çidade", "cidade"], resp: 1,
+        explica: "Antes de **e, i** la c ya suena s: nunca se escribe *çe* ni *çi*." },
+      { tipo: "marcar", frase: "*muito* se pronuncia:", opciones: ["muito (tal cual)", "muinto (nasal)"], resp: 1, oir: "muito" },
+      { tipo: "completar", frase: "___", resp: ["coração"], pista: "Escribe 'corazón' en portugués" },
+      { tipo: "completar", frase: "___", resp: ["açúcar"], pista: "Escribe 'azúcar' en portugués" },
+      { tipo: "completar", frase: "___", resp: ["mão"], pista: "Escribe 'mano' en portugués" },
+      { tipo: "completar", frase: "Minha ___ não tomava sol.", resp: ["avó"], pista: "abuela (o abierta)" },
+      { tipo: "completar", frase: "Meu ___ morreu novo.", resp: ["avô"], pista: "abuelo (o cerrada)" }
     ]
   },
   {
-    id: "saludos", icono: "👋", titulo: "Saludos",
-    intro: "En Brasil se usa mucho 'Oi' (hola informal) y 'Tudo bem?' (¿todo bien?).",
+    id: "saludos", grupo: "curso", icono: "👋", titulo: "Saludos (Cumprimentos)",
+    intro: "Los saludos cambian según la hora y la confianza. Son lo primero que vas a usar en cualquier conversación.",
+    apuntes: [
+      { t: "Cumprimentos",
+        ej: [["Bom dia!", "¡Buenos días!"], ["Boa tarde!", "¡Buenas tardes!"], ["Boa noite!", "¡Buenas noches!"],
+             ["Olá! Como vai?", "Hola, ¿cómo está(s)?"], ["Oi! Tudo bem?", "¡Hola! ¿Todo bien?"],
+             ["Tudo bem, obrigado.", "Todo bien, gracias."], ["Até amanhã!", "¡Hasta mañana!"], ["Até logo!", "¡Hasta luego!"]],
+        porque: "**Bom** va con *dia* (masculino) y **Boa** con *tarde* y *noite* (femeninos). Es la misma concordancia que *bueno / buena*." },
+      { t: "¿Cuándo uso cada uno?",
+        lista: ["**Bom dia** → hasta el mediodía", "**Boa tarde** → del mediodía hasta que oscurece",
+                "**Boa noite** → de noche; sirve para **saludar y para despedirse**",
+                "**Oi / Tudo bem?** → informal (amigos, compañeros)", "**Olá / Como vai?** → un poco más formal"] },
+      { t: "Obrigado / Obrigada",
+        p: "Se usa para agradecer. Los **hombres** dicen **obrigado** y las **mujeres** dicen **obrigada**.",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["Obrigado(a)", "Gracias"], ["Muito obrigado(a)", "Muchas gracias"], ["De nada / Por nada", "De nada"]] },
+        porque: "*Obrigado* significa literalmente 'obligado': quedo obligado contigo por el favor. Por eso concuerda con **quien agradece**, no con quien recibe las gracias." },
+      { t: "Primer encuentro: preguntas y expresiones",
+        ej: [["Como você se chama?", "¿Cómo te llamas?"], ["Qual é o seu nome?", "¿Cuál es tu nombre?"],
+             ["De onde você é?", "¿De dónde eres?"], ["Qual é a sua profissão?", "¿A qué te dedicas?"],
+             ["Prazer em conhecê-lo!", "¡Encantado de conocerte! (a un hombre)"], ["Prazer em conhecê-la!", "¡Encantado de conocerte! (a una mujer)"],
+             ["O prazer é meu!", "¡El gusto es mío!"]],
+        porque: "**conhecê-lo** se le dice a un hombre y **conhecê-la** a una mujer: *lo / la* es la persona que conoces. Si no quieres complicarte, **Muito prazer!** sirve para todos." },
+      { t: "Diálogo: Robert y Carlos",
+        dialogo: [["Robert", "Bom dia!", "¡Buenos días!"], ["Carlos", "Bom dia! Qual é o seu nome?", "¡Buenos días! ¿Cuál es tu nombre?"],
+                  ["Robert", "Meu nome é Robert. Prazer em conhecê-lo!", "Me llamo Robert. ¡Encantado de conocerte!"],
+                  ["Carlos", "Meu nome é Carlos. O prazer é meu!", "Me llamo Carlos. ¡El gusto es mío!"],
+                  ["Robert", "De onde você é, Carlos?", "¿De dónde eres, Carlos?"],
+                  ["Carlos", "Eu sou carioca, sou do Rio de Janeiro. E você?", "Soy carioca, soy de Río de Janeiro. ¿Y tú?"],
+                  ["Robert", "Eu sou de Brighton, sou inglês.", "Soy de Brighton, soy inglés."]],
+        porque: "**carioca** = persona de la ciudad de Río de Janeiro. Fíjate en **do** Rio (de + o): Rio lleva artículo, Brighton no." },
+      { t: "Si no entiendes", extra: true,
+        ej: [["Desculpa, não entendi.", "Perdón, no entendí."], ["Pode repetir, por favor?", "¿Puedes repetir, por favor?"],
+             ["Fala mais devagar, por favor.", "Habla más despacio, por favor."]] }
+    ],
     items: [
-      { pt: "Olá", es: "Hola" },
-      { pt: "Oi", es: "Hola (informal)" },
-      { pt: "Bom dia", es: "Buenos días" },
-      { pt: "Boa tarde", es: "Buenas tardes" },
-      { pt: "Boa noite", es: "Buenas noches" },
-      { pt: "Tudo bem?", es: "¿Todo bien? / ¿Qué tal?" },
-      { pt: "Tudo bom", es: "Todo bien", n: "Respuesta típica a 'Tudo bem?'" },
-      { pt: "Como vai?", es: "¿Cómo te va?" },
-      { pt: "Tchau", es: "Chau / Adiós" },
-      { pt: "Até logo", es: "Hasta luego" },
-      { pt: "Até amanhã", es: "Hasta mañana" },
-      { pt: "Prazer em conhecer", es: "Mucho gusto" },
-      { pt: "Obrigado", es: "Gracias (lo dice un hombre)" },
-      { pt: "Obrigada", es: "Gracias (lo dice una mujer)" },
-      { pt: "De nada", es: "De nada" },
-      { pt: "Por favor", es: "Por favor" },
-      { pt: "Desculpa", es: "Perdón / Disculpa" },
-      { pt: "Com licença", es: "Con permiso" }
+      { pt: "Bom dia", es: "Buenos días" }, { pt: "Boa tarde", es: "Buenas tardes" }, { pt: "Boa noite", es: "Buenas noches" },
+      { pt: "Olá", es: "Hola" }, { pt: "Oi", es: "Hola (informal)" }, { pt: "Como vai?", es: "¿Cómo te va?" },
+      { pt: "Tudo bem?", es: "¿Todo bien?" }, { pt: "Até amanhã", es: "Hasta mañana" }, { pt: "Até logo", es: "Hasta luego" },
+      { pt: "Tchau", es: "Chau" }, { pt: "Obrigado", es: "Gracias (lo dice un hombre)" },
+      { pt: "Obrigada", es: "Gracias (lo dice una mujer)" }, { pt: "Muito obrigado", es: "Muchas gracias" },
+      { pt: "De nada", es: "De nada" }, { pt: "Muito prazer", es: "Mucho gusto" },
+      { pt: "O prazer é meu", es: "El gusto es mío" }, { pt: "Com licença", es: "Con permiso" }, { pt: "Desculpa", es: "Perdón" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Bom ___!", resp: ["dia"], pista: "Son las 8 de la mañana" },
+      { tipo: "completar", frase: "Boa ___!", resp: ["tarde"], pista: "Son las 3 de la tarde" },
+      { tipo: "completar", frase: "Boa ___!", resp: ["noite"], pista: "Son las 10 de la noche" },
+      { tipo: "completar", frase: "— Oi! Tudo bem? — Tudo ___, obrigado.", resp: [["bem", "bom"]] },
+      { tipo: "completar", frase: "Muito ___!", resp: ["obrigada"], pista: "Muchas gracias (lo dice una mujer)" },
+      { tipo: "completar", frase: "Prazer em ___!", resp: ["conhecê-la"], pista: "Conoces a una mujer: conocerla" },
+      { tipo: "completar", frase: "O prazer é ___!", resp: ["meu"] },
+      { tipo: "completar", frase: "Qual é o seu ___?", resp: ["nome"] },
+      { tipo: "completar", frase: "De ___ você é?", resp: ["onde"] },
+      { tipo: "marcar", frase: "Lúcia quiere agradecer. Ella dice:", opciones: ["Obrigado!", "Obrigada!", "De nada!"], resp: 1,
+        explica: "Lúcia es mujer → **obrigada**.", oir: "Obrigada!" },
+      { tipo: "marcar", frase: "Son las 9 de la noche y llegas a una reunión. Saludas:", opciones: ["Bom dia!", "Boa tarde!", "Boa noite!"], resp: 2, oir: "Boa noite!" },
+      { tipo: "marcar", frase: "Te dicen *Prazer em conhecê-lo!* Respondes:", opciones: ["O prazer é meu!", "De nada!", "Até logo!"], resp: 0, oir: "O prazer é meu!" },
+      { tipo: "marcar", frase: "¿Por qué se dice **Boa** tarde y no *Bom* tarde?", opciones: ["Porque *tarde* es femenino", "Porque es de tarde", "Es una excepción"], resp: 0 },
+      { tipo: "marcar", frase: "¿Qué es un **carioca**?", opciones: ["Alguien de la ciudad de Río de Janeiro", "Cualquier brasileño", "Un baile típico"], resp: 0 }
     ]
   },
   {
-    id: "numeros", icono: "🔢", titulo: "Números",
-    intro: "Ojo: 'dois' es dos y 'duas' se usa con palabras femeninas (duas casas). 'Seis' a veces se dice 'meia' al dictar números de teléfono.",
+    id: "presentarse", grupo: "curso", icono: "🙋", titulo: "Presentarse (Informações pessoais)",
+    intro: "Para presentarte a un grupo en portugués normalmente se mencionan seis datos: nombre, origen, nacionalidad, edad, profesión y dónde vives.",
+    apuntes: [
+      { t: "Presentándote a un grupo",
+        tabla: { cab: ["Dato", "Significado", "Cómo decirlo"], filas: [
+          ["Nome", "Nombre", "Eu me chamo... / Meu nome é..."], ["Origem", "Origen", "Eu sou de..."],
+          ["Nacionalidade", "Nacionalidad", "Eu sou peruano(a)."], ["Idade", "Edad", "Eu tenho ... anos."],
+          ["Profissão", "Profesión", "Eu sou... / Eu trabalho como..."], ["Onde mora", "Dónde vives", "Eu moro em..."]] },
+        ej: [["Oi! Eu me chamo Carlos. Eu sou de Lima, sou peruano. Tenho trinta anos, sou engenheiro e moro em Callao. Muito prazer!",
+              "¡Hola! Me llamo Carlos. Soy de Lima, soy peruano. Tengo treinta años, soy ingeniero y vivo en Callao. ¡Mucho gusto!"]],
+        porque: "Cada dato usa un verbo distinto: **ser** para quién eres, **ter** para la edad y **morar** para dónde vives. Ese es el 'esqueleto' de cualquier presentación." },
+      { t: "Diálogos del curso",
+        dialogo: [["Edna", "Olá! Eu sou Edna, sou brasileira e gosto de dançar. Muito prazer!", "¡Hola! Soy Edna, soy brasileña y me gusta bailar. ¡Mucho gusto!"],
+                  ["Carlos", "Oi, Edna! Eu sou Carlos, sou peruano e gosto de viajar. Muito prazer!", "¡Hola, Edna! Soy Carlos, soy peruano y me gusta viajar. ¡Mucho gusto!"],
+                  ["Rodrigo", "Oi. Eu me chamo Rodrigo.", "Hola. Me llamo Rodrigo."],
+                  ["Zé", "Um prazer. Eu me chamo Zé.", "Un gusto. Me llamo Zé."],
+                  ["Ricardo", "Olá. Qual é o seu nome?", "Hola. ¿Cuál es tu nombre?"],
+                  ["André", "Eu me chamo André. E você?", "Me llamo André. ¿Y tú?"],
+                  ["Ricardo", "Eu sou Ricardo.", "Yo soy Ricardo."]],
+        porque: "**Zé** es el apodo de *José*, muy común en Brasil. Y fíjate en **gosto de dançar**: el verbo *gostar* siempre va con **de**." },
+      { t: "Eu me chamo: el verbo chamar-se",
+        p: "Funciona igual que 'llamarse' en español:",
+        tabla: { cab: ["Pronombre", "Chamar-se", "Español"], pron: [1], filas: [
+          ["eu", "**me** chamo", "me llamo"], ["você / ele / ela", "**se** chama", "te llamas / se llama"],
+          ["nós", "**nos** chamamos", "nos llamamos"], ["vocês / eles / elas", "**se** chamam", "se llaman"]] },
+        porque: "En Brasil el **me / se** va **antes** del verbo (*Eu me chamo*). En Portugal va después (*Chamo-me*). Por eso en tu curso aparecen las dos formas." },
+      { t: "Preguntas para conocer a alguien",
+        p: "Cada pregunta del curso con su respuesta modelo:",
+        ej: [["Como você se chama?", "¿Cómo te llamas?"], ["Eu me chamo Carlos.", "Me llamo Carlos."],
+             ["De onde você é?", "¿De dónde eres?"], ["Eu sou do Chile. Eu sou de São Paulo.", "Soy de Chile. Soy de São Paulo."],
+             ["O que você faz da vida?", "¿A qué te dedicas?"], ["Eu trabalho como professor.", "Trabajo como profesor."],
+             ["Qual é o seu sobrenome? E o seu apelido?", "¿Cuál es tu apellido? ¿Y tu apodo?"], ["Meu sobrenome é Torres.", "Mi apellido es Torres."],
+             ["Quando você faz aniversário?", "¿Cuándo cumples años?"], ["Faço aniversário no dia doze de outubro.", "Cumplo años el 12 de octubre."],
+             ["Você está casado ou solteiro?", "¿Estás casado o soltero?"], ["Estou solteira, mas tenho namorado.", "Estoy soltera, pero tengo enamorado."],
+             ["Quantos anos você tem?", "¿Cuántos años tienes?"], ["Eu tenho vinte e oito anos.", "Tengo veintiocho años."],
+             ["Onde você mora? Qual é o seu endereço?", "¿Dónde vives? ¿Cuál es tu dirección?"], ["Eu moro em Lima, na rua Santa Maria, trinta e quatro.", "Vivo en Lima, en la calle Santa María 34."],
+             ["Quem mora com você?", "¿Quién vive contigo?"], ["Eu moro com a minha família.", "Vivo con mi familia."],
+             ["Quais são os seus interesses?", "¿Cuáles son tus intereses?"], ["Eu gosto de música e de fazer exercício.", "Me gusta la música y hacer ejercicio."]],
+        porque: "**apelido** NO es apellido: es el **apodo**. Apellido se dice **sobrenome**. ¡Es un falso amigo clásico!" },
+      { t: "Pronombres interrogativos",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["Como?", "¿Cómo?"], ["Onde? / De onde?", "¿Dónde? / ¿De dónde?"], ["O que?", "¿Qué?"], ["Qual? / Quais?", "¿Cuál? / ¿Cuáles?"],
+          ["Quando?", "¿Cuándo?"], ["Quantos? / Quantas?", "¿Cuántos? / ¿Cuántas?"], ["Quem?", "¿Quién?"]] },
+        porque: "Las palabras en negrita de la tabla anterior son estos interrogativos. Con ellos puedes armar cualquier pregunta. **Qual** se usa más que en español: *Qual é o seu nome?*" },
+      { t: "Ser DE + lugar: ¿do, da o de?", extra: true,
+        p: "Al decir de dónde eres, el **de** se une con el artículo del lugar:",
+        tabla: { cab: ["Lugar", "Se dice", "Por qué"], filas: [
+          ["o Brasil, o Peru, o Chile, o Rio", "sou **do** Peru", "de + o = do"],
+          ["a Argentina, a Bahia", "sou **da** Argentina", "de + a = da"],
+          ["Lima, São Paulo, Portugal", "sou **de** Lima", "las ciudades (y algunos países) no llevan artículo"]] },
+        porque: "Por eso Carlos dice *sou **do** Rio* y Robert *sou **de** Brighton*." },
+      { t: "Nacionalidades", extra: true,
+        tabla: { cab: ["Masculino", "Femenino", "País"], filas: [
+          ["peruano", "peruana", "o Peru"], ["brasileiro", "brasileira", "o Brasil"], ["argentino", "argentina", "a Argentina"],
+          ["chileno", "chilena", "o Chile"], ["colombiano", "colombiana", "a Colômbia"], ["angolano", "angolana", "Angola"],
+          ["português", "portuguesa", "Portugal"], ["inglês", "inglesa", "a Inglaterra"], ["espanhol", "espanhola", "a Espanha"]] },
+        porque: "Regla: **-o → -a** (peruano → peruana), **-ês → -esa** (inglês → inglesa), **-ol → -ola** (espanhol → espanhola). Se escriben con **minúscula**." },
+      { t: "Profesiones", extra: true,
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["professor / professora", "profesor(a)"], ["estudante", "estudiante"], ["jornalista", "periodista"],
+          ["advogado / advogada", "abogado(a)"], ["médico / médica", "médico(a)"], ["engenheiro / engenheira", "ingeniero(a)"],
+          ["administrador / administradora", "administrador(a)"], ["jogador / jogadora", "jugador(a)"],
+          ["fazendeiro / fazendeira", "hacendado(a)"], ["dono / dona de restaurante", "dueño(a) de restaurante"]] },
+        porque: "Como en español, la profesión va **sin artículo**: *Eu sou professor* (no *Eu sou um professor*)." },
+      { t: "Verbo fazer (hacer)", extra: true,
+        tabla: { cab: ["Pronombre", "Fazer", "Español"], pron: [1], filas: [
+          ["eu", "faço", "hago"], ["você / ele / ela", "faz", "haces / hace"], ["nós", "fazemos", "hacemos"], ["vocês / eles / elas", "fazem", "hacen"]] },
+        porque: "Aparece en dos preguntas del curso: *O que você **faz** da vida?* (¿A qué te dedicas?) y *Quando você **faz** aniversário?* (¿Cuándo cumples años?)." },
+      { t: "Conhecer: personajes del curso",
+        ej: [["Oi, me chamo Ana Martinelli. Sou do Brasil, de São Paulo. Trabalho como professora.", "Me llamo Ana Martinelli. Soy de Brasil, de São Paulo. Trabajo como profesora."],
+             ["Chamo-me Catarina Gonzaga. Sou portuguesa, da cidade do Porto. Trabalho numa agência de viagens.", "Me llamo Catarina Gonzaga. Soy portuguesa, de la ciudad de Oporto. Trabajo en una agencia de viajes."],
+             ["Meu nome é Jorge Alves. Sou dono de restaurante em Salvador, na Bahia.", "Me llamo Jorge Alves. Soy dueño de un restaurante en Salvador, Bahía."],
+             ["Sou Fátima Conceição. Moro em São Paulo, mas sou carioca, do Rio de Janeiro. Sou jornalista.", "Soy Fátima Conceição. Vivo en São Paulo, pero soy carioca, de Río de Janeiro. Soy periodista."],
+             ["Meu nome é Matheus Werner. Moro em Porto Alegre, no Rio Grande do Sul. Tenho vinte e cinco anos, sou estudante.", "Me llamo Matheus Werner. Vivo en Porto Alegre, Rio Grande do Sul. Tengo 25 años, soy estudiante."],
+             ["Sou Luiz Andrade, angolano, de Luanda. Tenho vinte e três anos, sou jogador de basquete.", "Soy Luiz Andrade, angoleño, de Luanda. Tengo 23 años, soy jugador de básquet."],
+             ["Meu nome é Fabiano. Sou fazendeiro de Anápolis, no estado de Goiás, Brasil.", "Me llamo Fabiano. Soy hacendado de Anápolis, en el estado de Goiás, Brasil."]],
+        porque: "Catarina dice **Chamo-me** porque es de Portugal. **numa** = em + uma. Y Fátima muestra la diferencia entre **morar** (dónde vives ahora) y **ser de** (dónde naciste)." },
+      { t: "Cartão de visita (tarjeta de presentación)", extra: true,
+        p: "En las tarjetas aparecen nombre, profesión, dirección y teléfono:",
+        lista: ["**Maria Beatriz Schneider** — Administradora", "Rua do Comércio, 25 — Porto Alegre", "Telefone: (51) 3452-0987"],
+        porque: "**Rua** = calle. Los teléfonos se dicen cifra por cifra, y el **6** muchas veces se dice **meia** (de *meia dúzia*, media docena) para no confundirlo con el 3." }
+    ],
     items: [
-      { pt: "zero", es: "0" }, { pt: "um", es: "1" }, { pt: "dois", es: "2" },
-      { pt: "três", es: "3" }, { pt: "quatro", es: "4" }, { pt: "cinco", es: "5" },
-      { pt: "seis", es: "6" }, { pt: "sete", es: "7" }, { pt: "oito", es: "8" },
-      { pt: "nove", es: "9" }, { pt: "dez", es: "10" }, { pt: "onze", es: "11" },
-      { pt: "doze", es: "12" }, { pt: "treze", es: "13" }, { pt: "catorze", es: "14" },
-      { pt: "quinze", es: "15" }, { pt: "dezesseis", es: "16" }, { pt: "dezessete", es: "17" },
-      { pt: "dezoito", es: "18" }, { pt: "dezenove", es: "19" }, { pt: "vinte", es: "20" },
-      { pt: "trinta", es: "30" }, { pt: "cem", es: "100" }, { pt: "mil", es: "1000" }
+      { pt: "nome", es: "nombre" }, { pt: "sobrenome", es: "apellido" }, { pt: "apelido", es: "apodo", n: "¡Falso amigo!" },
+      { pt: "idade", es: "edad" }, { pt: "profissão", es: "profesión" }, { pt: "nacionalidade", es: "nacionalidad" },
+      { pt: "endereço", es: "dirección" }, { pt: "rua", es: "calle" }, { pt: "aniversário", es: "cumpleaños" },
+      { pt: "casado", es: "casado" }, { pt: "solteiro", es: "soltero" }, { pt: "namorado", es: "enamorado / novio" },
+      { pt: "Eu me chamo...", es: "Me llamo..." }, { pt: "Eu moro em...", es: "Vivo en..." },
+      { pt: "Eu trabalho como...", es: "Trabajo como..." }, { pt: "Como você se chama?", es: "¿Cómo te llamas?" },
+      { pt: "Onde você mora?", es: "¿Dónde vives?" }, { pt: "Quantos anos você tem?", es: "¿Cuántos años tienes?" },
+      { pt: "Quem?", es: "¿Quién?" }, { pt: "Quando?", es: "¿Cuándo?" }, { pt: "Qual?", es: "¿Cuál?" },
+      { pt: "jornalista", es: "periodista" }, { pt: "advogado", es: "abogado" }, { pt: "estudante", es: "estudiante" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Eu me ___ Carlos.", resp: ["chamo"], pista: "chamar-se" },
+      { tipo: "completar", frase: "Como você se ___?", resp: ["chama"] },
+      { tipo: "completar", frase: "Eu ___ trinta anos.", resp: ["tenho"], pista: "edad → ter" },
+      { tipo: "completar", frase: "Eu ___ em Lima.", resp: ["moro"], pista: "morar" },
+      { tipo: "completar", frase: "Eu sou ___ Peru.", resp: ["do"], pista: "de + o" },
+      { tipo: "completar", frase: "Ela é ___ Argentina.", resp: ["da"], pista: "de + a" },
+      { tipo: "completar", frase: "Robert é ___ Brighton.", resp: ["de"], pista: "ciudad: sin artículo" },
+      { tipo: "completar", frase: "Ela é ___.", resp: ["peruana"], pista: "peruano, en femenino" },
+      { tipo: "completar", frase: "Ela é ___.", resp: ["portuguesa"], pista: "português, en femenino" },
+      { tipo: "completar", frase: "___ anos você tem?", resp: ["quantos"] },
+      { tipo: "completar", frase: "___ você mora?", resp: ["onde"] },
+      { tipo: "completar", frase: "___ mora com você?", resp: ["quem"], pista: "¿quién?" },
+      { tipo: "completar", frase: "___ você faz aniversário?", resp: ["quando"], pista: "¿cuándo?" },
+      { tipo: "completar", frase: "Fátima mora em ___, mas é do ___.", resp: ["São Paulo", "Rio de Janeiro"], pista: "Lee los personajes en Teoría" },
+      { tipo: "completar", frase: "Matheus tem ___ anos.", resp: ["vinte e cinco"] },
+      { tipo: "marcar", frase: "Luiz Andrade é de Luanda. Ele é:", opciones: ["angolano", "português", "brasileiro"], resp: 0, oir: "Ele é angolano." },
+      { tipo: "marcar", frase: "Qual é a profissão da Fátima?", opciones: ["professora", "jornalista", "estudante"], resp: 1, oir: "Ela é jornalista." },
+      { tipo: "marcar", frase: "*Qual é o seu apelido?* pregunta por tu:", opciones: ["apellido", "apodo", "dirección"], resp: 1,
+        explica: "Apellido se dice **sobrenome**." },
+      { tipo: "marcar", frase: "*O que você faz da vida?* significa:", opciones: ["¿Qué haces hoy?", "¿A qué te dedicas?", "¿Qué te gusta?"], resp: 1 },
+      { tipo: "marcar", frase: "Catarina dice *Chamo-me Catarina*. ¿Por qué no *Eu me chamo*?", opciones: ["Es un error", "Es la forma de Portugal", "Es más informal"], resp: 1 },
+      { tipo: "marcar", frase: "¿Cuál es correcta?", opciones: ["Eu sou professor.", "Eu sou um professor."], resp: 0,
+        explica: "La profesión va sin artículo, como en español.", oir: "Eu sou professor." }
     ]
   },
   {
-    id: "colores", icono: "🎨", titulo: "Colores",
-    intro: "Varios colores cambian bastante respecto al español: preto (negro), roxo (morado), cinza (gris).",
+    id: "serestar", grupo: "curso", icono: "👤", titulo: "Pronombres + SER, ESTAR y TER",
+    intro: "Son los tres verbos más importantes del curso: con ellos dices quién eres (ser), cómo o dónde estás (estar) y qué tienes (ter).",
+    apuntes: [
+      { t: "Pronomes pessoais",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["eu", "yo"], ["você (= tu)", "tú / usted"], ["ele / ela", "él / ella"], ["nós (= a gente)", "nosotros"],
+          ["vocês", "ustedes"], ["eles / elas", "ellos / ellas"]] },
+        lista: ["**a gente** = nosotros, pero se conjuga como *ele*: a gente **é**, a gente **tem**. Es muy común al hablar."],
+        porque: "En Brasil casi no se usa **tu** ni **vós**: se usa **você** y **vocês**, que se conjugan como *ele* y *eles*. Por eso las tablas del curso ponen *Ele / Ela / Você* en la misma fila: ¡llevan la misma forma del verbo!" },
+      { t: "Verbo SER — cualidad permanente",
+        tabla: { cab: ["Pronombre", "SER", "Español"], pron: [1], filas: [
+          ["eu", "sou", "yo soy"], ["tu \\*", "és", "tú eres"], ["ele / ela / você", "é", "él / ella es · tú eres"],
+          ["nós", "somos", "nosotros somos"], ["vós \\*", "sois", "vosotros sois"], ["eles / elas / vocês", "são", "ellos / ellas son · ustedes son"]] },
+        lista: ["**SER** → cualidad **permanente** (normalmente): identidad, origen, nacionalidad, profesión, carácter.",
+                "\\* *tu* y *vós* se usan en Portugal; en Brasil, solo en pocos lugares."],
+        ojo: "Una tabla del material dice *tu **eres***. En portugués es **tu és** (con tilde). *Eres* es español." },
+      { t: "Verbo ESTAR — cualidad temporal",
+        tabla: { cab: ["Pronombre", "ESTAR", "Español"], pron: [1], filas: [
+          ["eu", "estou", "yo estoy"], ["tu \\*", "estás", "tú estás"], ["ele / ela / você", "está", "él / ella está · tú estás"],
+          ["nós", "estamos", "nosotros estamos"], ["vós \\*", "estais", "vosotros estáis"], ["eles / elas / vocês", "estão", "ellos / ellas están · ustedes están"]] },
+        lista: ["**ESTAR** → cualidad **temporal**: cómo te sientes, dónde estás ahora, estado civil."],
+        ej: [["Eu sou a Ana. Eu sou brasileira. Eu estou no Chile.", "Soy Ana. Soy brasileña. Estoy en Chile."]],
+        porque: "Ana **es** brasileña (eso no cambia), pero **está** en Chile (ahora; puede irse). Es la misma lógica que en español." },
+      { t: "SER o ESTAR: comparando", extra: true,
+        tabla: { cab: ["SER (permanente)", "ESTAR (temporal)"], filas: [
+          ["Ele **é** nervoso. (es así)", "Ele **está** nervoso. (ahora)"], ["Ela **é** alegre.", "Ela **está** alegre hoje."],
+          ["O café **é** bom. (en general)", "O café **está** quente. (ahora)"], ["Eu **sou** professor.", "Eu **estou** cansado."]] },
+        porque: "Con el mismo adjetivo, cambiar ser / estar cambia el sentido: *é nervoso* (es una persona nerviosa) vs. *está nervoso* (está nervioso en este momento)." },
+      { t: "Verbo TER (possuir, pertencer)",
+        tabla: { cab: ["Pronombre", "TER", "Español"], pron: [1], filas: [
+          ["eu", "tenho", "yo tengo"], ["ele / ela / você", "tem", "él / ella tiene · tú tienes"], ["nós", "temos", "nosotros tenemos"],
+          ["eles / elas / vocês", "têm", "ellos / ellas tienen · ustedes tienen"]] },
+        ej: [["Ela tem cabelo liso.", "Ella tiene el cabello lacio."], ["Ele tem vinte anos.", "Él tiene veinte años."], ["Nós temos um cachorro.", "Tenemos un perro."]],
+        porque: "**tem** (él tiene) y **têm** (ellos tienen) suenan casi igual: el **circunflejo (^)** solo marca el plural al escribir." },
+      { t: "TER también es 'hay'", extra: true,
+        p: "Al hablar, en Brasil **tem** se usa como 'hay'. En textos formales se usa **há**:",
+        ej: [["Tem um banco aqui perto?", "¿Hay un banco cerca?"], ["Há um menino jogando bola.", "Hay un niño jugando a la pelota."], ["Não tem problema!", "¡No hay problema!"]] },
+      { t: "Diálogo con el verbo ESTAR",
+        dialogo: [["Renato", "Oi, Lúcia, como você está?", "Hola, Lucía, ¿cómo estás?"],
+                  ["Lúcia", "Estou bem, obrigada. E você, Renato?", "Estoy bien, gracias. ¿Y tú, Renato?"],
+                  ["Renato", "Estou bem também.", "Yo también estoy bien."],
+                  ["Lúcia", "Onde está o seu carro?", "¿Dónde está tu auto?"],
+                  ["Renato", "Ah, Lúcia! Meu carro está com problemas e levei para a oficina. E o seu carro?", "¡Ay, Lucía! Mi auto tiene problemas y lo llevé al taller. ¿Y tu auto?"],
+                  ["Lúcia", "Meu carro está com meu esposo, José.", "Mi auto lo tiene mi esposo, José."],
+                  ["Renato", "E onde está o José?", "¿Y dónde está José?"],
+                  ["Lúcia", "Hoje ele está no escritório. Está em uma reunião com uma empresa estrangeira. E a sua esposa, Magda? Já se adaptou ao Brasil?", "Hoy está en la oficina, en una reunión con una empresa extranjera. ¿Y tu esposa, Magda? ¿Ya se adaptó a Brasil?"],
+                  ["Renato", "Ainda está se adaptando. Agora está aprendendo português na Ciunac, uma escola de português para estrangeiros que fica aqui bem perto da praia.", "Todavía se está adaptando. Ahora está aprendiendo portugués en Ciunac, una escuela para extranjeros muy cerca de la playa."],
+                  ["Lúcia", "Que bom!", "¡Qué bien!"],
+                  ["Renato", "Sim. Ela está gostando muito e está aprendendo muitas coisas legais.", "Sí. Le está gustando mucho y está aprendiendo muchas cosas chéveres."],
+                  ["Lúcia", "Que legal! Vocês podem praticar juntos.", "¡Qué chévere! Pueden practicar juntos."],
+                  ["Renato", "Sim, já estamos praticando.", "Sí, ya estamos practicando."],
+                  ["Lúcia", "Muito bom! Nos vemos mais tarde, Renato.", "¡Muy bien! Nos vemos más tarde, Renato."],
+                  ["Renato", "Até mais!", "¡Hasta luego!"]],
+        porque: "Fíjate en los usos de **estar**: cómo te sientes (*estou bem*), dónde está algo (*onde está o carro?*), una situación temporal (*está com problemas*) y una acción en curso (*está aprendendo*). Además, **oficina** = taller y **escritório** = oficina: ¡falsos amigos!",
+        ojo: "En el material Lúcia dice *Obrigado*; como es mujer, lo correcto es **Obrigada**. Aquí ya está corregido." },
+      { t: "ESTAR + gerundio (-ndo)", extra: true,
+        p: "Para decir lo que está pasando **ahora**, igual que en español:",
+        tabla: { cab: ["Verbo", "Gerundio", "Español"], pron: [1], filas: [
+          ["falar", "falando", "hablando"], ["aprender", "aprendendo", "aprendiendo"], ["gostar", "gostando", "gustando"],
+          ["praticar", "praticando", "practicando"], ["adaptar", "adaptando", "adaptando"]] },
+        ej: [["Ela está aprendendo português.", "Ella está aprendiendo portugués."], ["Já estamos praticando.", "Ya estamos practicando."]],
+        porque: "Se forma quitando la **-r** y agregando **-ndo**: fala**r** → fala**ndo**. Es más fácil que en español porque nunca cambia." }
+    ],
     items: [
-      { pt: "vermelho", es: "rojo" }, { pt: "azul", es: "azul" },
-      { pt: "verde", es: "verde" }, { pt: "amarelo", es: "amarillo" },
-      { pt: "preto", es: "negro" }, { pt: "branco", es: "blanco" },
-      { pt: "laranja", es: "naranja" }, { pt: "roxo", es: "morado" },
-      { pt: "rosa", es: "rosado" }, { pt: "cinza", es: "gris" },
-      { pt: "marrom", es: "marrón" }
+      { pt: "eu", es: "yo" }, { pt: "você", es: "tú / usted" }, { pt: "ele", es: "él" }, { pt: "ela", es: "ella" },
+      { pt: "nós", es: "nosotros" }, { pt: "a gente", es: "nosotros (informal)" }, { pt: "vocês", es: "ustedes" },
+      { pt: "eles", es: "ellos" }, { pt: "eu sou", es: "yo soy" }, { pt: "você é", es: "tú eres" },
+      { pt: "nós somos", es: "nosotros somos" }, { pt: "eles são", es: "ellos son" }, { pt: "eu estou", es: "yo estoy" },
+      { pt: "você está", es: "tú estás" }, { pt: "nós estamos", es: "nosotros estamos" }, { pt: "eles estão", es: "ellos están" },
+      { pt: "eu tenho", es: "yo tengo" }, { pt: "você tem", es: "tú tienes" }, { pt: "nós temos", es: "nosotros tenemos" },
+      { pt: "eles têm", es: "ellos tienen" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Eu ___ a Ana.", resp: ["sou"], pista: "ser" },
+      { tipo: "completar", frase: "Eu sou brasileira. Eu ___ no Chile.", resp: ["estou"], pista: "estar" },
+      { tipo: "completar", frase: "Nós ___ peruanos.", resp: ["somos"], pista: "ser" },
+      { tipo: "completar", frase: "Vocês ___ cansados?", resp: ["estão"], pista: "estar" },
+      { tipo: "completar", frase: "Ela ___ cabelo liso.", resp: ["tem"], pista: "ter" },
+      { tipo: "completar", frase: "Eles ___ dois filhos.", resp: ["têm"], pista: "ter (plural, con ^)" },
+      { tipo: "completar", frase: "Nós ___ um cachorro.", resp: ["temos"], pista: "ter" },
+      { tipo: "completar", frase: "A gente ___ em casa.", resp: ["está"], pista: "estar (a gente = como ele)" },
+      { tipo: "completar", frase: "Onde ___ o seu carro?", resp: ["está"], pista: "estar" },
+      { tipo: "completar", frase: "Meu carro ___ com problemas.", resp: ["está"], pista: "estar" },
+      { tipo: "completar", frase: "Ela está ___ português.", resp: ["aprendendo"], pista: "aprender en gerundio" },
+      { tipo: "marcar", frase: "Ela ___ médica.", opciones: ["é", "está"], resp: 0, explica: "Profesión → **ser**." },
+      { tipo: "marcar", frase: "Eu ___ cansado hoje.", opciones: ["sou", "estou"], resp: 1, explica: "Estado de hoy → **estar**." },
+      { tipo: "marcar", frase: "Ele ___ nervoso porque tem prova amanhã.", opciones: ["é", "está"], resp: 1,
+        explica: "*porque tem prova amanhã* indica algo **temporal**." },
+      { tipo: "marcar", frase: "Nós ___ de Lima.", opciones: ["somos", "estamos", "temos"], resp: 0, explica: "Origen → **ser**." },
+      { tipo: "marcar", frase: "Eu ___ vinte anos.", opciones: ["sou", "estou", "tenho"], resp: 2, explica: "La edad se dice con **ter**." },
+      { tipo: "marcar", frase: "En Brasil, para decir 'tú', normalmente se usa:", opciones: ["tu", "você", "vós"], resp: 1 },
+      { tipo: "marcar", frase: "¿Cuál significa 'ellos tienen'?", opciones: ["eles tem", "eles têm"], resp: 1, oir: "eles têm" },
+      { tipo: "marcar", frase: "Según el diálogo, ¿dónde está José?", opciones: ["No escritório", "Na praia", "Na oficina"], resp: 0,
+        explica: "*Hoje ele está no escritório, em uma reunião.*", oir: "Hoje ele está no escritório." },
+      { tipo: "marcar", frase: "Según el diálogo, ¿qué está haciendo Magda?", opciones: ["Trabalhando", "Aprendendo português", "Viajando"], resp: 1 },
+      { tipo: "marcar", frase: "*O carro está na oficina* significa:", opciones: ["El auto está en la oficina", "El auto está en el taller"], resp: 1,
+        explica: "**oficina** = taller. Oficina se dice **escritório**." }
     ]
   },
   {
-    id: "familia", icono: "👨‍👩‍👧", titulo: "Familia",
-    intro: "Las tildes importan: avô (abuelo) suena cerrado y avó (abuela) suena abierto.",
+    id: "verbosar", grupo: "curso", icono: "🗣️", titulo: "Verbos en -AR (falar, gostar)",
+    intro: "La mayoría de los verbos en portugués terminan en -AR. Si aprendes el modelo de FALAR, puedes conjugar cientos de verbos.",
+    apuntes: [
+      { t: "Conjugação do verbo FALAR",
+        tabla: { cab: ["Pronombre", "FALAR", "Español"], pron: [1], filas: [
+          ["eu", "fal**o**", "yo hablo"], ["você", "fal**a**", "tú hablas"], ["ele / ela", "fal**a**", "él / ella habla"],
+          ["nós", "fal**amos**", "nosotros hablamos"], ["vocês", "fal**am**", "ustedes hablan"], ["eles / elas", "fal**am**", "ellos / ellas hablan"]] },
+        ej: [["Eu falo português.", "Hablo portugués."], ["Você fala italiano.", "Hablas italiano."], ["Ele não fala muito.", "Él no habla mucho."],
+             ["Nós falamos muito na aula de português.", "Hablamos mucho en la clase de portugués."], ["Vocês falam sobre amor?", "¿Ustedes hablan sobre el amor?"],
+             ["Eles falam em morar aqui?", "¿Ellos hablan de vivir aquí?"], ["Paula fala muito no seu namorado.", "Paula habla mucho de su novio."],
+             ["Nós falamos sobre educação.", "Hablamos sobre educación."]],
+        porque: "Las terminaciones son siempre las mismas: **-o, -a, -amos, -am**. Quitas el **-ar** y pones la terminación: fal**ar** → fal**o**, fal**a**, fal**amos**, fal**am**." },
+      { t: "El mismo modelo para muchos verbos", extra: true,
+        tabla: { cab: ["Verbo", "eu", "você / ele", "nós", "vocês / eles"], filas: [
+          ["morar (vivir)", "moro", "mora", "moramos", "moram"], ["trabalhar (trabajar)", "trabalho", "trabalha", "trabalhamos", "trabalham"],
+          ["estudar (estudiar)", "estudo", "estuda", "estudamos", "estudam"], ["dançar (bailar)", "danço", "dança", "dançamos", "dançam"],
+          ["viajar (viajar)", "viajo", "viaja", "viajamos", "viajam"], ["chamar (llamar)", "chamo", "chama", "chamamos", "chamam"]] },
+        porque: "Por eso en *Presentarse* ves *Eu moro*, *Eu trabalho*, *Eu me chamo*: son verbos en -AR con el mismo patrón." },
+      { t: "Conjugação do verbo GOSTAR",
+        tabla: { cab: ["Pronombre", "GOSTAR", "Español"], pron: [1], filas: [
+          ["eu", "gosto", "a mí me gusta"], ["você", "gosta", "a ti te gusta"], ["ele / ela", "gosta", "a él / ella le gusta"],
+          ["nós", "gostamos", "a nosotros nos gusta"], ["vocês", "gostam", "a ustedes les gusta"], ["eles / elas", "gostam", "a ellos / ellas les gusta"]] },
+        ej: [["Eu gosto de visitar a cidade do Rio de Janeiro.", "Me gusta visitar la ciudad de Río de Janeiro."], ["Você gosta de viajar?", "¿Te gusta viajar?"],
+             ["Ele não gosta muito de andar à noite.", "A él no le gusta mucho caminar de noche."], ["Nós gostamos muito de você.", "Te queremos mucho."],
+             ["Vocês gostam de ler?", "¿Les gusta leer?"], ["Eles gostam de morar aqui.", "Les gusta vivir aquí."],
+             ["Vocês gostam do Brasil?", "¿Les gusta Brasil?"], ["Paula gosta muito da caipirinha de abacaxi!", "¡A Paula le gusta mucho la caipiriña de piña!"],
+             ["Nós gostamos dos doces.", "Nos gustan los dulces."]],
+        consejos: ["Piensa en **gostar de** como 'ser aficionado a': *Eu gosto de café* = soy aficionado al café. Así recuerdas que la persona va primero y que siempre lleva **de**.",
+                   "*Nós gostamos muito **de você*** se traduce mejor como 'te queremos mucho': *gostar de alguém* también es 'querer / tener cariño'."],
+        porque: "En español decimos 'me gusta', pero en portugués es al revés: **yo gusto DE**. La persona es el sujeto y **siempre** va *de* después." },
+      { t: "Gostar de + artículo = do, da, dos, das",
+        tabla: { cab: ["Después de gostar viene...", "Se dice", "Ejemplo"], filas: [
+          ["un verbo", "**de**", "Gosto **de** viajar."], ["una persona o nombre", "**de**", "Gosto **de** você."],
+          ["o + masculino", "**do**", "Gosto **do** Brasil."], ["a + femenino", "**da**", "Gosto **da** caipirinha."],
+          ["os + masculino plural", "**dos**", "Gosto **dos** doces."], ["as + femenino plural", "**das**", "Gosto **das** praias."]] },
+        porque: "El **de** de *gostar* se une con el artículo (o, a, os, as). Es la misma regla de las contracciones que verás en *Artículos*." },
+      { t: "Negar, preguntar y responder", extra: true,
+        lista: ["Para negar, pon **não** antes del verbo: Ele **não** fala muito.",
+                "Para preguntar no cambia el orden: solo sube la entonación. *Você fala inglês?*",
+                "Para responder 'sí', se repite el verbo: — Você gosta de café? — **Gosto!**"],
+        porque: "En Brasil casi nunca se responde solo *sim*: lo natural es repetir el verbo (*Gosto*, *Falo*, *Moro*)." },
+      { t: "Falar EM", extra: true,
+        p: "**falar em** = mencionar, hablar de algo o alguien. *Paula fala muito **no** namorado* = Paula habla mucho de su novio (**no** = em + o)." }
+    ],
     items: [
-      { pt: "mãe", es: "madre" }, { pt: "pai", es: "padre" },
-      { pt: "irmão", es: "hermano" }, { pt: "irmã", es: "hermana" },
-      { pt: "filho", es: "hijo" }, { pt: "filha", es: "hija" },
-      { pt: "avô", es: "abuelo" }, { pt: "avó", es: "abuela" },
-      { pt: "tio", es: "tío" }, { pt: "tia", es: "tía" },
-      { pt: "primo", es: "primo" }, { pt: "marido", es: "esposo" },
-      { pt: "esposa", es: "esposa" }, { pt: "namorado", es: "novio / enamorado" },
-      { pt: "namorada", es: "novia / enamorada" }
+      { pt: "falar", es: "hablar" }, { pt: "gostar de", es: "gustar" }, { pt: "morar", es: "vivir (residir)" },
+      { pt: "trabalhar", es: "trabajar" }, { pt: "estudar", es: "estudiar" }, { pt: "dançar", es: "bailar" },
+      { pt: "viajar", es: "viajar" }, { pt: "visitar", es: "visitar" }, { pt: "andar", es: "caminar / andar" },
+      { pt: "praticar", es: "practicar" }, { pt: "jogar", es: "jugar" }, { pt: "comprar", es: "comprar" },
+      { pt: "escutar", es: "escuchar" }, { pt: "ajudar", es: "ayudar" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Eu ___ português.", resp: ["falo"], pista: "falar" },
+      { tipo: "completar", frase: "Nós ___ muito na aula.", resp: ["falamos"], pista: "falar" },
+      { tipo: "completar", frase: "Vocês ___ espanhol?", resp: ["falam"], pista: "falar" },
+      { tipo: "completar", frase: "Ele ___ em Salvador.", resp: ["mora"], pista: "morar" },
+      { tipo: "completar", frase: "Eu ___ como professora.", resp: ["trabalho"], pista: "trabalhar" },
+      { tipo: "completar", frase: "Nós ___ português na Ciunac.", resp: ["estudamos"], pista: "estudar" },
+      { tipo: "completar", frase: "Eles ___ de morar aqui.", resp: ["gostam"], pista: "gostar" },
+      { tipo: "completar", frase: "Eu gosto ___ viajar.", resp: ["de"] },
+      { tipo: "completar", frase: "Vocês gostam ___ Brasil?", resp: ["do"], pista: "de + o" },
+      { tipo: "completar", frase: "Paula gosta ___ caipirinha.", resp: ["da"], pista: "de + a" },
+      { tipo: "completar", frase: "Nós gostamos ___ doces.", resp: ["dos"], pista: "de + os" },
+      { tipo: "completar", frase: "Ela gosta ___ praias.", resp: ["das"], pista: "de + as" },
+      { tipo: "completar", frase: "Ele ___ fala muito.", resp: ["não"], pista: "negación" },
+      { tipo: "marcar", frase: "'Me gusta el café' se dice:", opciones: ["Eu gosto de café.", "Me gusta café.", "Eu gosto café."], resp: 0, oir: "Eu gosto de café." },
+      { tipo: "marcar", frase: "— Você fala inglês? La respuesta más natural en Brasil:", opciones: ["Falo, sim!", "Sim, eu é.", "Sim falar."], resp: 0, oir: "Falo, sim!" },
+      { tipo: "marcar", frase: "La terminación de **nós** en los verbos -AR es:", opciones: ["-o", "-amos", "-am"], resp: 1 },
+      { tipo: "marcar", frase: "*Eles falam* se pronuncia:", opciones: ["fálam (con m)", "fálaun (nasal)"], resp: 1, oir: "Eles falam." }
     ]
   },
   {
-    id: "verbos", icono: "⚙️", titulo: "Verbos básicos",
-    intro: "En Brasil se usa 'você' para decir 'tú/usted', y se conjuga como 'él'. 'A gente' (= nosotros) es muy común al hablar.",
+    id: "descripciones", grupo: "curso", icono: "🧑", titulo: "Descripciones físicas y de personalidad",
+    intro: "Para describir a alguien combinamos tres verbos: SER (cómo es), TER (qué tiene: cabello, ojos) y ESTAR (cómo está ahora).",
+    apuntes: [
+      { t: "¿Qué verbo uso para describir?",
+        tabla: { cab: ["Verbo", "Para", "Ejemplo"], filas: [
+          ["**SER**", "características: altura, peso, carácter", "Ela **é** alta e engraçada."],
+          ["**TER**", "partes del cuerpo: cabello, ojos, nariz", "Ele **tem** olhos verdes e cabelo cacheado."],
+          ["**ESTAR**", "cómo está ahora", "Ela **está** bronzeada. (volvió de la playa)"]] },
+        porque: "Es la misma lógica de la lección anterior: SER = permanente, ESTAR = temporal, TER = lo que posees. Con partes del cuerpo normalmente no se pone artículo: *Ela tem cabelo liso*." },
+      { t: "Características físicas",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["alto / alta", "alto / alta"], ["baixo / baixa", "bajo / baja"], ["gordo / gorda", "gordo / gorda"], ["magro / magra", "delgado / delgada"],
+          ["forte", "fuerte"], ["fraco / fraca", "débil"], ["jovem", "joven"], ["idoso / idosa", "persona mayor"],
+          ["loiro / loira", "rubio / rubia"], ["ruivo / ruiva", "pelirrojo / pelirroja"], ["careca", "calvo, pelado"],
+          ["sardas", "pecas"], ["bigode", "bigote"]] } },
+      { t: "El cabello y los ojos",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["cabelo liso", "cabello lacio"], ["cabelo ondulado", "cabello ondulado"], ["cabelo cacheado / crespo", "cabello rizado / crespo"],
+          ["cabelo castanho / preto / branco", "cabello castaño / negro / blanco"], ["cabelo grisalho", "cabello canoso"],
+          ["cabelo longo / curto", "cabello largo / corto"], ["olhos verdes / azuis / castanhos / pretos", "ojos verdes / azules / castaños / negros"]] },
+        porque: "**longo** = largo (de longitud). *Largo* en portugués significa **ancho**: *nariz largo* = nariz ancha. ¡Otro falso amigo!" },
+      { t: "Características psicológicas (personalidad)",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["engraçado/a", "chistoso, gracioso"], ["nervoso/a", "nervioso, enojón"], ["responsável", "responsable"], ["amável", "amable"],
+          ["chato/a", "aburrido, pesado"], ["legal", "genial, chévere"], ["metido/a", "creído"], ["invejoso/a", "envidioso"], ["corajoso/a", "valiente"]] },
+        porque: "**legal** en Brasil casi nunca es 'legal' de la ley: significa **chévere**. *Que legal!* = ¡Qué chévere! Y **chato** no es 'chato' de bajo: es **aburrido / pesado**." },
+      { t: "Vocabulário útil",
+        tabla: { cab: ["Parte", "Palabras"], filas: [
+          ["Pele (piel)", "morena, negra, clara, bronzeada, enrugada (arrugada), manchada, lisinha, macia (suave), hidratada"],
+          ["Cabelos", "castanho, louro, ruivo, longos, cacheados, lisos, crespos, curtos, careca, tingidos (teñidos)"],
+          ["Altura", "baixinho, alto, baixo, altura mediana"],
+          ["Peso", "magro, gordo, magrelo, gordinho, sarado (marcado), em forma, musculoso, barrigudo, cheinho (rellenito)"],
+          ["Olhos", "redondos, amendoados (almendrados), puxados (rasgados), castanhos, claros, escuros, verdes, pretos"],
+          ["Nariz", "grande, pequeno, fininho, largo (ancho), de batatinha (redondito)"],
+          ["Boca", "carnuda, fininha"], ["Dentes", "brancos, brilhantes, amarelados"]] } },
+      { t: "Concordancia: masculino, femenino y plural", extra: true,
+        lista: ["**-o → -a**: alto → alta, magro → magra, engraçado → engraçada",
+                "No cambian: forte, jovem, responsável, amável, legal, careca",
+                "Plural: se agrega **-s** (altos, altas). Los que terminan en **-el / -al** cambian: responsáv**el** → responsáv**eis**, leg**al** → leg**ais**"] },
+      { t: "Diminutivo -inho / -inha", extra: true,
+        p: "Los brasileños usan muchísimo el diminutivo: baix**inho**, gord**inho**, fin**inho**, lis**inha**, chei**nho**.",
+        porque: "Decir *Ele é gordo* puede sonar duro; *Ele é gordinho* suena más amable o cariñoso. Por eso hay tantas palabras con -inho en tu vocabulario." },
+      { t: "Ejemplos de descripción", extra: true,
+        ej: [["A minha amiga Júlia é alta e magra. Ela tem cabelo castanho, longo e cacheado, e olhos verdes. Ela é muito engraçada e amável, mas hoje está cansada.",
+              "Mi amiga Julia es alta y delgada. Tiene el cabello castaño, largo y rizado, y ojos verdes. Es muy chistosa y amable, pero hoy está cansada."],
+             ["O meu avô é baixinho e careca. Ele tem bigode branco e é muito corajoso.", "Mi abuelo es bajito y calvo. Tiene bigote blanco y es muy valiente."]] }
+    ],
     items: [
-      { pt: "eu sou", es: "yo soy" }, { pt: "você é", es: "tú eres" },
-      { pt: "nós somos", es: "nosotros somos" }, { pt: "eles são", es: "ellos son" },
-      { pt: "eu estou", es: "yo estoy" }, { pt: "você está", es: "tú estás" },
-      { pt: "nós estamos", es: "nosotros estamos" },
-      { pt: "eu tenho", es: "yo tengo" }, { pt: "você tem", es: "tú tienes" },
-      { pt: "nós temos", es: "nosotros tenemos" },
-      { pt: "eu vou", es: "yo voy" }, { pt: "você vai", es: "tú vas" },
-      { pt: "nós vamos", es: "nosotros vamos" },
-      { pt: "eu quero", es: "yo quiero" },
-      { pt: "eu gosto de", es: "me gusta", n: "Siempre con 'de': eu gosto de café" },
-      { pt: "eu posso", es: "yo puedo" }
+      { pt: "alto", es: "alto" }, { pt: "baixo", es: "bajo" }, { pt: "magro", es: "delgado" }, { pt: "gordo", es: "gordo" },
+      { pt: "forte", es: "fuerte" }, { pt: "fraco", es: "débil" }, { pt: "jovem", es: "joven" }, { pt: "idoso", es: "persona mayor" },
+      { pt: "loiro", es: "rubio" }, { pt: "ruivo", es: "pelirrojo" }, { pt: "careca", es: "calvo" }, { pt: "sardas", es: "pecas" },
+      { pt: "bigode", es: "bigote" }, { pt: "cabelo liso", es: "cabello lacio" }, { pt: "cabelo cacheado", es: "cabello rizado" },
+      { pt: "cabelo grisalho", es: "cabello canoso" }, { pt: "olhos castanhos", es: "ojos castaños" },
+      { pt: "engraçado", es: "chistoso" }, { pt: "chato", es: "aburrido / pesado" }, { pt: "legal", es: "chévere / genial" },
+      { pt: "metido", es: "creído" }, { pt: "invejoso", es: "envidioso" }, { pt: "corajoso", es: "valiente" }, { pt: "amável", es: "amable" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Ela ___ alta e magra.", resp: ["é"], pista: "ser" },
+      { tipo: "completar", frase: "Ele ___ olhos verdes.", resp: ["tem"], pista: "ter" },
+      { tipo: "completar", frase: "Hoje eu ___ cansado.", resp: ["estou"], pista: "estar" },
+      { tipo: "completar", frase: "A minha irmã é ___.", resp: ["alta"], pista: "alto, en femenino" },
+      { tipo: "completar", frase: "O meu avô tem cabelo ___.", resp: ["grisalho"], pista: "canoso" },
+      { tipo: "completar", frase: "Ele não tem cabelo, ele é ___.", resp: ["careca"] },
+      { tipo: "completar", frase: "Ela tem cabelo ___ e sardas.", resp: ["ruivo"], pista: "pelirrojo" },
+      { tipo: "completar", frase: "O professor é muito ___.", resp: ["engraçado"], pista: "chistoso" },
+      { tipo: "completar", frase: "Eles são muito ___.", resp: ["responsáveis"], pista: "responsável, en plural" },
+      { tipo: "completar", frase: "Ele é ___.", resp: ["baixinho"], pista: "bajito (diminutivo)" },
+      { tipo: "marcar", frase: "*Ele é chato* significa:", opciones: ["Él es bajo", "Él es aburrido / pesado", "Él tiene la nariz chata"], resp: 1 },
+      { tipo: "marcar", frase: "*Que legal!* significa:", opciones: ["¡Qué legal (según la ley)!", "¡Qué chévere!"], resp: 1, oir: "Que legal!" },
+      { tipo: "marcar", frase: "*Ela tem nariz largo* significa:", opciones: ["Tiene la nariz larga", "Tiene la nariz ancha"], resp: 1 },
+      { tipo: "marcar", frase: "Para el cabello y los ojos usamos el verbo:", opciones: ["ser", "ter", "estar"], resp: 1 },
+      { tipo: "marcar", frase: "*cabelo cacheado* es:", opciones: ["cabello lacio", "cabello rizado", "cabello corto"], resp: 1 },
+      { tipo: "marcar", frase: "Ela ___ bronzeada porque foi à praia.", opciones: ["é", "está", "tem"], resp: 1,
+        explica: "Es un estado temporal (por haber ido a la playa) → **estar**." }
     ]
   },
   {
-    id: "frases", icono: "💬", titulo: "Frases útiles",
-    intro: "Frases para sobrevivir en un viaje o una primera conversación.",
+    id: "articulos", grupo: "curso", icono: "📌", titulo: "Artículos y contracciones",
+    intro: "Los artículos acompañan a casi todos los sustantivos. Los definidos (o, a, os, as) hablan de algo conocido; los indefinidos (um, uma, uns, umas), de algo no especificado.",
+    apuntes: [
+      { t: "Artigo definido",
+        p: "Los artículos definidos (**o, a, os, as**) definen o individualizan, de forma precisa, a los sustantivos: una persona, un objeto o un lugar **ya conocido**.",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [["o", "el"], ["a", "la"], ["os", "los"], ["as", "las"]] },
+        ej: [["O computador.", "El ordenador."], ["Os computadores.", "Los ordenadores."], ["A gata.", "La gata."], ["As gatas.", "Las gatas."]],
+        porque: "Se llaman *definidos* porque se refieren a algo que ya sabemos cuál es: *o livro* = ese libro concreto del que estamos hablando." },
+      { t: "Artigo indefinido",
+        p: "Se usan cuando la palabra **no está especificada** (uno cualquiera):",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [["um", "un"], ["uma", "una"], ["uns", "unos"], ["umas", "unas"]] },
+        ej: [["Nós falamos com um homem muito simpático.", "Hablamos con un hombre muy simpático."], ["Há um menino jogando bola.", "Hay un niño jugando a la pelota."],
+             ["Eu estou lendo um livro muito interessante.", "Estoy leyendo un libro muy interesante."], ["Nós vamos viajar para uma cidade no interior.", "Vamos a viajar a una ciudad del interior."],
+             ["Eles assistem a um filme na televisão.", "Ellos ven una película en la televisión."], ["Você comprou um carro novo?", "¿Compraste un auto nuevo?"],
+             ["Eu não vejo um homem na rua. Vejo uma mulher.", "No veo a un hombre en la calle. Veo a una mujer."],
+             ["Há uns livros na mesa.", "Hay unos libros en la mesa."], ["Ela vê umas crianças brincando na rua.", "Ella ve a unos niños jugando en la calle."]],
+        porque: "**um / uma** también son el número 1: *um livro* puede ser 'un libro' o 'un (solo) libro'." },
+      { t: "Tres cosas que cambian respecto al español", extra: true,
+        lista: ["El artículo **o** se pronuncia **u** y **os** se pronuncia **us**, porque son 'o' débiles.",
+                "Los artículos **se juntan con preposiciones**: de + o = do, de + a = da, em + o = no, em + a = na. Por eso decimos *o cabelo **da** minha mãe* o *ela está **na** praia*.",
+                "En Brasil es muy común poner artículo **antes de nombres de personas y de posesivos**, algo que en español no hacemos:"],
+        ej: [["O José está no escritório.", "José está en la oficina."], ["A minha mãe é baixinha.", "Mi mamá es bajita."], ["Eu sou a Ana.", "Yo soy Ana."]] },
+      { t: "Contrações: EM + artículo",
+        p: "Es más fácil de lo que parece. En español ya hacemos esto con **del** (de + el) y **al** (a + el). En portugués pasa lo mismo, pero con **todos** los artículos. **EM** significa 'en', y cuando va antes de un artículo se junta con él:",
+        tabla: { cab: ["Se junta", "Resultado", "Equivale a"], pron: [1], filas: [
+          ["em + o", "no", "en el"], ["em + a", "na", "en la"], ["em + os", "nos", "en los"], ["em + as", "nas", "en las"]] } },
+      { t: "Contrações: DE + artículo",
+        p: "**DE** significa 'de', y también se junta:",
+        tabla: { cab: ["Se junta", "Resultado", "Equivale a"], pron: [1], filas: [
+          ["de + o", "do", "del"], ["de + a", "da", "de la"], ["de + os", "dos", "de los"], ["de + as", "das", "de las"]] },
+        porque: "En español solo contraemos *del* y *al*. En portugués **em** y **de** se unen **siempre** con o, a, os, as: nunca se dice *em o* ni *de a*. Contraer es obligatorio." },
+      { t: "Los ejemplos del curso, paso a paso",
+        ej: [["O dinheiro está na bolsa.", "El dinero está en la cartera. → na = em + a = en la"],
+             ["As chaves das portas estão nas gavetas da cômoda.", "Las llaves de las puertas están en los cajones de la cómoda. → das = de + as · nas = em + as · da = de + a"]],
+        consejos: ["Para saber cuál usar, pregúntate: ¿la palabra que sigue es masculina o femenina? ¿singular o plural? *bolsa* es femenino singular → **a** → em + a = **na**.",
+                   "*gaveta* (cajón) es femenino en portugués: por eso es **nas gavetas** y no *nos*."] },
+      { t: "Contracciones con um / uma", extra: true,
+        p: "También existen: em + um = **num**, em + uma = **numa**.",
+        ej: [["Trabalho numa agência de viagens.", "Trabajo en una agencia de viajes."]],
+        porque: "Por eso Catarina dice *trabalho **numa** agência* en la lección *Presentarse*." },
+      { t: "Sufixos e correspondências",
+        tabla: { cab: ["Español", "Português", "Ejemplos"], filas: [
+          ["-dad / -tad", "**-dade**", "uma cidade, a responsabilidade, a liberdade, a dificuldade"],
+          ["-ción / -sión / -ón", "**-ção / -são / -ão**", "uma canção, um avião, a pressão, a razão, o coração"],
+          ["-aje", "**-agem**", "uma viagem, a paisagem, a hospedagem, a mensagem"]] },
+        porque: "Con estas reglas puedes 'adivinar' cientos de palabras: *nación → nação*, *verdad → verdade*, *garaje → garagem*." },
+      { t: "O gênero e algumas inversões",
+        p: "Algunas palabras cambian de género respecto al español:",
+        tabla: { cab: ["Femenino en portugués", "Masculino en portugués"], filas: [
+          ["**a** dor (el dolor)", "**o** leite (la leche)"], ["**a** viagem (el viaje)", "**o** nariz (la nariz)"],
+          ["**a** mensagem (el mensaje)", "**o** massacre (la masacre)"], ["**a** porcentagem (el porcentaje)", "**o** costume (la costumbre)"],
+          ["**a** cor (el color)", "**o** mel (la miel)"], ["**a** vodca (el vodka)", "**o** sal (la sal)"],
+          ["**a** árvore (el árbol)", "**o** legume (la legumbre)"]] },
+        consejos: ["**Leite** es masculino (*o leite*) aunque en español es 'la leche'. Y **árvore** es femenino (*as árvores*) aunque en español es 'los árboles'. Hay que memorizar estas dos.",
+                   "Las palabras que en español terminan en **-aje** (masculinas) en portugués terminan en **-agem** y son **femeninas**: *a viagem, a mensagem, a garagem*.",
+                   "Las que en español terminan en **-umbre** (femeninas) en portugués son **masculinas**: *o costume, o legume*.",
+                   "**Estudantes, cariocas, recepcionista** y **atendente** sirven para hombre y mujer: llevan *o / os* si es hombre y *a / as* si es mujer."],
+        porque: "Todas las palabras en **-agem** son **femeninas** (a viagem, a garagem), aunque en español *-aje* sea masculino. Es la inversión más común." }
+    ],
     items: [
-      { pt: "Meu nome é...", es: "Mi nombre es..." },
-      { pt: "Qual é o seu nome?", es: "¿Cuál es tu nombre?" },
-      { pt: "De onde você é?", es: "¿De dónde eres?" },
-      { pt: "Eu não entendo", es: "No entiendo" },
-      { pt: "Você fala espanhol?", es: "¿Hablas español?" },
-      { pt: "Pode repetir, por favor?", es: "¿Puedes repetir, por favor?" },
-      { pt: "Fala mais devagar, por favor", es: "Habla más despacio, por favor" },
-      { pt: "Quanto custa?", es: "¿Cuánto cuesta?" },
-      { pt: "Onde fica o banheiro?", es: "¿Dónde queda el baño?" },
-      { pt: "Eu gostaria de...", es: "Me gustaría..." },
-      { pt: "A conta, por favor", es: "La cuenta, por favor" },
-      { pt: "Socorro!", es: "¡Auxilio!" }
+      { pt: "o", es: "el" }, { pt: "a", es: "la" }, { pt: "os", es: "los" }, { pt: "as", es: "las" },
+      { pt: "um", es: "un" }, { pt: "uma", es: "una" }, { pt: "uns", es: "unos" }, { pt: "umas", es: "unas" },
+      { pt: "no", es: "en el (em + o)" }, { pt: "na", es: "en la (em + a)" }, { pt: "nos", es: "en los (em + os)" }, { pt: "nas", es: "en las (em + as)" },
+      { pt: "do", es: "del (de + o)" }, { pt: "da", es: "de la (de + a)" }, { pt: "dos", es: "de los (de + os)" }, { pt: "das", es: "de las (de + as)" },
+      { pt: "a viagem", es: "el viaje" }, { pt: "a cor", es: "el color" }, { pt: "o leite", es: "la leche" }, { pt: "o nariz", es: "la nariz" },
+      { pt: "a cidade", es: "la ciudad" }, { pt: "a canção", es: "la canción" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "___ cachorro · ___ livro · ___ pintura · ___ saia · ___ professores", resp: ["o", "o", "a", "a", "os"],
+        pista: "Artículo definido (ejercicio del curso, 1-5)" },
+      { tipo: "completar", frase: "___ ilhas · ___ olhos · ___ bolsa · ___ cinema · ___ leite", resp: ["as", "os", "a", "o", "o"],
+        pista: "Artículo definido (6-10)", explica: "**o leite**: en portugués *leite* es masculino." },
+      { tipo: "completar", frase: "___ árvores · ___ estudantes · ___ cariocas · ___ mapa · ___ mesas", resp: ["as", ["os", "as"], ["os", "as"], "o", "as"],
+        pista: "Artículo definido (11-15)", explica: "**as árvores**: *árvore* es femenino (en español, 'los árboles'). *estudantes* y *cariocas* pueden ser **os** o **as**. *mapa* termina en -a pero es masculino." },
+      { tipo: "completar", frase: "___ pergunta · ___ carro · ___ recepcionista · ___ pessoas · ___ atendente", resp: ["a", "o", ["o", "a"], "as", ["o", "a"]],
+        pista: "Artículo definido (16-20)", explica: "*recepcionista* y *atendente* sirven para hombre y mujer: **o** o **a**." },
+      { tipo: "completar", frase: "Há ___ menino jogando bola.", resp: ["um"], pista: "indefinido" },
+      { tipo: "completar", frase: "Nós vamos viajar para ___ cidade no interior.", resp: ["uma"], pista: "indefinido" },
+      { tipo: "completar", frase: "Há ___ livros na mesa.", resp: ["uns"], pista: "indefinido plural" },
+      { tipo: "completar", frase: "Ela vê ___ crianças brincando na rua.", resp: ["umas"], pista: "indefinido plural" },
+      { tipo: "completar", frase: "Ela entra ___ escritório às oito e meia ___ manhã.", resp: ["no", "da"], pista: "(em o) · (de a)" },
+      { tipo: "completar", frase: "A família assiste à televisão ___ sala ___ segundo andar.", resp: ["na", "do"], pista: "(em a) · (de o)" },
+      { tipo: "completar", frase: "Os planos ___ arquitetos estão ___ pastas ___ projetos, dentro ___ cofre.", resp: ["dos", "nas", "dos", "do"],
+        pista: "(de os) · (em as) · (de os) · (de o)" },
+      { tipo: "completar", frase: "Nós vamos passar o verão ___ casa de praia ___ tio de Fernando.", resp: ["na", "do"], pista: "(em a) · (de o)" },
+      { tipo: "completar", frase: "Onde essas pessoas estão? Eles estão ___ ponto de ônibus. Ela está ___ escola.", resp: ["no", "na"], pista: "paradero · escuela" },
+      { tipo: "completar", frase: "Lima é uma ___ grande.", resp: ["cidade"], pista: "ciudad (-dad → -dade)" },
+      { tipo: "completar", frase: "Eu gosto desta ___.", resp: ["canção"], pista: "canción (-ción → -ção)" },
+      { tipo: "completar", frase: "A ___ foi ótima!", resp: ["viagem"], pista: "el viaje (-aje → -agem)" },
+      { tipo: "marcar", frase: "___ viagem foi longa.", opciones: ["O", "A"], resp: 1, explica: "Las palabras en **-agem** son femeninas." },
+      { tipo: "marcar", frase: "___ leite está quente.", opciones: ["O", "A"], resp: 0, explica: "*leite* es masculino en portugués." },
+      { tipo: "marcar", frase: "Qual é ___ sua cor favorita?", opciones: ["o", "a"], resp: 1, explica: "**a cor**: femenino (en español, *el color*)." },
+      { tipo: "marcar", frase: "em + as =", opciones: ["nas", "nos", "em as"], resp: 0 },
+      { tipo: "marcar", frase: "Trabalho ___ agência de viagens.", opciones: ["numa", "num", "em uma a"], resp: 0, explica: "em + uma = **numa**." },
+      { tipo: "marcar", frase: "Uso el artículo **indefinido** (um, uma) cuando:", opciones: ["hablo de algo ya conocido", "la cosa no está especificada"], resp: 1 }
+    ]
+  },
+
+  // ============================ PRÁCTICA EXTRA ============================
+  {
+    id: "numeros", grupo: "extra", icono: "🔢", titulo: "Números",
+    intro: "Los vas a necesitar para la edad, el teléfono y la dirección. Ojo: 'dois' tiene femenino ('duas').",
+    apuntes: [
+      { t: "Uno y dos tienen femenino",
+        lista: ["**um** livro / **uma** casa", "**dois** livros / **duas** casas"],
+        ej: [["dois carros", "dos autos"], ["duas casas", "dos casas"]] },
+      { t: "Cómo se forman",
+        p: "Las decenas y las unidades se unen con **e**:",
+        ej: [["vinte e um", "21"], ["trinta e cinco", "35"], ["cento e dez", "110"]] },
+      { t: "Cem o cento",
+        p: "**cem** = 100 exacto. **cento** cuando sigue algo: cento e um (101)." },
+      { t: "La edad y el teléfono",
+        ej: [["Eu tenho vinte anos.", "Tengo veinte años."], ["Quantos anos você tem?", "¿Cuántos años tienes?"], ["Qual é o seu telefone?", "¿Cuál es tu teléfono?"]],
+        porque: "Al dictar teléfonos, el 6 se dice **meia** para no confundir *seis* con *três*." }
+    ],
+    items: [
+      { pt: "zero", es: "0" }, { pt: "um", es: "1" }, { pt: "dois", es: "2" }, { pt: "três", es: "3" }, { pt: "quatro", es: "4" },
+      { pt: "cinco", es: "5" }, { pt: "seis", es: "6" }, { pt: "sete", es: "7" }, { pt: "oito", es: "8" }, { pt: "nove", es: "9" },
+      { pt: "dez", es: "10" }, { pt: "onze", es: "11" }, { pt: "doze", es: "12" }, { pt: "treze", es: "13" }, { pt: "catorze", es: "14" },
+      { pt: "quinze", es: "15" }, { pt: "dezesseis", es: "16" }, { pt: "dezessete", es: "17" }, { pt: "dezoito", es: "18" },
+      { pt: "dezenove", es: "19" }, { pt: "vinte", es: "20" }, { pt: "trinta", es: "30" }, { pt: "cem", es: "100" }, { pt: "mil", es: "1000" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Eu tenho ___ anos.", resp: ["vinte e cinco"], pista: "25" },
+      { tipo: "completar", frase: "Dois mais dois são ___.", resp: ["quatro"] },
+      { tipo: "completar", frase: "Eu tenho ___ irmãs.", resp: ["duas"], pista: "2 (irmãs es femenino)" },
+      { tipo: "completar", frase: "A semana tem ___ dias.", resp: ["sete"] },
+      { tipo: "completar", frase: "O ano tem ___ meses.", resp: ["doze"] },
+      { tipo: "marcar", frase: "¿Cómo se escribe 16?", opciones: ["dezesseis", "dezessete", "sessenta"], resp: 0 },
+      { tipo: "marcar", frase: "Eu comprei ___ camisas.", opciones: ["dois", "duas", "doze"], resp: 1, explica: "*camisas* es femenino → **duas**." },
+      { tipo: "marcar", frase: "100 exacto se dice:", opciones: ["cento", "cem", "mil"], resp: 1, explica: "**cento** solo cuando sigue otro número: cento e um." }
     ]
   },
   {
-    id: "comida", icono: "🍽️", titulo: "Comida",
+    id: "colores", grupo: "extra", icono: "🎨", titulo: "Colores",
+    intro: "Sirven para las descripciones (olhos castanhos, cabelo preto). Varios cambian bastante: preto (negro), roxo (morado), cinza (gris).",
+    apuntes: [
+      { t: "Concordancia",
+        p: "Los colores que terminan en **-o** cambian a **-a** con palabras femeninas:",
+        ej: [["o carro vermelho", "el auto rojo"], ["a casa vermelha", "la casa roja"], ["o sapato preto", "el zapato negro"], ["a blusa preta", "la blusa negra"]] },
+      { t: "Los que no cambian",
+        p: "azul, verde, laranja, rosa, cinza y marrom son iguales en masculino y femenino: o carro **azul**, a casa **azul**." }
+    ],
+    items: [
+      { pt: "vermelho", es: "rojo" }, { pt: "azul", es: "azul" }, { pt: "verde", es: "verde" }, { pt: "amarelo", es: "amarillo" },
+      { pt: "preto", es: "negro" }, { pt: "branco", es: "blanco" }, { pt: "laranja", es: "naranja" }, { pt: "roxo", es: "morado" },
+      { pt: "rosa", es: "rosado" }, { pt: "cinza", es: "gris" }, { pt: "marrom", es: "marrón" }, { pt: "castanho", es: "castaño" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "O céu é ___.", resp: ["azul"] },
+      { tipo: "completar", frase: "A banana é ___.", resp: ["amarela"], pista: "amarillo, en femenino" },
+      { tipo: "completar", frase: "O leite é ___.", resp: ["branco"] },
+      { tipo: "completar", frase: "A rosa é ___.", resp: ["vermelha"], pista: "roja" },
+      { tipo: "marcar", frase: "*roxo* significa:", opciones: ["rojo", "morado", "rosado"], resp: 1, explica: "Rojo se dice **vermelho**." },
+      { tipo: "marcar", frase: "A camisa é ___.", opciones: ["preto", "preta"], resp: 1, explica: "*camisa* es femenino → **preta**." }
+    ]
+  },
+  {
+    id: "familia", grupo: "extra", icono: "👨‍👩‍👧", titulo: "Familia",
+    intro: "Útil para responder 'Quem mora com você?'. Ojo con las tildes: avô (abuelo) y avó (abuela).",
+    apuntes: [
+      { t: "Posesivos",
+        tabla: { cab: ["", "Masculino", "Femenino"], filas: [["mi", "meu", "minha"], ["tu / su (de você)", "seu", "sua"], ["nuestro", "nosso", "nossa"]] },
+        ej: [["meu pai", "mi padre"], ["minha mãe", "mi madre"], ["Eu moro com a minha família.", "Vivo con mi familia."]],
+        porque: "El posesivo concuerda con la **cosa poseída**, no con el dueño: un hombre dice *minha mãe* porque *mãe* es femenino." }
+    ],
+    items: [
+      { pt: "mãe", es: "madre" }, { pt: "pai", es: "padre" }, { pt: "irmão", es: "hermano" }, { pt: "irmã", es: "hermana" },
+      { pt: "filho", es: "hijo" }, { pt: "filha", es: "hija" }, { pt: "avô", es: "abuelo" }, { pt: "avó", es: "abuela" },
+      { pt: "tio", es: "tío" }, { pt: "tia", es: "tía" }, { pt: "primo", es: "primo" }, { pt: "marido", es: "esposo" },
+      { pt: "esposa", es: "esposa" }, { pt: "namorado", es: "novio / enamorado" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "A mãe da minha mãe é a minha ___.", resp: ["avó"] },
+      { tipo: "completar", frase: "O irmão do meu pai é o meu ___.", resp: ["tio"] },
+      { tipo: "completar", frase: "___ mãe se chama Rosa.", resp: ["minha"], pista: "mi (femenino)" },
+      { tipo: "completar", frase: "___ irmão é alto.", resp: ["meu"], pista: "mi (masculino)" },
+      { tipo: "marcar", frase: "¿Cuál significa **abuela**?", opciones: ["avô", "avó"], resp: 1 },
+      { tipo: "marcar", frase: "A filha da minha tia é a minha ___.", opciones: ["prima", "irmã", "sobrinha"], resp: 0 }
+    ]
+  },
+  {
+    id: "dias", grupo: "extra", icono: "📅", titulo: "Días, meses y fechas",
+    intro: "Para responder 'Quando você faz aniversário?'. De lunes a viernes se cuentan con números: segunda-feira (lunes), terça-feira (martes)...",
+    apuntes: [
+      { t: "Los días",
+        p: "De lunes a viernes: número + **feira**. Al hablar se acortan: **segunda, terça, quarta, quinta, sexta**. Sábado y domingo, como en español.",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["segunda-feira", "lunes"], ["terça-feira", "martes"], ["quarta-feira", "miércoles"], ["quinta-feira", "jueves"],
+          ["sexta-feira", "viernes"], ["sábado", "sábado"], ["domingo", "domingo"]] },
+        consejos: ["De lunes a viernes los días se cuentan con números y son **femeninos**: *a segunda-feira, a terça-feira*. Por eso se dice **na** segunda (em + a)."],
+        porque: "Viene de la tradición religiosa de contar los días desde el domingo: el lunes era el 'segundo día'." },
+      { t: "Los meses",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["janeiro", "enero"], ["fevereiro", "febrero"], ["março", "marzo"], ["abril", "abril"], ["maio", "mayo"], ["junho", "junio"],
+          ["julho", "julio"], ["agosto", "agosto"], ["setembro", "septiembre"], ["outubro", "octubre"], ["novembro", "noviembre"], ["dezembro", "diciembre"]] } },
+      { t: "Fechas",
+        ej: [["Faço aniversário no dia doze de outubro.", "Cumplo años el 12 de octubre."], ["Em que mês você faz aniversário?", "¿En qué mes cumples años?"],
+             ["Em março.", "En marzo."], ["na segunda-feira", "el lunes"], ["no sábado", "el sábado"]],
+        porque: "**no dia** (em + o dia) para la fecha exacta, **em** + mes (los meses no llevan artículo), **na** segunda (*feira* es femenino) y **no** sábado." }
+    ],
+    items: [
+      { pt: "segunda-feira", es: "lunes" }, { pt: "terça-feira", es: "martes" }, { pt: "quarta-feira", es: "miércoles" },
+      { pt: "quinta-feira", es: "jueves" }, { pt: "sexta-feira", es: "viernes" }, { pt: "sábado", es: "sábado" }, { pt: "domingo", es: "domingo" },
+      { pt: "hoje", es: "hoy" }, { pt: "amanhã", es: "mañana" }, { pt: "ontem", es: "ayer" },
+      { pt: "janeiro", es: "enero" }, { pt: "fevereiro", es: "febrero" }, { pt: "março", es: "marzo" }, { pt: "abril", es: "abril" },
+      { pt: "maio", es: "mayo" }, { pt: "junho", es: "junio" }, { pt: "julho", es: "julio" }, { pt: "agosto", es: "agosto" },
+      { pt: "setembro", es: "septiembre" }, { pt: "outubro", es: "octubre" }, { pt: "novembro", es: "noviembre" }, { pt: "dezembro", es: "diciembre" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Depois de segunda-feira vem ___.", resp: [["terça-feira", "terça"]] },
+      { tipo: "completar", frase: "Hoje é sexta-feira. Amanhã é ___.", resp: ["sábado"] },
+      { tipo: "completar", frase: "Faço aniversário ___ dia 12 de outubro.", resp: ["no"], pista: "em + o" },
+      { tipo: "completar", frase: "O Natal é em ___.", resp: ["dezembro"], pista: "diciembre" },
+      { tipo: "completar", frase: "Eu trabalho ___ segunda-feira.", resp: ["na"], pista: "em + a" },
+      { tipo: "marcar", frase: "*sexta-feira* es:", opciones: ["jueves", "viernes", "sábado"], resp: 1 },
+      { tipo: "marcar", frase: "*ontem* significa:", opciones: ["hoy", "mañana", "ayer"], resp: 2 },
+      { tipo: "marcar", frase: "El carnaval de Brasil es en ___ (febrero).", opciones: ["fevereiro", "febreiro", "fevrero"], resp: 0 }
+    ]
+  },
+  {
+    id: "comida", grupo: "extra", icono: "🍽️", titulo: "Comida",
     intro: "El 'arroz com feijão' (arroz con frejoles) es la base de la comida brasileña.",
+    apuntes: [
+      { t: "Las comidas del día",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [["café da manhã", "desayuno"], ["almoço", "almuerzo"], ["lanche", "merienda / snack"], ["jantar", "cena"]] } },
+      { t: "En el restaurante",
+        ej: [["Mesa para dois, por favor.", "Mesa para dos, por favor."], ["Eu gostaria de um suco de laranja.", "Quisiera un jugo de naranja."],
+             ["Está delicioso!", "¡Está delicioso!"], ["A conta, por favor.", "La cuenta, por favor."]],
+        porque: "**Eu gostaria de...** (me gustaría) es más educado que **Eu quero...** (quiero)." }
+    ],
     items: [
-      { pt: "água", es: "agua" }, { pt: "pão", es: "pan" },
-      { pt: "café", es: "café" }, { pt: "leite", es: "leche" },
-      { pt: "carne", es: "carne" }, { pt: "frango", es: "pollo" },
-      { pt: "peixe", es: "pescado" }, { pt: "arroz", es: "arroz" },
-      { pt: "feijão", es: "frejol / frijol" }, { pt: "ovo", es: "huevo" },
-      { pt: "queijo", es: "queso" }, { pt: "suco", es: "jugo" },
-      { pt: "sorvete", es: "helado" }, { pt: "cerveja", es: "cerveza" }
+      { pt: "água", es: "agua" }, { pt: "pão", es: "pan" }, { pt: "café", es: "café" }, { pt: "leite", es: "leche" },
+      { pt: "carne", es: "carne" }, { pt: "frango", es: "pollo" }, { pt: "peixe", es: "pescado" }, { pt: "arroz", es: "arroz" },
+      { pt: "feijão", es: "frejol / frijol" }, { pt: "ovo", es: "huevo" }, { pt: "queijo", es: "queso" }, { pt: "suco", es: "jugo" },
+      { pt: "sorvete", es: "helado" }, { pt: "abacaxi", es: "piña" }, { pt: "doces", es: "dulces" },
+      { pt: "café da manhã", es: "desayuno" }, { pt: "almoço", es: "almuerzo" }, { pt: "jantar", es: "cena" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Eu bebo ___ de laranja.", resp: ["suco"], pista: "jugo" },
+      { tipo: "completar", frase: "Eu quero arroz com ___.", resp: ["feijão"], pista: "frejoles" },
+      { tipo: "completar", frase: "Um ___ de chocolate, por favor.", resp: ["sorvete"], pista: "helado" },
+      { tipo: "completar", frase: "Paula gosta da caipirinha de ___.", resp: ["abacaxi"], pista: "piña" },
+      { tipo: "marcar", frase: "*café da manhã* significa:", opciones: ["café de la mañana", "desayuno", "almuerzo"], resp: 1 },
+      { tipo: "marcar", frase: "La cena se dice:", opciones: ["almoço", "lanche", "jantar"], resp: 2 }
     ]
   },
   {
-    id: "dias", icono: "📅", titulo: "Días y tiempo",
-    intro: "De lunes a viernes se cuentan con números: segunda-feira (lunes), terça-feira (martes)... Muchas veces solo dicen 'segunda', 'terça'.",
+    id: "falsos", grupo: "extra", icono: "⚠️", titulo: "Falsos amigos",
+    intro: "Palabras que parecen español pero significan otra cosa. Varias ya aparecieron en tu curso: apelido, oficina, largo, legal...",
+    apuntes: [
+      { t: "Truco",
+        p: "Si una palabra se parece **demasiado** al español, sospecha. Estas frases muestran el significado real:",
+        ej: [["Meu apelido é Zé.", "Mi apodo es Zé."], ["Levei o carro para a oficina.", "Llevé el auto al taller."],
+             ["Ele tem nariz largo.", "Tiene la nariz ancha."], ["Que comida esquisita!", "¡Qué comida tan rara!"],
+             ["Vou ligar para você.", "Te voy a llamar."]] }
+    ],
     items: [
-      { pt: "segunda-feira", es: "lunes" }, { pt: "terça-feira", es: "martes" },
-      { pt: "quarta-feira", es: "miércoles" }, { pt: "quinta-feira", es: "jueves" },
-      { pt: "sexta-feira", es: "viernes" }, { pt: "sábado", es: "sábado" },
-      { pt: "domingo", es: "domingo" }, { pt: "hoje", es: "hoy" },
-      { pt: "amanhã", es: "mañana" }, { pt: "ontem", es: "ayer" },
-      { pt: "semana", es: "semana" }, { pt: "agora", es: "ahora" }
-    ]
-  },
-  {
-    id: "falsos", icono: "⚠️", titulo: "Falsos amigos",
-    intro: "Palabras que parecen español pero significan otra cosa. ¡Las más peligrosas para hispanohablantes!",
-    items: [
-      { pt: "esquisito", es: "raro / extraño", n: "No es 'exquisito' (eso es 'delicioso')" },
-      { pt: "embaraçada", es: "avergonzada", n: "Embarazada se dice 'grávida'" },
-      { pt: "polvo", es: "pulpo", n: "Polvo se dice 'pó'" },
-      { pt: "borracha", es: "borrador / goma", n: "Borracha se dice 'bêbada'" },
-      { pt: "apelido", es: "apodo", n: "Apellido se dice 'sobrenome'" },
-      { pt: "cadeira", es: "silla", n: "Cadera se dice 'quadril'" },
-      { pt: "ligar", es: "llamar por teléfono" },
-      { pt: "pegar", es: "agarrar / tomar", n: "Pegar (golpear) se dice 'bater'" },
-      { pt: "rato", es: "ratón", n: "Un rato se dice 'um tempinho'" },
-      { pt: "oficina", es: "taller", n: "Oficina se dice 'escritório'" },
-      { pt: "largo", es: "ancho", n: "Largo se dice 'comprido'" },
-      { pt: "todavia", es: "sin embargo", n: "Todavía se dice 'ainda'" },
-      { pt: "assinatura", es: "firma", n: "Y 'firma' en portugués es empresa" },
-      { pt: "salada", es: "ensalada", n: "Salada (con sal) se dice 'salgada'" }
+      { pt: "apelido", es: "apodo", n: "Apellido = 'sobrenome'" }, { pt: "oficina", es: "taller", n: "Oficina = 'escritório'" },
+      { pt: "largo", es: "ancho", n: "Largo = 'comprido' / 'longo'" }, { pt: "esquisito", es: "raro / extraño", n: "Exquisito = 'delicioso'" },
+      { pt: "embaraçada", es: "avergonzada", n: "Embarazada = 'grávida'" }, { pt: "polvo", es: "pulpo", n: "Polvo = 'pó'" },
+      { pt: "borracha", es: "borrador / goma", n: "Borracha = 'bêbada'" }, { pt: "cadeira", es: "silla", n: "Cadera = 'quadril'" },
+      { pt: "ligar", es: "llamar por teléfono" }, { pt: "pegar", es: "agarrar / tomar", n: "Pegar (golpear) = 'bater'" },
+      { pt: "rato", es: "ratón", n: "Un rato = 'um tempinho'" }, { pt: "todavia", es: "sin embargo", n: "Todavía = 'ainda'" },
+      { pt: "chato", es: "aburrido / pesado" }, { pt: "salada", es: "ensalada", n: "Salada (con sal) = 'salgada'" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Qual é o seu ___?", resp: ["sobrenome"], pista: "apellido" },
+      { tipo: "completar", frase: "Ela trabalha num ___.", resp: ["escritório"], pista: "oficina" },
+      { tipo: "completar", frase: "Vou ___ para você amanhã.", resp: ["ligar"], pista: "llamar por teléfono" },
+      { tipo: "completar", frase: "Eu ___ não terminei.", resp: ["ainda"], pista: "todavía" },
+      { tipo: "marcar", frase: "Tu amiga va a tener un bebé. Ela está ___.", opciones: ["grávida", "embaraçada"], resp: 0,
+        explica: "**embaraçada** significa avergonzada.", oir: "Ela está grávida." },
+      { tipo: "marcar", frase: "*Esse filme é esquisito* significa:", opciones: ["Esa película es deliciosa", "Esa película es rara"], resp: 1 },
+      { tipo: "marcar", frase: "*O polvo está delicioso* habla de:", opciones: ["polvo (suciedad)", "pulpo"], resp: 1 }
     ]
   }
 ];
 
 const APROBADO = 70; // % mínimo en el quiz para marcar la lección como completada
 const CLAVE = "pt-progreso";
+
+const PESTANAS = [
+  { id: "apuntes",    ico: "📝", txt: "Teoría",      hay: l => l.apuntes && l.apuntes.length },
+  { id: "aprender",   ico: "📖", txt: "Vocabulario", hay: l => l.items && l.items.length },
+  { id: "tarjetas",   ico: "🃏", txt: "Tarjetas",    hay: l => l.items && l.items.length },
+  { id: "ejercicios", ico: "✏️", txt: "Ejercicios",  hay: l => l.ejercicios && l.ejercicios.length },
+  { id: "quiz",       ico: "✅", txt: "Quiz",        hay: l => l.items && l.items.length >= 4 }
+];
 
 let progreso = JSON.parse(localStorage.getItem(CLAVE) || "{}");
 let velocidadLenta = localStorage.getItem("pt-lento") === "1";
@@ -315,6 +1045,7 @@ let leccion = null;   // lección abierta
 let pestana = "aprender";
 let tarjetaIdx = 0, volteada = false, mazo = [];
 let quiz = null;
+let ejRes = [];       // resultado de cada ejercicio: null (sin responder), true o false
 
 // ---------- utilidades ----------
 const $app = document.getElementById("app");
@@ -326,6 +1057,123 @@ const mezclar = arr => {
   return arr;
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const md = s => esc(s)
+  .replace(/\\\*/g, "&#42;")
+  .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+  .replace(/\*(.+?)\*/g, "<em>$1</em>")
+  .replace(/___/g, '<span class="hueco-txt">____</span>');
+const normalizar = s => s.toLowerCase().trim().replace(/[.!?¿¡,;:]+$/g, "").replace(/\s+/g, " ");
+const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+const sinMd = s => String(s).replace(/\\?\*/g, "");
+const filaAudio = (pt, es, nota, quien, pr) => `
+  <div class="fila" data-pt="${esc(pt)}" onclick="hablar(this.dataset.pt)">
+    <button class="altavoz" aria-label="Escuchar">🔊</button>
+    <div>
+      ${quien ? `<div class="quien">${esc(quien)}</div>` : ""}
+      <div class="pt">${esc(pt)}</div>
+      <div class="pron">🗣️ ${esc(pr || pron(pt))}</div>
+      <div class="es">${esc(es)}</div>
+      ${nota ? `<div class="nota">💡 ${esc(nota)}</div>` : ""}
+    </div>
+  </div>`;
+
+// ---------- guía de pronunciación (portugués de Brasil, escrita para hispanohablantes) ----------
+// zh = j francesa · sh = sh inglesa · j = j suave · ñ = nh · lli = lh · dyi / chi = de, di / te, ti
+// aun, ain, oin, ein = nasales · la tilde marca la sílaba fuerte
+const PRON_EXCEPCIONES = {
+  muito: "múintu", muita: "múinta", muitos: "múintus", muitas: "múintas", ainda: "aínda", sexta: "sésta", ao: "au",
+  robert: "jóberchi", brighton: "bráitun", callao: "caiáu", luiz: "luís", werner: "vérner", martinelli: "marchinéli"
+};
+const VOCALES = "aáâãàeéêiíoóôõuú";
+const CON_ACENTO = /[áéíóúâêô]/;
+function pronPalabra(palabra) {
+  const s = palabra.toLowerCase(), n = s.length;
+  let r = PRON_EXCEPCIONES[s];
+  if (!r) {
+    const esVocal = i => i >= 0 && i < n && VOCALES.includes(s[i]);
+    const uMuda = i => s[i] === "u" && (s[i - 1] === "q" || s[i - 1] === "g") && esVocal(i + 1);
+    const vocal = i => esVocal(i) && !uMuda(i);
+    // Núcleos de sílaba (vocal o diptongo)
+    const nucleos = [];
+    for (let i = 0; i < n;) {
+      if (!vocal(i)) { i++; continue; }
+      let j = i + 1;
+      const par = s.slice(i, i + 2);
+      if (["ão", "ãe", "õe"].includes(par)) j = i + 2;
+      else if ("aáâeéêoóô".includes(s[i]) && /^[iu]$/.test(s[i + 1] || "")) j = i + 2;
+      else if (par === "ui" || par === "iu") j = i + 2;
+      nucleos.push({ a: i, b: j });
+      i = j;
+    }
+    // Sílaba tónica
+    let t = nucleos.findIndex(x => CON_ACENTO.test(s.slice(x.a, x.b)));
+    if (t < 0) t = nucleos.findIndex(x => /[ãõ]/.test(s.slice(x.a, x.b)));
+    if (t < 0) {
+      const sinS = s.replace(/s$/, "");
+      const llana = /[aeo]$/.test(sinS) || /(am|em|en)$/.test(sinS);
+      t = nucleos.length >= 2 && llana ? nucleos.length - 2 : nucleos.length - 1;
+    }
+    const mono = nucleos.length === 1;
+    const marcar = !mono || CON_ACENTO.test(s);
+    const tildar = v => v.replace(/[aeiou]/, c => ({ a: "á", e: "é", i: "í", o: "ó", u: "ú" }[c]));
+    // Cómo suena cada vocal
+    const sale = {};
+    nucleos.forEach((x, k) => {
+      const txt = s.slice(x.a, x.b).replace("à", "a");
+      const resto = s.slice(x.b);
+      const ultima = k === nucleos.length - 1;
+      let v;
+      if (txt === "ão") v = "aun";
+      else if (txt === "ãe") v = "ain";
+      else if (txt === "õe") v = "oin";
+      else if (txt === "ã") v = "an";
+      else if (txt === "õ") v = "on";
+      else if (ultima && resto === "m") {
+        v = { a: "aun", e: "ein", i: "in", o: "on", u: "un" }[sinTildes(txt[0])] || txt;
+        if (CON_ACENTO.test(txt[0])) v = txt[0] + v.slice(1);
+        sale[x.b] = "";
+      } else if (ultima && resto === "ns" && sinTildes(txt) === "e") {
+        v = CON_ACENTO.test(txt) ? txt + "in" : "ein";
+        sale[x.b] = "";
+      } else if (ultima && /^s?$/.test(resto) && /^[eo]$/.test(txt) && (k !== t || (mono && !CON_ACENTO.test(s)))) {
+        v = txt === "e" ? "i" : "u";
+      } else v = txt;
+      if (k === t && marcar && !CON_ACENTO.test(v)) v = tildar(v);
+      sale[x.a] = v;
+      for (let i = x.a + 1; i < x.b; i++) sale[i] = "";
+    });
+    const suenaI = i => /^[ií]/.test(sale[i + 1] || "");
+    const eI = c => /[eéêií]/.test(c || "");
+    r = "";
+    for (let i = 0; i < n; i++) {
+      if (i in sale) { r += sale[i]; continue; }
+      const c = s[i], sig = s[i + 1], ant = s[i - 1];
+      if (c === "h") continue;                                       // la h no suena
+      else if (c === "c") { if (sig === "h") { r += "sh"; i++; } else r += eI(sig) ? "s" : "c"; }
+      else if (c === "ç") r += "s";
+      else if (c === "q") { if (sig === "u") { r += eI(s[i + 2]) ? "qu" : "cu"; i++; } else r += "c"; }
+      else if (c === "g") { if (uMuda(i + 1)) { r += "gu"; i++; } else r += eI(sig) ? "zh" : "g"; }
+      else if (c === "j") r += "zh";
+      else if (c === "l") {
+        if (sig === "h") { r += suenaI(i + 1) ? "ll" : "lli"; i++; }
+        else if (!vocal(i + 1)) r += /[uú]$/.test(r) ? "" : "u";    // l final suena u: Brasil → brazíu
+        else r += "l";
+      }
+      else if (c === "n") { if (sig === "h") { r += "ñ"; i++; } else r += "n"; }
+      else if (c === "r") { if (i === 0 || "nls".includes(ant)) r += "j"; else if (sig === "r") { r += "j"; i++; } else r += "r"; }
+      else if (c === "s") { if (sig === "s") { r += "s"; i++; } else r += vocal(i - 1) && vocal(i + 1) ? "z" : "s"; }
+      else if (c === "x") r += i === 1 && s[0] === "e" && vocal(2) ? "z" : "sh";
+      else if (c === "z") r += i === n - 1 ? "s" : "z";
+      else if (c === "t") { if (sig === "c" && s[i + 2] === "h") { r += "ch"; i += 2; } else r += suenaI(i) ? "ch" : "t"; }
+      else if (c === "d") r += suenaI(i) ? "dy" : "d";
+      else if (c === "y") r += "i";
+      else if (c === "w") r += "u";
+      else r += c;
+    }
+  }
+  return palabra[0] !== palabra[0].toLowerCase() ? r[0].toUpperCase() + r.slice(1) : r;
+}
+const pron = texto => sinMd(texto).replace(/[A-Za-zÀ-ÿ]+/g, pronPalabra);
 
 // ---------- voz ----------
 function vozPortugues() {
@@ -336,7 +1184,7 @@ function vozPortugues() {
 function hablar(texto) {
   if (!("speechSynthesis" in window)) { alert("Tu navegador no permite reproducir voz."); return; }
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(texto.replace("...", ""));
+  const u = new SpeechSynthesisUtterance(texto.replace(/\.\.\./g, ""));
   u.lang = "pt-BR";
   const v = vozPortugues();
   if (v) u.voice = v;
@@ -369,16 +1217,19 @@ function pintarProgreso() {
 }
 
 // ---------- navegación ----------
+// Rutas: #/  ·  #/l/<lección>  ·  #/l/<lección>/<pestaña>
 function ruta() {
-  const m = location.hash.match(/^#\/l\/(\w+)/);
+  const m = location.hash.match(/^#\/l\/(\w+)(?:\/(\w+))?/);
   if (m) {
     leccion = m[1] === "repaso"
       ? { id: "repaso", icono: "🏆", titulo: "Repaso general",
-          intro: "Preguntas mezcladas de todas las lecciones.",
-          items: LECCIONES.flatMap(l => l.items) }
+          intro: "Vocabulario, ejercicios y quiz mezclados de todas las lecciones.",
+          items: LECCIONES.flatMap(l => l.items),
+          ejercicios: mezclar(LECCIONES.flatMap(l => l.ejercicios || [])).slice(0, 15) }
       : LECCIONES.find(l => l.id === m[1]);
     if (leccion) {
-      pestana = leccion.id === "repaso" ? "quiz" : "aprender";
+      const disponibles = pestanasDe(leccion).map(p => p.id);
+      pestana = disponibles.includes(m[2]) ? m[2] : (leccion.id === "repaso" ? "quiz" : disponibles[0]);
       prepararPestana();
       pintarLeccion();
       window.scrollTo(0, 0);
@@ -390,72 +1241,106 @@ function ruta() {
 }
 window.addEventListener("hashchange", ruta);
 
+function pestanasDe(l) { return PESTANAS.filter(p => p.hay(l)); }
 function prepararPestana() {
   if (pestana === "tarjetas") { mazo = leccion.items.map((_, i) => i); tarjetaIdx = 0; volteada = false; }
   if (pestana === "quiz") quiz = crearQuiz(leccion.items);
+  if (pestana === "ejercicios") ejRes = leccion.ejercicios.map(() => null);
 }
-function cambiarPestana(p) { pestana = p; prepararPestana(); pintarLeccion(); }
+function cambiarPestana(p) {
+  pestana = p;
+  history.replaceState(null, "", `#/l/${leccion.id}/${p}`);
+  prepararPestana();
+  pintarLeccion();
+  window.scrollTo(0, 0);
+}
 
 // ---------- pantallas ----------
+function tarjetaLeccion(l) {
+  const nota = progreso[l.id] || 0;
+  const notaEj = progreso["ej-" + l.id];
+  const hecha = nota >= APROBADO;
+  return `
+    <div class="tarjeta-leccion ${hecha ? "hecha" : ""}" onclick="location.hash='#/l/${l.id}'">
+      ${nota ? `<span class="insignia">${hecha ? "✓ " : ""}${nota}%</span>` : ""}
+      <div class="ico">${l.icono}</div>
+      <h3>${esc(l.titulo)}</h3>
+      <small>${l.items.length} palabras · ${(l.ejercicios || []).length} ejercicios</small>
+      ${notaEj !== undefined ? `<small>✏️ Ejercicios: ${notaEj}%</small>` : ""}
+    </div>`;
+}
 function pintarInicio() {
-  let html = `<div class="grid">`;
-  for (const l of LECCIONES) {
-    const nota = progreso[l.id] || 0;
-    const hecha = nota >= APROBADO;
-    html += `
-      <div class="tarjeta-leccion ${hecha ? "hecha" : ""}" onclick="location.hash='#/l/${l.id}'">
-        ${nota ? `<span class="insignia">${hecha ? "✓ " : ""}${nota}%</span>` : ""}
-        <div class="ico">${l.icono}</div>
-        <h3>${esc(l.titulo)}</h3>
-        <small>${l.items.length} palabras</small>
-      </div>`;
-  }
   const notaRepaso = progreso.repaso || 0;
-  html += `
+  $app.innerHTML = `
+    <h2 class="seccion">📘 Mi curso</h2>
+    <div class="grid">${LECCIONES.filter(l => l.grupo === "curso").map(tarjetaLeccion).join("")}</div>
+    <h2 class="seccion">➕ Práctica extra</h2>
+    <div class="grid">
+      ${LECCIONES.filter(l => l.grupo !== "curso").map(tarjetaLeccion).join("")}
       <div class="tarjeta-leccion repaso" onclick="location.hash='#/l/repaso'">
         ${notaRepaso ? `<span class="insignia">${notaRepaso}%</span>` : ""}
         <div class="ico">🏆</div>
         <h3>Repaso general</h3>
-        <small>Quiz de todo</small>
+        <small>Mezcla de todo</small>
       </div>
     </div>
     <footer>Tu progreso se guarda en este navegador.<br>
       <a href="#" onclick="if(confirm('¿Borrar todo tu progreso?')){localStorage.removeItem(CLAVE);progreso={};pintarProgreso();pintarInicio();}return false;">Reiniciar progreso</a>
     </footer>`;
-  $app.innerHTML = html;
 }
 
 function pintarLeccion() {
-  const pestanas = leccion.id === "repaso" ? "" : `
+  const disponibles = pestanasDe(leccion);
+  const barra = disponibles.length < 2 ? "" : `
     <div class="pestanas">
-      <button class="${pestana === "aprender" ? "activa" : ""}" onclick="cambiarPestana('aprender')">📖 Aprender</button>
-      <button class="${pestana === "tarjetas" ? "activa" : ""}" onclick="cambiarPestana('tarjetas')">🃏 Tarjetas</button>
-      <button class="${pestana === "quiz" ? "activa" : ""}" onclick="cambiarPestana('quiz')">✅ Quiz</button>
+      ${disponibles.map(p => `
+        <button class="${pestana === p.id ? "activa" : ""}" onclick="cambiarPestana('${p.id}')"><span>${p.ico}</span>${p.txt}</button>`).join("")}
     </div>`;
-  let cuerpo = "";
-  if (pestana === "aprender") cuerpo = htmlAprender();
-  if (pestana === "tarjetas") cuerpo = htmlTarjetas();
-  if (pestana === "quiz") cuerpo = htmlQuiz();
+  const cuerpo = {
+    apuntes: htmlApuntes, aprender: htmlAprender, tarjetas: htmlTarjetas,
+    ejercicios: htmlEjercicios, quiz: htmlQuiz
+  }[pestana]();
   $app.innerHTML = `
     <button class="volver" onclick="location.hash='#/'">← Lecciones</button>
     <h2 style="margin:6px 0 0">${leccion.icono} ${esc(leccion.titulo)}</h2>
     <div class="intro">${esc(leccion.intro)}</div>
-    ${pestanas}
+    ${barra}
     ${cuerpo}`;
 }
 
-// Aprender
+// Teoría
+function htmlApuntes() {
+  // t.pron = columnas a las que se les agrega al lado una columna de pronunciación
+  const tabla = t => {
+    const expandir = (fila, celda) => fila.flatMap((c, k) => t.pron && t.pron.includes(k) ? [md(c), celda(c)] : [md(c)]);
+    return `
+    <div class="tabla-wrap"><table>
+      ${t.cab.some(c => c) ? `<tr>${expandir(t.cab, () => "🗣️").map(c => `<th>${c}</th>`).join("")}</tr>` : ""}
+      ${t.filas.map(f => `<tr>${expandir(f, c => c ? `<span class="pron">${esc(pron(c))}</span>` : "").map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}
+    </table></div>`;
+  };
+  return leccion.apuntes.map(a => `
+    <div class="apunte">
+      ${a.t ? `<h3>${esc(a.t)}${a.extra ? `<span class="etiqueta-extra">➕ Extra</span>` : ""}</h3>` : ""}
+      ${a.p ? `<p>${md(a.p)}</p>` : ""}
+      ${a.tabla ? tabla(a.tabla) : ""}
+      ${a.lista ? `<ul>${a.lista.map(x => `<li>${md(x)}</li>`).join("")}</ul>` : ""}
+      ${a.ej ? `<div class="lista">${a.ej.map(([pt, es, pr]) => filaAudio(pt, es, null, null, pr)).join("")}</div>` : ""}
+      ${a.dialogo ? `<div class="lista">${a.dialogo.map(([quien, pt, es, pr]) => filaAudio(pt, es, null, quien, pr)).join("")}</div>` : ""}
+      ${a.consejos ? `<div class="consejo">💡 <strong>Consejos</strong><ul>${a.consejos.map(x => `<li>${md(x)}</li>`).join("")}</ul></div>` : ""}
+      ${a.porque ? `<div class="porque">🤔 <strong>¿Por qué?</strong> ${md(a.porque)}</div>` : ""}
+      ${a.ojo ? `<div class="ojo">⚠️ <strong>Ojo:</strong> ${md(a.ojo)}</div>` : ""}
+    </div>`).join("") + siguientePaso("ejercicios", "Practicar con ejercicios →");
+}
+
+// Vocabulario
 function htmlAprender() {
-  return `<div class="lista">` + leccion.items.map((it, i) => `
-    <div class="fila" onclick="hablar(leccion.items[${i}].pt)">
-      <button class="altavoz" aria-label="Escuchar">🔊</button>
-      <div>
-        <div class="pt">${esc(it.pt)}</div>
-        <div class="es">${esc(it.es)}</div>
-        ${it.n ? `<div class="nota">💡 ${esc(it.n)}</div>` : ""}
-      </div>
-    </div>`).join("") + `</div>
-    <div class="controles"><button class="btn" onclick="cambiarPestana('quiz')">Hacer el quiz →</button></div>`;
+  return `<div class="lista">${leccion.items.map(it => filaAudio(it.pt, it.es, it.n, null, it.pr)).join("")}</div>` +
+    siguientePaso("ejercicios", "Hacer los ejercicios →");
+}
+function siguientePaso(p, texto) {
+  if (!pestanasDe(leccion).some(x => x.id === p)) return "";
+  return `<div class="controles"><button class="btn" onclick="cambiarPestana('${p}')">${texto}</button></div>`;
 }
 
 // Tarjetas
@@ -464,6 +1349,7 @@ function htmlTarjetas() {
   return `
     <div class="flash ${volteada ? "volteada" : ""}" onclick="voltear()">
       <div class="grande">${esc(volteada ? it.es : it.pt)}</div>
+      ${volteada ? "" : `<div class="pron" style="margin-top:6px">🗣️ ${esc(it.pr || pron(it.pt))}</div>`}
       ${volteada && it.n ? `<div class="nota" style="margin-top:8px">💡 ${esc(it.n)}</div>` : ""}
       <div class="ayuda">${volteada ? "Toca para ver en portugués" : "¿Qué significa? Toca para voltear"}</div>
     </div>
@@ -480,6 +1366,114 @@ function moverTarjeta(d) {
   tarjetaIdx = (tarjetaIdx + d + mazo.length) % mazo.length;
   volteada = false;
   pintarLeccion();
+}
+
+// Ejercicios
+function htmlEjercicios() {
+  return `
+    <div class="marcador" id="ejMarcador">${textoMarcador()}</div>
+    <div class="lista">
+      ${leccion.ejercicios.map((e, i) => e.tipo === "marcar" ? htmlMarcar(e, i) : htmlCompletar(e, i)).join("")}
+    </div>
+    <div class="controles"><button class="btn sec" onclick="cambiarPestana('ejercicios')">↺ Reiniciar ejercicios</button></div>`;
+}
+function htmlCompletar(e, i) {
+  const partes = e.frase.split("___");
+  let frase = esc(partes[0]);
+  for (let k = 1; k < partes.length; k++) {
+    const largo = Math.max(...[].concat(e.resp[k - 1]).map(s => s.length));
+    frase += `<input class="hueco" style="width:${Math.max(5, largo + 2)}ch" autocomplete="off" autocapitalize="off"
+      autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')comprobarCompletar(${i})">` + esc(partes[k]);
+  }
+  return `
+    <div class="ej" id="ej-${i}">
+      <div class="tipo">✏️ Completa${e.pista ? ` · <em>${esc(e.pista)}</em>` : ""}</div>
+      <div class="frase">${frase}</div>
+      ${e.trad ? `<div class="trad">${esc(e.trad)}</div>` : ""}
+      <div class="controles izq"><button class="btn peq" onclick="comprobarCompletar(${i})">Comprobar</button></div>
+      <div class="res"></div>
+    </div>`;
+}
+function htmlMarcar(e, i) {
+  return `
+    <div class="ej" id="ej-${i}">
+      <div class="tipo">☑️ Marca la correcta</div>
+      <div class="frase">${md(e.frase)}</div>
+      <div class="opciones">
+        ${e.opciones.map((o, k) => `<button class="opcion" onclick="marcar(${i}, ${k})">${esc(o)}</button>`).join("")}
+      </div>
+      <div class="res"></div>
+    </div>`;
+}
+function fraseCompleta(e) {
+  return e.frase.split("___").reduce((acc, parte, k) => acc + [].concat(e.resp[k - 1])[0] + parte);
+}
+function comprobarCompletar(i) {
+  if (ejRes[i] !== null) return;
+  const e = leccion.ejercicios[i];
+  const caja = document.getElementById("ej-" + i);
+  const inputs = [...caja.querySelectorAll("input")];
+  const res = caja.querySelector(".res");
+  if (inputs.some(inp => !inp.value.trim())) {
+    res.innerHTML = `<span class="aviso">Completa todos los espacios primero.</span>`;
+    return;
+  }
+  let todoBien = true, casi = false;
+  inputs.forEach((inp, k) => {
+    const validas = [].concat(e.resp[k]).map(normalizar);
+    const v = normalizar(inp.value);
+    const exacta = validas.includes(v);
+    const soloTildes = !exacta && validas.some(a => sinTildes(a) === sinTildes(v));
+    inp.classList.add(exacta ? "bien" : soloTildes ? "casi" : "mal");
+    inp.disabled = true;
+    if (!exacta) todoBien = false;
+    if (soloTildes) casi = true;
+  });
+  const correcta = fraseCompleta(e);
+  let msg = todoBien ? "✅ ¡Correcto!"
+          : casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>`
+          : `❌ Respuesta: <strong>${esc(correcta)}</strong>`;
+  msg += `<div class="pron">🗣️ ${esc(pron(correcta))}</div>`;
+  if (e.explica) msg += `<div class="explica">💡 ${md(e.explica)}</div>`;
+  res.innerHTML = msg;
+  caja.querySelector(".controles").remove();
+  hablar(correcta.replace(/ · /g, ", "));
+  terminarEjercicio(i, todoBien);
+}
+function marcar(i, k) {
+  if (ejRes[i] !== null) return;
+  const e = leccion.ejercicios[i];
+  const caja = document.getElementById("ej-" + i);
+  const ok = k === e.resp;
+  caja.querySelectorAll(".opcion").forEach((b, j) => {
+    if (j === e.resp) b.classList.add("bien");
+    else if (j === k) b.classList.add("mal");
+    b.disabled = true;
+  });
+  const oir = e.oir || (e.frase.includes("___") ? e.frase.replace("___", e.opciones[e.resp]) : null);
+  let msg = ok ? "✅ ¡Correcto!" : `❌ La correcta es: <strong>${esc(e.opciones[e.resp])}</strong>`;
+  if (oir) msg += `<div class="pron">🗣️ ${esc(pron(oir))}</div>`;
+  if (e.explica) msg += `<div class="explica">💡 ${md(e.explica)}</div>`;
+  caja.querySelector(".res").innerHTML = msg;
+  if (oir) hablar(oir);
+  terminarEjercicio(i, ok);
+}
+function terminarEjercicio(i, ok) {
+  ejRes[i] = ok;
+  document.getElementById("ejMarcador").innerHTML = textoMarcador();
+  if (ejRes.every(r => r !== null)) {
+    guardarNota("ej-" + leccion.id, Math.round(ejRes.filter(Boolean).length / ejRes.length * 100));
+  }
+}
+function textoMarcador() {
+  const hechos = ejRes.filter(r => r !== null).length;
+  const bien = ejRes.filter(r => r === true).length;
+  if (hechos === ejRes.length && hechos > 0) {
+    const pct = Math.round(bien / hechos * 100);
+    return `🎉 ¡Terminaste! ${bien} de ${hechos} correctos (${pct}%)` +
+      (pct < 100 ? " · Repasa la teoría y vuelve a intentarlo" : " · Perfeito!");
+  }
+  return `Respondidos: ${hechos} de ${ejRes.length} · Correctos: ${bien}`;
 }
 
 // Quiz
