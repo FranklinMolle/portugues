@@ -1211,17 +1211,34 @@ function vozPortugues() {
   return voces.find(v => v.lang === "pt-BR" || v.lang === "pt_BR") ||
          voces.find(v => v.lang.startsWith("pt"));
 }
-function hablar(texto) {
-  if (!("speechSynthesis" in window)) { alert("Tu navegador no permite reproducir voz."); return; }
-  speechSynthesis.cancel();
+let vozActual = null;   // referencia para que el navegador no la descarte mientras habla
+function hablar(texto, op = {}) {
+  if (!("speechSynthesis" in window)) { alert("Tu navegador no permite reproducir voz. Prueba con Safari o Chrome actualizados."); return; }
+  const synth = window.speechSynthesis;
   const u = new SpeechSynthesisUtterance(texto.replace(/\.\.\./g, ""));
   u.lang = "pt-BR";
-  const v = vozPortugues();
+  const v = op.sinVoz ? null : vozPortugues();
   if (v) u.voice = v;
   u.rate = velocidadLenta ? 0.6 : 0.9;
-  speechSynthesis.speak(u);
+  u.volume = 1;
+  if (op.inicio) u.onstart = op.inicio;
+  if (op.fin) u.onend = op.fin;
+  if (op.error) u.onerror = e => op.error(e.error || "desconocido");
+  vozActual = u;
+  synth.resume();
+  // En Safari (iPhone), cancelar y hablar al mismo instante a veces deja la voz muda: se espera un momento
+  if (synth.speaking || synth.pending) { synth.cancel(); setTimeout(() => synth.speak(u), 120); }
+  else synth.speak(u);
 }
-if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => {};
+if ("speechSynthesis" in window) {
+  speechSynthesis.onvoiceschanged = () => { if (location.hash === "#/audio") pintarAudio(); };
+  // iPhone: la voz solo se activa tras un toque del usuario; el primer toque la "despierta" en silencio
+  const despertar = () => {
+    if (!speechSynthesis.speaking) { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); }
+  };
+  document.addEventListener("touchend", despertar, { once: true });
+  document.addEventListener("click", despertar, { once: true });
+}
 
 function cambiarVelocidad() {
   velocidadLenta = !velocidadLenta;
@@ -1249,6 +1266,7 @@ function pintarProgreso() {
 // ---------- navegación ----------
 // Rutas: #/  ·  #/l/<lección>  ·  #/l/<lección>/<pestaña>
 function ruta() {
+  if (location.hash === "#/audio") { leccion = null; pintarAudio(); return; }
   const mp = location.hash.match(/^#\/practica(?:\/(\w+))?/);
   if (mp) {
     leccion = null;
@@ -1315,6 +1333,7 @@ function pintarInicio() {
         <small>Preguntas infinitas, una por una. Ideal para el transporte.${errores().length ? ` · 🔁 ${errores().length} errores por repasar` : ""}</small>
       </div>
     </div>
+    <p style="margin:10px 2px 0;font-size:.88rem"><a href="#/audio">🔊 ¿No escuchas el audio? Pruébalo aquí</a></p>
     <h2 class="seccion">📘 Mi curso</h2>
     <div class="grid">${LECCIONES.filter(l => l.grupo === "curso").map(tarjetaLeccion).join("")}</div>
     <h2 class="seccion">➕ Práctica extra</h2>
@@ -1349,6 +1368,62 @@ function pintarLeccion() {
     <div class="intro">${esc(leccion.intro)}</div>
     ${barra}
     ${cuerpo}`;
+}
+
+// Prueba del audio
+function pintarAudio() {
+  const hay = "speechSynthesis" in window;
+  const voces = hay ? speechSynthesis.getVoices() : [];
+  const vocesPt = voces.filter(v => /^pt/i.test(v.lang));
+  const elegida = hay ? vozPortugues() : null;
+  const desdeInicio = navigator.standalone || matchMedia("(display-mode: standalone)").matches;
+  $app.innerHTML = `
+    <button class="volver" onclick="location.hash='#/'">← Inicio</button>
+    <h2 style="margin:6px 0 10px">🔊 Probar el audio</h2>
+    <div class="apunte">
+      <p>Toca un botón y escucha:</p>
+      <div class="controles izq">
+        <button class="btn" onclick="probarAudio(false)">▶️ Voz en portugués</button>
+        <button class="btn sec" onclick="probarAudio(true)">▶️ Voz del sistema</button>
+      </div>
+      <div id="audioEstado" class="res"></div>
+    </div>
+    <div class="apunte">
+      <h3>Datos de tu celular</h3>
+      <ul>
+        <li>Voz del navegador: ${hay ? "✅ disponible" : "❌ no disponible"}</li>
+        <li>Voces instaladas: ${voces.length}</li>
+        <li>Voces en portugués: ${vocesPt.length ? esc(vocesPt.map(v => `${v.name} (${v.lang})`).join(", ")) : "❌ ninguna"}</li>
+        <li>Voz que usa la página: ${elegida ? esc(elegida.name) : "la del sistema"}</li>
+        <li>Abierta desde un ícono de la pantalla de inicio: ${desdeInicio ? "sí" : "no"}</li>
+      </ul>
+    </div>
+    <div class="apunte">
+      <h3>Si no escuchas nada</h3>
+      <ul>
+        <li>📱 <strong>iPhone:</strong> el <strong>interruptor lateral de silencio</strong> también silencia esta voz. Ponlo en modo sonido (que no se vea la franja naranja) y sube el volumen con los botones laterales.</li>
+        <li>🎧 Si tienes audífonos Bluetooth conectados, el sonido puede estar saliendo por ellos.</li>
+        <li>🇧🇷 Si dice "Voces en portugués: ninguna":<br>
+          iPhone → Ajustes → Accesibilidad → Contenido leído → Voces → Portugués (Brasil) → descarga una voz.<br>
+          Android → Ajustes → Sistema → Idiomas → Salida de texto a voz → instala Portugués (Brasil).</li>
+        <li>Si la abriste desde un ícono de la pantalla de inicio y no suena, ábrela directamente en Safari o Chrome.</li>
+        <li>Cierra otras apps que estén usando el sonido (música, videos) y vuelve a probar.</li>
+      </ul>
+    </div>`;
+}
+function probarAudio(sinVoz) {
+  const estado = document.getElementById("audioEstado");
+  let empezo = false;
+  estado.innerHTML = "⏳ Intentando hablar...";
+  setTimeout(() => {
+    if (!empezo) estado.innerHTML = "❌ La voz no arrancó en 4 segundos. Revisa los consejos de abajo y, si sigue igual, mándame una captura de esta pantalla.";
+  }, 4000);
+  hablar("Olá! Tudo bem? Vamos aprender português.", {
+    sinVoz,
+    inicio: () => { empezo = true; estado.innerHTML = "🔊 La voz está sonando. Si ves este mensaje pero no oyes nada, el problema es el <strong>volumen</strong> o el <strong>modo silencio</strong>."; },
+    fin: () => { estado.innerHTML += "<br>✅ Terminó de hablar."; },
+    error: e => { empezo = true; estado.innerHTML = "❌ Error de voz: " + esc(e) + ". Mándame una captura de esta pantalla."; }
+  });
 }
 
 // Teoría
