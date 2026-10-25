@@ -159,6 +159,11 @@
   .consejo ul { margin: 4px 0 0; }
   td .pron { font-size: .85rem; }
   .ojo { background: var(--error-claro); border-left: 4px solid var(--error); }
+  .resuelto { background: var(--fondo); border-radius: 10px; padding: 10px 12px; margin-top: 8px; border-left: 4px solid var(--verde); }
+  .resuelto .r-frase { font-weight: 600; }
+  .resuelto .r-exp { margin: 5px 0; font-size: .93rem; }
+  .resuelto .r-resp { display: flex; align-items: center; gap: 8px; font-size: .93rem; }
+  .resuelto .altavoz { width: 32px; height: 32px; font-size: .9rem; }
   .tabla-wrap { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: .92rem; margin: 6px 0; }
   th, td { border: 1px solid var(--borde); padding: 6px 8px; text-align: left; vertical-align: top; }
@@ -1781,6 +1786,37 @@ const LECCIONES = [
         ej: [["Nós nunca discutimos.", "Nunca discutimos. → termina en -mos: nós"], ["Eles sempre bebem cerveja depois da aula.", "Ellos siempre toman cerveza después de clase. → -em: eles"],
              ["Todo dia eu como yakisoba.", "Todos los días como yakisoba. → -o: eu"], ["Chorei muito quando ele partiu.", "Lloré mucho cuando él se fue. → -iu: ele"]],
         porque: "**-mos** es siempre **nós**, en todos los tiempos. Y la **m** final casi siempre indica **eles / vocês**. Con eso ya resuelves la mitad del ejercicio." },
+      { t: "Ejercicio del curso: ¿cómo se resuelve?",
+        p: "Cada frase tiene un espacio vacío **antes del verbo**. Tienes que poner **quién hace la acción**: *eu, você, ele, ela, nós, eles, vocês*. Eso se llama **pronombre**.",
+        porque: "En portugués, igual que en español, **el verbo cambia según quién lo hace**. Piensa en español: *yo como, tú comes, nosotros comemos, ellos comen*. Solo con escuchar «comemos», ya sabes que es «nosotros», ¿verdad? En portugués pasa exactamente lo mismo.",
+        lista: ["**Paso 1:** mira el verbo (el que está en negrita).",
+                "**Paso 2:** fíjate en **cómo termina**.",
+                "**Paso 3:** piensa ese verbo **en español** y busca quién lo dice: ese es el pronombre."] },
+      { t: "Los 10, explicados uno por uno",
+        p: "Mismo método en todos: **mirar el verbo → ver cómo termina → pensarlo en español → poner el pronombre**.",
+        resueltos: [
+          { f: "Eu pedi para ___ **abrir** a porta para mim.", r: "você",
+            x: "El verbo *abrir* **no cambia** (está en infinitivo, como «abrir» en español), así que no da pistas. Hay que pensar por lógica: «Yo pedí que ___ abra la puerta para mí». Si **yo** lo pedí, se lo pedí **a otra persona**." },
+          { f: "Ontem ___ **falei** com meus pais.", r: "eu",
+            x: "*falei* termina en **-ei**. En español es «hablé», y «hablé» solo lo dice **yo**." },
+          { f: "___ nunca **discutimos**.", r: "nós",
+            x: "*discutimos* termina en **-mos**. En español también es «discutimos», y eso siempre es **nosotros**." },
+          { f: "___ sempre **bebem** cerveja depois da aula.", r: "eles",
+            x: "*bebem* termina en **-em**. En español es «beben», y eso lo hacen **ellos**." },
+          { f: "Ei, cuidado! ___ **anda** muito rápido.", r: "você",
+            x: "*anda* termina en **-a**. En español es «camina». Como dice «¡Oye, cuidado!», le está hablando **directamente a alguien**, o sea **tú**." },
+          { f: "Amanhã ___ **comeremos** feijoada no restaurante!", r: "nós",
+            x: "*comeremos* termina en **-mos**. En español también es «comeremos», y eso es **nosotros**." },
+          { f: "Chorei muito quando ___ **partiu**.", r: "ela (o ele)",
+            x: "*partiu* termina en **-iu**. En español es «se fue» (él o ella). Como **yo** lloré, se fue **otra persona**." },
+          { f: "___ **viajará** agora que tem seu visto para o Brasil.", r: "ele (o ela)",
+            x: "*viajará* termina en **-á**. En español también es «viajará», y eso lo dice **él** o **ella**." },
+          { f: "___ **querem** estudar português no Brasil?", r: "vocês",
+            x: "*querem* termina en **-em**. En español es «quieren». Como es una **pregunta directa**, le hablas a un grupo: **ustedes**." },
+          { f: "Todo dia ___ **como** yakisoba.", r: "eu",
+            x: "*como* termina en **-o**. En español también es «como» (yo como), y eso lo dice **yo**." }],
+        consejos: ["**El truco final:** traduce mentalmente el verbo al español. Si en español sabes quién lo dice, en portugués es el mismo pronombre.",
+                   "**Resumen:** si en español lo dice «yo», pones **eu**; si lo dice «tú, él o ella», pones **você, ele** o **ela**; si termina en «-mos», pones **nós**; y si lo dicen «ellos o ustedes», pones **eles** o **vocês**."] },
       { t: "Verbos útiles (y falsos amigos)",
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["acordar", "despertar(se)"], ["lembrar", "recordar, acordarse"], ["esquecer", "olvidar"], ["pegar", "tomar, agarrar"], ["colar", "pegar (con pegamento)"],
@@ -1812,16 +1848,26 @@ const LECCIONES = [
       { pt: "enjoar", es: "marear" }, { pt: "afastar", es: "alejar" }, { pt: "conhecer", es: "conocer" }, { pt: "vir", es: "venir" }, { pt: "pôr", es: "poner" }
     ],
     ejercicios: [
-      { tipo: "completar", frase: "Eu pedi para ___ abrir a porta para mim.", resp: [["você", "ele", "ela"]], pista: "abrir: la persona a quien le pides algo" },
-      { tipo: "completar", frase: "Ontem ___ falei com meus pais.", resp: ["eu"], pista: "falei → -ei" },
-      { tipo: "completar", frase: "___ nunca discutimos.", resp: ["nós"], pista: "discutimos → -mos" },
-      { tipo: "completar", frase: "___ sempre bebem cerveja depois da aula.", resp: [["eles", "elas", "vocês"]], pista: "bebem → -em" },
-      { tipo: "completar", frase: "Ei, cuidado! ___ anda muito rápido.", resp: [["você", "ele", "ela"]], pista: "anda → -a" },
-      { tipo: "completar", frase: "Amanhã ___ comeremos feijoada no restaurante!", resp: ["nós"], pista: "comeremos → -mos" },
-      { tipo: "completar", frase: "Chorei muito quando ___ partiu.", resp: [["ele", "ela", "você"]], pista: "partiu → -iu" },
-      { tipo: "completar", frase: "___ viajará agora que tem seu visto para o Brasil.", resp: [["ele", "ela", "você"]], pista: "viajará → -rá" },
-      { tipo: "completar", frase: "___ querem estudar português no Brasil?", resp: [["vocês", "eles", "elas"]], pista: "querem → -em" },
-      { tipo: "completar", frase: "Todo dia ___ como yakisoba.", resp: ["eu"], pista: "como → -o" },
+      { tipo: "completar", frase: "Eu pedi para ___ abrir a porta para mim.", resp: [["você", "ele", "ela"]], pista: "abrir no cambia: piensa por lógica",
+        explica: "*abrir* está en infinitivo y **no da pistas**. Por lógica: si **yo** lo pedí, se lo pedí **a otra persona** → **você** (o ele / ela)." },
+      { tipo: "completar", frase: "Ontem ___ falei com meus pais.", resp: ["eu"], pista: "falei → -ei",
+        explica: "*falei* termina en **-ei**. En español es «hablé», y eso solo lo dice **yo** → **eu**." },
+      { tipo: "completar", frase: "___ nunca discutimos.", resp: ["nós"], pista: "discutimos → -mos",
+        explica: "Termina en **-mos**: en español «discutimos» → siempre **nosotros** → **nós**." },
+      { tipo: "completar", frase: "___ sempre bebem cerveja depois da aula.", resp: [["eles", "elas", "vocês"]], pista: "bebem → -em",
+        explica: "*bebem* termina en **-em**. En español «beben» → **ellos** → **eles** (o elas / vocês)." },
+      { tipo: "completar", frase: "Ei, cuidado! ___ anda muito rápido.", resp: [["você", "ele", "ela"]], pista: "anda → -a",
+        explica: "*anda* = «camina». Como dice «¡Oye, cuidado!», le habla **directamente a alguien** (tú) → **você**." },
+      { tipo: "completar", frase: "Amanhã ___ comeremos feijoada no restaurante!", resp: ["nós"], pista: "comeremos → -mos",
+        explica: "Termina en **-mos**: en español «comeremos» → **nosotros** → **nós**." },
+      { tipo: "completar", frase: "Chorei muito quando ___ partiu.", resp: [["ele", "ela", "você"]], pista: "partiu → -iu",
+        explica: "*partiu* termina en **-iu** = «se fue» (él o ella). Como **yo** lloré, se fue **otra persona** → **ela** (o ele)." },
+      { tipo: "completar", frase: "___ viajará agora que tem seu visto para o Brasil.", resp: [["ele", "ela", "você"]], pista: "viajará → -rá",
+        explica: "*viajará* termina en **-á**: en español «viajará» → **él** o **ella** → **ele / ela**." },
+      { tipo: "completar", frase: "___ querem estudar português no Brasil?", resp: [["vocês", "eles", "elas"]], pista: "querem → -em",
+        explica: "*querem* = «quieren». Es una **pregunta directa** a un grupo → **ustedes** → **vocês**." },
+      { tipo: "completar", frase: "Todo dia ___ como yakisoba.", resp: ["eu"], pista: "como → -o",
+        explica: "*como* termina en **-o**: en español «(yo) como» → **yo** → **eu**." },
       { tipo: "completar", frase: "Eu ___ que vai chover.", resp: ["acho"], pista: "achar" },
       { tipo: "completar", frase: "Você ___ de ajuda?", resp: ["precisa"], pista: "precisar" },
       { tipo: "completar", frase: "Eu ___ estudar à noite.", resp: ["costumo"], pista: "costumar (soler)" },
@@ -2397,6 +2443,21 @@ function htmlApuntes() {
       ${a.lista ? `<ul>${a.lista.map(x => `<li>${md(x)}</li>`).join("")}</ul>` : ""}
       ${a.ej ? `<div class="lista">${a.ej.map(([pt, es, pr]) => filaAudio(pt, es, null, null, pr)).join("")}</div>` : ""}
       ${a.dialogo ? `<div class="lista">${a.dialogo.map(([quien, pt, es, pr]) => filaAudio(pt, es, null, quien, pr)).join("")}</div>` : ""}
+      ${a.resueltos ? a.resueltos.map((x, i) => {
+        const antes = x.f.split("___")[0];
+        const r = sinParentesis(x.r);
+        const respuesta = !antes.trim() || /[.!?]\s*$/.test(antes) ? r[0].toUpperCase() + r.slice(1) : r;   // mayúscula al inicio de oración
+        const frase = sinMd(x.f.replace("___", respuesta));
+        return `
+        <div class="resuelto">
+          <div class="r-frase">${i + 1}. ${md(x.f)}</div>
+          <div class="r-exp">👉 ${md(x.x)}</div>
+          <div class="r-resp">
+            <button class="altavoz" data-pt="${esc(frase)}" onclick="hablar(this.dataset.pt)" aria-label="Escuchar">🔊</button>
+            <span>✅ <strong>${esc(x.r)}</strong> → <em>${esc(frase)}</em></span>
+          </div>
+        </div>`;
+      }).join("") : ""}
       ${a.consejos ? `<div class="consejo">💡 <strong>Consejos</strong><ul>${a.consejos.map(x => `<li>${md(x)}</li>`).join("")}</ul></div>` : ""}
       ${a.porque ? `<div class="porque">🤔 <strong>¿Por qué?</strong> ${md(a.porque)}</div>` : ""}
       ${a.ojo ? `<div class="ojo">⚠️ <strong>Ojo:</strong> ${md(a.ojo)}</div>` : ""}
@@ -2507,7 +2568,8 @@ function comprobarCompletar(i) {
           : casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>`
           : `❌ Respuesta: <strong>${esc(correcta)}</strong>`;
   msg += `<div class="pron">🗣️ ${esc(pron(correcta))}</div>`;
-  if (e.explica) msg += `<div class="explica">💡 ${md(e.explica)}</div>`;
+  const explica = e.explica || explicarAuto(e);
+  if (explica) msg += `<div class="explica">💡 ${md(explica)}</div>`;
   res.innerHTML = msg;
   caja.querySelector(".controles").remove();
   hablar(correcta.replace(/ · /g, ", "));
@@ -2663,11 +2725,11 @@ const VERBOS = [
 // Verbos regulares sin cambios de escritura, para generar presente, pasado y futuro
 const VERBOS_REGULARES = [
   ["falar", "hablar"], ["morar", "vivir"], ["estudar", "estudiar"], ["cantar", "cantar"], ["comprar", "comprar"], ["andar", "caminar"],
-  ["usar", "usar"], ["viajar", "viajar"], ["tomar", "tomar"], ["amar", "amar"], ["gostar", "gustar"], ["precisar", "necesitar"],
+  ["usar", "usar"], ["viajar", "viajar"], ["tomar", "tomar"], ["amar", "amar"], ["precisar", "necesitar"],
   ["encontrar", "encontrar"], ["deixar", "dejar"], ["pintar", "pintar"], ["trabalhar", "trabajar"],
   ["comer", "comer"], ["beber", "beber"], ["aprender", "aprender"], ["correr", "correr"], ["entender", "entender"],
   ["escrever", "escribir"], ["viver", "vivir"], ["vender", "vender"], ["atender", "atender"],
-  ["abrir", "abrir"], ["assistir", "ver (TV)"], ["partir", "partir"], ["dividir", "dividir"], ["discutir", "discutir"],
+  ["abrir", "abrir"], ["assistir", "ver"], ["partir", "partir"], ["dividir", "dividir"], ["discutir", "discutir"],
   ["insistir", "insistir"], ["permitir", "permitir"], ["imprimir", "imprimir"], ["desistir", "desistir"], ["decidir", "decidir"]
 ];
 const TERMINACIONES = {
@@ -2678,6 +2740,75 @@ function conjugar(inf, tiempo, p) {
   if (tiempo === "futuro") return inf + ["ei", "á", "emos", "ão"][p];
   return inf.slice(0, -2) + TERMINACIONES[tiempo][inf.slice(-2)][p];
 }
+const finalPt = (inf, t, p) => t === "futuro" ? "-" + ["ei", "á", "emos", "ão"][p] : "-" + TERMINACIONES[t][inf.slice(-2)][p];
+
+// Conjugación en español (para comparar: "piénsalo en español")
+const ES_IRREGULARES = {
+  encontrar: { presente: ["encuentro", "encuentra", "encontramos", "encuentran"] },
+  entender: { presente: ["entiendo", "entiende", "entendemos", "entienden"] },
+  atender: { presente: ["atiendo", "atiende", "atendemos", "atienden"] },
+  ver: { presente: ["veo", "ve", "vemos", "ven"], pasado: ["vi", "vio", "vimos", "vieron"] }
+};
+function conjugarEs(inf, t, p) {
+  const irr = ES_IRREGULARES[inf] && ES_IRREGULARES[inf][t];
+  if (irr) return irr[p];
+  if (t === "futuro") return inf + ["é", "á", "emos", "án"][p];
+  const fin = {
+    presente: { ar: ["o", "a", "amos", "an"], er: ["o", "e", "emos", "en"], ir: ["o", "e", "imos", "en"] },
+    pasado: { ar: ["é", "ó", "amos", "aron"], er: ["í", "ió", "imos", "ieron"], ir: ["í", "ió", "imos", "ieron"] }
+  }[t][inf.slice(-2)];
+  return inf.slice(0, -2) + fin[p];
+}
+const QUIEN_PT = ["**eu**", "**ele / ela / você**", "**nós**", "**eles / elas / vocês**"];
+const QUIEN_ES = ["**yo**", "**él, ella o tú (usted)**", "**nosotros**", "**ellos o ustedes**"];
+const IRREGULARES = ["ser", "estar", "ter", "ir", "fazer", "querer", "poder", "ler", "ver", "ouvir", "dormir", "dizer", "saber", "vir", "pôr", "chamar-se"];
+
+// Explicación paso a paso de un verbo conjugado (para ejercicios sin explicación escrita)
+function explicarVerbo(e) {
+  if (!e.pista || e.resp.length !== 1) return null;
+  const inf = e.pista.split(/[\s(,]/)[0].toLowerCase();
+  const resp = normalizar([].concat(e.resp[0])[0]);
+  const grp = /(ar|er|ir)$/.test(inf) && !IRREGULARES.includes(inf) ? inf.slice(-2) : null;
+  const esV = VERBOS_REGULARES.find(x => x[0] === inf);
+  const ort = s => sinTildes(s).replace(/j/g, "g");
+  if (grp) {
+    for (const t of ["presente", "pasado", "futuro"]) {
+      for (let p = 0; p < 4; p++) {
+        const forma = conjugar(inf, t, p);
+        if (forma !== resp && ort(forma) !== ort(resp)) continue;
+        const tiempo = t === "presente" ? "" : t === "pasado" ? " en **pasado**" : " en **futuro** (infinitivo + terminación)";
+        let x = `*${inf}* termina en **-${grp}**. Con ${QUIEN_PT[p]}${tiempo} la terminación es **${finalPt(inf, t, p)}** → **${resp}**.`;
+        if (forma !== resp) x += ` (Cambia la escritura para mantener el sonido: *${forma}* → **${resp}**.)`;
+        if (esV) x += ` En español: «${conjugarEs(esV[1], t, p)}».`;
+        return x;
+      }
+    }
+  }
+  const v = VERBOS.find(x => x.inf === inf);
+  const p = v ? v.f.indexOf(resp) : -1;
+  if (p >= 0) return `*${inf}* es **irregular**: hay que memorizarlo → eu ${v.f[0]} · ele/você ${v.f[1]} · nós ${v.f[2]} · eles ${v.f[3]}. Con ${QUIEN_PT[p]} → **${resp}**.`;
+  return null;
+}
+// Contracciones: pista "em + o", "de + a", "a + os", "por + a"...
+function explicarContraccion(e) {
+  const m = (e.pista || "").match(/^(em|de|a|por) \+ (o|a|os|as)$/);
+  if (!m || e.resp.length !== 1) return null;
+  const [, prep, art] = m;
+  const res = CONTRACCIONES[prep].t[art];
+  const sig = (e.frase.split("___")[1] || "").trim().split(/[\s.,!?]/)[0];
+  const genero = { o: "masculino singular", a: "femenino singular", os: "masculino plural", as: "femenino plural" }[art];
+  const enEsp = { em: ["en el", "en la", "en los", "en las"], de: ["del", "de la", "de los", "de las"], a: ["al", "a la", "a los", "a las"],
+                  por: ["por el", "por la", "por los", "por las"] }[prep][["o", "a", "os", "as"].indexOf(art)];
+  return `Paso 1: la palabra que sigue es *${sig}*, ${genero} → artículo **${art}**. ` +
+         `Paso 2: **${prep} + ${art}** siempre se juntan → **${res}**. En español: «${enEsp}».`;
+}
+// Plurales: "um pão, dois ___"
+function explicarPlural(e) {
+  const m = e.frase.match(/^(?:um|uma) ([^,]+), (?:dois|duas) ___/);
+  const pl = m && PLURALES.find(x => x[0] === m[1]);
+  return pl ? `*${pl[0]}* → **${pl[1]}**. Regla: ${pl[3]}` : null;
+}
+const explicarAuto = e => explicarVerbo(e) || explicarContraccion(e) || explicarPlural(e);
 const SUJETOS = [["Eu", 0], ["Você", 1], ["Ele", 1], ["Ela", 1], ["A gente", 1], ["A Ana", 1], ["O meu pai", 1],
                  ["Nós", 2], ["Vocês", 3], ["Eles", 3], ["Elas", 3], ["Os meus amigos", 3]];
 
@@ -2975,15 +3106,22 @@ function genConjugacion() {
   const sujetos = v.soloSing ? SUJETOS.filter(s => ["Eu", "Você", "Ele", "Ela"].includes(s[0])) : SUJETOS;
   const [suj, p] = azar(sujetos);
   const comp = azar(v.comp);
-  const tabla = `**${v.inf}**: eu ${v.f[0]} · você/ele ${v.f[1]} · nós ${v.f[2]} · eles ${v.f[3]}`;
+  const grp = /(ar|er|ir)$/.test(v.inf) ? v.inf.slice(-2) : null;
+  const regular = grp && !IRREGULARES.includes(v.inf) && [0, 1, 2, 3].every(k => conjugar(v.inf, "presente", k) === v.f[k]);
+  const formas = `eu ${v.f[0]} · você/ele ${v.f[1]} · nós ${v.f[2]} · eles ${v.f[3]}`;
+  const comoQuien = ["persona **eu**", "se conjuga como **ele**", "persona **nós**", "se conjuga como **eles**"];
+  const tabla = (s, k) => regular
+    ? `1) **${s}** → ${comoQuien[k]}. 2) *${v.inf}* termina en **-${grp}**. 3) Terminación **${finalPt(v.inf, "presente", k)}** → **${v.f[k]}**.`
+    : `1) **${s}** → ${comoQuien[k]}. 2) *${v.inf}* ${IRREGULARES.includes(v.inf) ? "es **irregular**, hay que memorizarlo" : "cambia un poco"}: ${formas} → **${v.f[k]}**.`;
   if (!v.soloSing && Math.random() < 0.25) {
     const pronombres = ["Eu", "Ela", "Nós", "Eles"];
     const pp = Math.floor(Math.random() * 4);
     return { clave: `pron-${v.inf}-${pp}`, sub: "¿Qué pronombre va?", pregunta: `___ ${v.f[pp]} ${comp}.`,
-             ...armar(pronombres[pp], pronombres), oir: `${pronombres[pp]} ${v.f[pp]} ${comp}.`, explica: tabla };
+             ...armar(pronombres[pp], pronombres), oir: `${pronombres[pp]} ${v.f[pp]} ${comp}.`,
+             explica: `*${v.f[pp]}* es la forma de ${QUIEN_PT[pp]} (en español: ${QUIEN_ES[pp]}). Formas de *${v.inf}*: ${formas}.` };
   }
   return { clave: `conj-${v.inf}-${p}`, sub: `${v.inf} = ${v.es}`, pregunta: `${suj} ___ ${comp}.`, ...armar(v.f[p], v.f),
-           oir: `${suj} ${v.f[p]} ${comp}.`, explica: tabla, escribible: true };
+           oir: `${suj} ${v.f[p]} ${comp}.`, explica: tabla(suj, p), escribible: true };
 }
 function genBanco(banco) {
   const e = azar(banco);
@@ -3037,6 +3175,7 @@ function genTiempo() {
   const pronombres = [["eu", 0], ["ele", 1], ["ela", 1], ["você", 1], ["nós", 2], ["eles", 3], ["vocês", 3]];
   const [pron, p] = azar(pronombres);
   const tipo = Math.random();
+  const marcaEs = { presente: "hoy", pasado: "ayer", futuro: "mañana" };
   if (tipo < 0.5) {
     // Conjugar con la pista de tiempo (hoje / ontem / amanhã)
     const t = azar(tiempos);
@@ -3044,16 +3183,18 @@ function genTiempo() {
     const otras = tiempos.map(x => conjugar(inf, x, p)).concat([conjugar(inf, t, (p + 1) % 4), conjugar(inf, t, (p + 3) % 4)]);
     return { clave: `tie-${inf}-${t}-${p}`, sub: `${inf} = ${es} · ${t}`, pregunta: `${marca[t]} ${pron} ___.`, ...armar(correcta, otras),
              oir: `${marca[t]} ${pron} ${correcta}.`, escribible: true,
-             explica: `${t === "futuro" ? "Futuro: infinitivo + " + ["-ei", "-á", "-emos", "-ão"][p] : t === "pasado" ? "Pasado" : "Presente"} → **${correcta}**. ` +
-                      `(${tiempos.map(x => `${x}: ${conjugar(inf, x, p)}`).join(" · ")})` };
+             explica: `1) *${marca[t]}* = ${marcaEs[t]} → **${t}**. 2) Persona: ${QUIEN_PT[p]}. ` +
+                      `3) ${t === "futuro" ? "Futuro = infinitivo completo + **" + finalPt(inf, t, p) + "**" : `*${inf}* es **-${inf.slice(-2)}** → terminación **${finalPt(inf, t, p)}**`}` +
+                      ` → **${correcta}**. En español: «${marcaEs[t]} ${conjugarEs(es, t, p)}».` };
   }
   if (tipo < 0.8) {
-    // ¿Qué pronombre? por la terminación
+    // ¿Qué pronombre? por la terminación, pensándolo en español
     const t = azar(tiempos);
     const forma = conjugar(inf, t, p);
     const opciones = ["Eu", "Ele", "Nós", "Eles"];
-    return { clave: `tpr-${inf}-${t}-${p}`, sub: "¿Qué pronombre va? Mira la terminación", pregunta: `___ ${forma}.`, ...armar(opciones[p], opciones),
-             oir: `${opciones[p]} ${forma}.`, explica: `**${forma}** (${t}) → ${["eu", "ele / ela / você", "nós", "eles / elas / vocês"][p]}.` };
+    return { clave: `tpr-${inf}-${t}-${p}`, sub: "¿Qué pronombre va? Mira cómo termina el verbo", pregunta: `___ ${forma}.`, ...armar(opciones[p], opciones),
+             oir: `${opciones[p]} ${forma}.`,
+             explica: `*${forma}* termina en **${finalPt(inf, t, p)}**. En español sería «${conjugarEs(es, t, p)}», y eso lo dice ${QUIEN_ES[p]} → ${QUIEN_PT[p]}.` };
   }
   // ¿En qué tiempo está? (sin nós, que es igual en presente y pasado)
   const pp = azar([0, 1, 3]);
@@ -3061,7 +3202,7 @@ function genTiempo() {
   const forma = conjugar(inf, t, pp);
   return { clave: `tqt-${inf}-${t}-${pp}`, sub: "¿En qué tiempo está?", pregunta: `${["Eu", "Ele", "", "Eles"][pp]} ${forma}.`,
            ...armar(t, tiempos), oir: `${["Eu", "Ele", "", "Eles"][pp]} ${forma}.`,
-           explica: `${inf}: presente **${conjugar(inf, "presente", pp)}** · pasado **${conjugar(inf, "pasado", pp)}** · futuro **${conjugar(inf, "futuro", pp)}**.` };
+           explica: `En español sería «${conjugarEs(es, t, pp)}» → **${t}**. Compara: presente *${conjugar(inf, "presente", pp)}* · pasado *${conjugar(inf, "pasado", pp)}* · futuro *${conjugar(inf, "futuro", pp)}*.` };
 }
 function genHeterogenerico() {
   const [pt, plur, g, es] = azar(HETEROGENERICOS);
@@ -3188,7 +3329,7 @@ function genCurso(lecciones) {
   }
   if (!modoEscribir || e.resp.length !== 1) return null;   // los de completar solo en modo escribir
   return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${e.pista || l.titulo}`, pregunta: e.frase, soloEscribir: true,
-           validas: [].concat(e.resp[0]), oir: e.frase === "___" ? null : fraseCompleta(e), explica: e.explica };
+           validas: [].concat(e.resp[0]), oir: e.frase === "___" ? null : fraseCompleta(e), explica: e.explica || explicarAuto(e) };
 }
 function genError() {
   const lista = errores();
