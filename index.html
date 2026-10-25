@@ -876,6 +876,263 @@ const LECCIONES = [
     ]
   },
 
+  {
+    id: "genero", grupo: "curso", icono: "🔀", titulo: "Género y plural",
+    intro: "Feminino ou masculino? Plural, tal vez? Algunas palabras cambian de género al pasar del español al portugués (heterogenéricos), y el plural tiene sus propias reglas.",
+    apuntes: [
+      { t: "Heterogenéricos: ¿qué son?",
+        p: "Aunque el portugués y el español se parecen mucho, algunas palabras **cambian de género** al traducirse de un idioma al otro. Se llaman **heterogenéricos** y causan muchas confusiones.",
+        ej: [["A viagem foi maravilhosa.", "El viaje fue maravilloso."], ["O leite está frio.", "La leche está fría."]],
+        consejos: ["Aprende cada palabra **con su artículo**: no memorices *viagem*, memoriza **a viagem**.",
+                   "Hay patrones que se repiten (abajo): con ellos te ahorras memorizar la mitad de la lista."] },
+      { t: "Masculino en español → FEMENINO en portugués",
+        tabla: { cab: ["Español", "Português"], pron: [1], filas: [
+          ["el análisis", "a análise"], ["el árbol", "a árvore"], ["el color", "a cor"], ["el coraje", "a coragem"], ["el desorden", "a desordem"],
+          ["el dolor", "a dor"], ["el énfasis", "a ênfase"], ["el equipo", "a equipe"], ["el estante", "a estante"], ["el puente", "a ponte"],
+          ["el lapicero, el bolígrafo", "a caneta"], ["el alma", "a alma"], ["el lunes, el martes...", "a segunda, a terça..."],
+          ["el carruaje", "a carruagem"], ["el chantaje", "a chantagem"], ["el garaje", "a garagem"], ["el homenaje", "a homenagem"],
+          ["el lenguaje", "a linguagem"], ["el mensaje", "a mensagem"], ["el paisaje", "a paisagem"], ["el tatuaje", "a tatuagem"], ["el viaje", "a viagem"]] },
+        porque: "Todas las palabras en **-agem** son **femeninas**, aunque en español *-aje* sea masculino. Con esa sola regla ya cubres 9 palabras de la lista.",
+        ojo: "*El alma* en español en realidad es femenina (se dice *el* solo por el sonido: *el alma pura*). En portugués es **a alma**." },
+      { t: "Femenino en español → MASCULINO en portugués",
+        tabla: { cab: ["Español", "Português"], pron: [1], filas: [
+          ["la alarma", "o alarme"], ["la baraja", "o baralho"], ["la costumbre", "o costume"], ["la cumbre", "o cume"], ["la crema", "o creme"],
+          ["la leche", "o leite"], ["la legumbre, la verdura", "o legume"], ["la miel", "o mel"], ["la nariz", "o nariz"], ["la radio", "o rádio"],
+          ["la sal", "o sal"], ["la sangre", "o sangue"], ["la sonrisa", "o sorriso"], ["la pesadilla", "o pesadelo"], ["la paradoja", "o paradoxo"],
+          ["la protesta", "o protesto"], ["la señal", "o sinal"]] },
+        porque: "Lo que en español termina en **-umbre** es masculino en portugués: *o costume, o cume, o legume*. Y varias terminan en **-o** en portugués (*sorriso, pesadelo, protesto*), la terminación típica del masculino." },
+      { t: "Verduras: ¿o o a?",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["o tomate", "el tomate"], ["a alface", "la lechuga"], ["o repolho", "el repollo, la col"], ["a couve-flor", "la coliflor"], ["o abacate", "la palta"]] },
+        porque: "En Perú decimos **la** palta, pero en portugués es **o abacate** (masculino). ¡Otro heterogenérico!" },
+      { t: "Juego del curso: frases que muestran el género",
+        p: "La frase tiene que **mostrar el género** con el artículo y el adjetivo. *Gosto de mel* no vale, porque ahí no se ve si *mel* es masculino o femenino.",
+        ej: [["O mel é delicioso.", "La miel es deliciosa."], ["Os gatos são pretos.", "Los gatos son negros."], ["O sal está na mesa.", "La sal está en la mesa."],
+             ["A árvore é muito alta.", "El árbol es muy alto."], ["O sorriso dela é lindo.", "Su sonrisa es linda."], ["A ponte é antiga.", "El puente es antiguo."],
+             ["O nariz dele é pequeno.", "Su nariz es pequeña."], ["A garagem está cheia.", "El garaje está lleno."], ["O abacate está maduro.", "La palta está madura."]],
+        consejos: ["El adjetivo **concuerda** con el género del portugués: *a viagem foi longa*, aunque en español sea *el viaje fue largo*."] },
+      { t: "O plural das palavras",
+        p: "Maçã → maçãs, homem → homens, mulher → mulheres, viagem → viagens. Y las palabras en **-ão**, que tienen tres plurales posibles:",
+        tabla: { cab: ["Singular", "Plural"], pron: [1], filas: [
+          ["pão", "pães"], ["alemão", "alemães"], ["capitão", "capitães"], ["órgão", "órgãos"], ["irmão", "irmãos"],
+          ["cidadão", "cidadãos"], ["estação", "estações"], ["limão", "limões"], ["razão", "razões"]] },
+        porque: "¡Truco! Piensa en el plural en **español**: *panes, alemanes, capitanes* → **-ães** · *órganos, hermanos, ciudadanos* → **-ãos** · *estaciones, limones, razones* → **-ões**. La gran mayoría son **-ões**." },
+      { t: "Reglas del plural", extra: true,
+        tabla: { cab: ["Termina en", "Plural", "Ejemplos"], filas: [
+          ["vocal", "+ **s**", "casa → casas, maçã → maçãs"],
+          ["-m", "→ **-ns**", "homem → homens, viagem → viagens, jovem → jovens"],
+          ["-r, -z", "+ **es**", "mulher → mulheres, cor → cores, nariz → narizes"],
+          ["-al, -el, -ol, -ul", "→ **-is**", "animal → animais, papel → papéis, sol → sóis, azul → azuis"],
+          ["-il (no tónica)", "→ **-eis**", "útil → úteis, fácil → fáceis"],
+          ["-s (no tónica)", "no cambia", "o ônibus → os ônibus, o lápis → os lápis"],
+          ["-ão", "**-ões / -ães / -ãos**", "estações, pães, irmãos"]] },
+        porque: "En portugués ninguna palabra termina en **-ms**: por eso *homem* → *homens*. Y la **l** final suena como *u*, así que en plural se vuelve vocal: *animal* → *animais*." }
+    ],
+    items: [
+      { pt: "a viagem", es: "el viaje" }, { pt: "a mensagem", es: "el mensaje" }, { pt: "a garagem", es: "el garaje" }, { pt: "a paisagem", es: "el paisaje" },
+      { pt: "a tatuagem", es: "el tatuaje" }, { pt: "a homenagem", es: "el homenaje" }, { pt: "a linguagem", es: "el lenguaje" }, { pt: "a coragem", es: "el coraje" },
+      { pt: "a árvore", es: "el árbol" }, { pt: "a cor", es: "el color" }, { pt: "a dor", es: "el dolor" }, { pt: "a ponte", es: "el puente" },
+      { pt: "a equipe", es: "el equipo" }, { pt: "a análise", es: "el análisis" }, { pt: "a caneta", es: "el lapicero" }, { pt: "a estante", es: "el estante" },
+      { pt: "o leite", es: "la leche" }, { pt: "o mel", es: "la miel" }, { pt: "o sal", es: "la sal" }, { pt: "o sangue", es: "la sangre" },
+      { pt: "o nariz", es: "la nariz" }, { pt: "o sorriso", es: "la sonrisa" }, { pt: "o costume", es: "la costumbre" }, { pt: "o legume", es: "la legumbre" },
+      { pt: "o alarme", es: "la alarma" }, { pt: "o creme", es: "la crema" }, { pt: "o pesadelo", es: "la pesadilla" }, { pt: "o sinal", es: "la señal" },
+      { pt: "o cume", es: "la cumbre" }, { pt: "o protesto", es: "la protesta" }, { pt: "o rádio", es: "la radio" }, { pt: "o baralho", es: "la baraja" },
+      { pt: "o tomate", es: "el tomate" }, { pt: "a alface", es: "la lechuga" }, { pt: "o repolho", es: "el repollo" },
+      { pt: "a couve-flor", es: "la coliflor" }, { pt: "o abacate", es: "la palta" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "___ viagem · ___ leite · ___ árvore · ___ sorriso · ___ ponte", resp: ["a", "o", "a", "o", "a"], pista: "Artículo: o / a" },
+      { tipo: "completar", frase: "___ mensagem · ___ sal · ___ cor · ___ nariz · ___ garagem", resp: ["a", "o", "a", "o", "a"], pista: "Artículo: o / a" },
+      { tipo: "completar", frase: "___ costume · ___ dor · ___ sangue · ___ equipe · ___ mel", resp: ["o", "a", "o", "a", "o"], pista: "Artículo: o / a" },
+      { tipo: "completar", frase: "___ abacate · ___ alface · ___ tomate · ___ couve-flor · ___ repolho", resp: ["o", "a", "o", "a", "o"], pista: "Verduras" },
+      { tipo: "completar", frase: "A viagem foi ___.", resp: ["maravilhosa"], pista: "maravilhoso (concuerda con a viagem)" },
+      { tipo: "completar", frase: "O mel é ___.", resp: ["delicioso"], pista: "delicioso" },
+      { tipo: "completar", frase: "A árvore é muito ___.", resp: ["alta"], pista: "alto" },
+      { tipo: "completar", frase: "O nariz dela é ___.", resp: ["pequeno"], pista: "pequeno" },
+      { tipo: "completar", frase: "A ponte é muito ___.", resp: ["antiga"], pista: "antigo" },
+      { tipo: "completar", frase: "um pão, dois ___", resp: ["pães"], pista: "plural" },
+      { tipo: "completar", frase: "um irmão, dois ___", resp: ["irmãos"], pista: "plural" },
+      { tipo: "completar", frase: "um limão, dois ___", resp: ["limões"], pista: "plural" },
+      { tipo: "completar", frase: "uma estação, duas ___", resp: ["estações"], pista: "plural" },
+      { tipo: "completar", frase: "um homem, dois ___", resp: ["homens"], pista: "plural" },
+      { tipo: "completar", frase: "uma mulher, duas ___", resp: ["mulheres"], pista: "plural" },
+      { tipo: "completar", frase: "um alemão, dois ___", resp: ["alemães"], pista: "plural" },
+      { tipo: "marcar", frase: "*el puente* se dice:", opciones: ["a ponte", "o ponte"], resp: 0, oir: "a ponte" },
+      { tipo: "marcar", frase: "*la sonrisa* se dice:", opciones: ["o sorriso", "a sorrisa"], resp: 0, oir: "o sorriso" },
+      { tipo: "marcar", frase: "*el equipo* se dice:", opciones: ["a equipe", "o equipe"], resp: 0, oir: "a equipe" },
+      { tipo: "marcar", frase: "*la palta* se dice:", opciones: ["o abacate", "a abacate"], resp: 0, oir: "o abacate" },
+      { tipo: "marcar", frase: "Plural de *cidadão*:", opciones: ["cidadãos", "cidadões", "cidadães"], resp: 0, explica: "Como *ciudadanos* → **-ãos**.", oir: "cidadãos" },
+      { tipo: "marcar", frase: "Plural de *capitão*:", opciones: ["capitães", "capitãos", "capitões"], resp: 0, explica: "Como *capitanes* → **-ães**.", oir: "capitães" },
+      { tipo: "marcar", frase: "Plural de *razão*:", opciones: ["razões", "razãos", "razães"], resp: 0, explica: "Como *razones* → **-ões**.", oir: "razões" },
+      { tipo: "marcar", frase: "Plural de *papel*:", opciones: ["papéis", "papeles", "papels"], resp: 0, explica: "-el → **-éis**.", oir: "papéis" },
+      { tipo: "marcar", frase: "¿Qué frase muestra el género de *mel*?", opciones: ["O mel é delicioso.", "Gosto de mel."], resp: 0,
+        explica: "*Gosto de mel* no tiene artículo ni adjetivo: no se ve el género.", oir: "O mel é delicioso." }
+    ]
+  },
+  {
+    id: "dias", grupo: "curso", icono: "📅", titulo: "Días, meses y la semana",
+    intro: "Que dia é hoje? Los días de la semana, los meses y las expresiones para hablar de tu semana y de tu rutina.",
+    apuntes: [
+      { t: "Dias da semana",
+        p: "De lunes a viernes: número + **feira**. Al hablar se acortan: **segunda, terça, quarta, quinta, sexta**. Sábado y domingo, como en español.",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["segunda-feira", "lunes"], ["terça-feira", "martes"], ["quarta-feira", "miércoles"], ["quinta-feira", "jueves"],
+          ["sexta-feira", "viernes"], ["sábado", "sábado"], ["domingo", "domingo"]] },
+        ej: [["Que dia é hoje?", "¿Qué día es hoy?"], ["Hoje é segunda-feira.", "Hoy es lunes."]],
+        consejos: ["Los días se escriben con **minúscula** en medio de la frase (igual que en español). Solo llevan mayúscula al empezar la frase."],
+        porque: "La semana empieza el **domingo** (día 1): por eso el lunes es el **segundo** día (*segunda*), el martes el tercero (*terça*), y así hasta el viernes, el sexto (*sexta*)." },
+      { t: "Dia é masculino, semana é feminino",
+        ej: [["o dia", "el día"], ["a semana", "la semana"], ["o dia da semana", "el día de la semana"]],
+        lista: ["De **segunda a sexta** son **femeninos**: *a segunda-feira* (porque *feira* es femenino).",
+                "**Sábado** y **domingo** son **masculinos**: *o sábado, o domingo*."],
+        porque: "Por eso decimos **na** segunda (em + a) pero **no** sábado (em + o)." },
+      { t: "Exemplos com dias da semana",
+        ej: [["Não tem nada interessante na TV no domingo.", "No hay nada interesante en la tele el domingo."],
+             ["Todo mundo odeia segunda-feira.", "Todo el mundo odia el lunes."],
+             ["Toda terça-feira tem vídeo novo no nosso canal.", "Cada martes hay video nuevo en nuestro canal."],
+             ["Quarta-feira à tarde ela vai visitar o centro da cidade.", "El miércoles en la tarde ella va a visitar el centro de la ciudad."],
+             ["O que você fez na quinta-feira passada?", "¿Qué hiciste el jueves pasado?"],
+             ["Sexta-feira é dia de beber caipirinhas!", "¡El viernes es día de tomar caipiriñas!"],
+             ["Eu gosto de relaxar no sábado.", "Me gusta relajarme el sábado."]],
+        ojo: "En el material aparecen *Domingo* y *Sábado* con mayúscula en medio de la frase. Según la regla del mismo curso, ahí van en **minúscula**." },
+      { t: "Hábitos: aos domingos, às segundas", extra: true,
+        p: "Para lo que haces **cada** semana se usa **a + artículo**:",
+        tabla: { cab: ["Se junta", "Resultado", "Ejemplo"], pron: [1], filas: [
+          ["a + o", "ao", "Vou **ao** parque."], ["a + a", "à", "Vou **à** praia."], ["a + os", "aos", "**aos** domingos"], ["a + as", "às", "**às** segundas"]] },
+        ej: [["Aos domingos brinco no parque com meus pais e não tenho aulas.", "Los domingos juego en el parque con mis padres y no tengo clases."],
+             ["Às sextas eu jogo futebol.", "Los viernes juego fútbol."], ["Todas as quintas eu estudo português.", "Todos los jueves estudio portugués."]],
+        porque: "Es igual que *em + o = no*, pero con la preposición **a**. El acento de **à / às** se llama **crase** y marca esa unión (a + a)." },
+      { t: "Meses do ano",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["janeiro", "enero"], ["fevereiro", "febrero"], ["março", "marzo"], ["abril", "abril"], ["maio", "mayo"], ["junho", "junio"],
+          ["julho", "julio"], ["agosto", "agosto"], ["setembro", "septiembre"], ["outubro", "octubre"], ["novembro", "noviembre"], ["dezembro", "diciembre"]] },
+        consejos: ["Los meses también van con **minúscula** (salvo al empezar la frase).", "Los meses **no llevan artículo**: *em janeiro, em março*."] },
+      { t: "Exemplos com os meses",
+        ej: [["Janeiro é o primeiro mês do ano. Em janeiro, comemoramos o Dia da Fraternidade Universal.", "Enero es el primer mes del año. En enero celebramos el Día de la Fraternidad Universal."],
+             ["Fevereiro é o mês em que celebramos a maior festa do mundo no Rio de Janeiro, o Carnaval.", "Febrero es el mes en que celebramos la fiesta más grande del mundo en Río: el Carnaval."],
+             ["Março é o mês da mulher.", "Marzo es el mes de la mujer."], ["Abril é o mês da Páscoa.", "Abril es el mes de la Pascua."],
+             ["Maio é o mês das noivas.", "Mayo es el mes de las novias."], ["Junho é o mês em que se inicia o inverno no Brasil.", "Junio es el mes en que empieza el invierno en Brasil."],
+             ["Julho é o mês em que se celebra o Dia do Amigo.", "Julio es el mes en que se celebra el Día del Amigo."],
+             ["Agosto, no Brasil, é o mês dos pais.", "Agosto, en Brasil, es el mes de los padres."],
+             ["Setembro é o mês em que se inicia a primavera.", "Septiembre es el mes en que empieza la primavera."],
+             ["Outubro é o mês das crianças.", "Octubre es el mes de los niños."],
+             ["Novembro é o mês em que celebramos a Proclamação da República.", "Noviembre es el mes en que celebramos la Proclamación de la República."],
+             ["Dezembro é o mês em que se inicia o verão no Brasil.", "Diciembre es el mes en que empieza el verano en Brasil."]],
+        porque: "Como Perú, Brasil está en el **hemisferio sur**: el verano empieza en diciembre y el invierno en junio.",
+        ojo: "El material dice *Em agosto, no Brasil, é o mês dos pais*. Es más natural sin *Em*: **Agosto, no Brasil, é o mês dos pais**, porque *agosto* es el sujeto de la frase." },
+      { t: "Expressões úteis para a semana",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["dia", "día"], ["semana", "semana"], ["fim de semana", "fin de semana"], ["dia útil", "día laborable"],
+          ["começo da semana", "comienzo de la semana"], ["Bom fim de semana!", "¡Buen fin de semana!"],
+          ["sexta que vem", "el viernes que viene"], ["próximo / próxima", "próximo / próxima"], ["Até!", "¡Nos vemos!"],
+          ["Até terça!", "¡Hasta el martes!"], ["todo dia", "todos los días"], ["um outro dia", "otro día"], ["um desses dias", "uno de estos días"],
+          ["dia a dia", "día a día"], ["semana que vem", "la semana que viene"], ["todos os dias", "todos los días"], ["todas as quintas", "todos los jueves"]] } },
+      { t: "Exemplos das expressões",
+        ej: [["Hoje é um belo dia para caminhar no parque.", "Hoy es un bello día para caminar en el parque."],
+             ["Tenho uma reunião importante na próxima semana.", "Tengo una reunión importante la próxima semana."],
+             ["Vamos à praia no fim de semana?", "¿Vamos a la playa el fin de semana?"],
+             ["Os bancos só funcionam em dias úteis.", "Los bancos solo funcionan en días laborables."],
+             ["Prefiro organizar minha agenda no começo da semana.", "Prefiero organizar mi agenda al comienzo de la semana."],
+             ["Bom fim de semana! Aproveite bastante.", "¡Buen fin de semana! Disfrútalo mucho."],
+             ["Ela vai começar o novo trabalho na semana que vem.", "Ella va a empezar el nuevo trabajo la semana que viene."],
+             ["A reunião será na próxima quinta-feira.", "La reunión será el próximo jueves."],
+             ["Até terça! Tenha um bom dia.", "¡Hasta el martes! Que tengas un buen día."],
+             ["Eu leio um livro todo dia antes de dormir.", "Leo un libro todos los días antes de dormir."],
+             ["Vamos marcar isso para um outro dia, hoje está muito corrido.", "Quedemos otro día, hoy está muy ajetreado."],
+             ["Precisamos nos encontrar um desses dias para colocar o papo em dia.", "Tenemos que vernos uno de estos días para ponernos al día."],
+             ["O dia a dia na cidade é muito agitado.", "El día a día en la ciudad es muy agitado."],
+             ["Minhas férias começam na semana que vem.", "Mis vacaciones empiezan la semana que viene."]],
+        ojo: "En el material dice *A reunião será **an** próxima quinta-feira*: es un error de tipeo. Lo correcto es **na** próxima (em + a)." },
+      { t: "¿Todo dia o o dia todo?", extra: true,
+        ej: [["Eu estudo todo dia.", "Estudio todos los días."], ["Hoje eu trabalho o dia todo.", "Hoy trabajo el día entero."]],
+        porque: "**todo dia / todos os dias** = cada día. **o dia todo / todo o dia** = el día completo. ¡Un artículo cambia el sentido!" },
+      { t: "Fechas",
+        ej: [["Faço aniversário no dia doze de outubro.", "Cumplo años el 12 de octubre."], ["Em que mês você faz aniversário?", "¿En qué mes cumples años?"],
+             ["Em março.", "En marzo."], ["na segunda-feira", "el lunes"], ["no sábado", "el sábado"]],
+        porque: "**no dia** (em + o dia) para la fecha exacta, **em** + mes (los meses no llevan artículo), **na** segunda (*feira* es femenino) y **no** sábado." },
+      { t: "Actividad del curso: ¿qué haces cada día?",
+        p: "Piensa en cosas que haces y que no haces cada día de la semana, usando los verbos sugeridos:",
+        tabla: { cab: ["Día", "Verbos", "Español"], filas: [
+          ["segunda-feira", "estudar / conversar", "estudiar / conversar"], ["terça-feira", "jogar / limpar", "jugar / limpiar"],
+          ["quarta-feira", "escrever / praticar", "escribir / practicar"], ["quinta-feira", "visitar / telefonar", "visitar / llamar por teléfono"],
+          ["sexta-feira", "brincar / desenhar", "jugar / dibujar"], ["sábado", "viajar / descansar", "viajar / descansar"]] },
+        ej: [["Às segundas eu estudo e converso com meus colegas.", "Los lunes estudio y converso con mis compañeros."],
+             ["Às terças eu jogo futebol e não limpo a casa.", "Los martes juego fútbol y no limpio la casa."],
+             ["Às quartas eu escrevo e pratico português.", "Los miércoles escribo y practico portugués."],
+             ["Às quintas eu visito meus avós e telefono para minha mãe.", "Los jueves visito a mis abuelos y llamo a mi mamá."],
+             ["Às sextas as crianças brincam e desenham.", "Los viernes los niños juegan y dibujan."],
+             ["Aos sábados eu viajo ou descanso.", "Los sábados viajo o descanso."]],
+        consejos: ["**brincar** vs **jogar**: los niños *brincam* (juegan libremente, se divierten); **jogar** es para juegos con reglas: *jogar futebol, jogar cartas*.",
+                   "**telefonar para** alguien = llamar a alguien: *telefono para minha mãe*.",
+                   "Para decir lo que **no** haces: **não** + verbo: *Aos domingos não tenho aulas*."] },
+      { t: "Verbos en -ER e -IR", extra: true,
+        p: "El ejercicio del curso usa verbos que no son -AR (escrever, sentir, poder). Sus terminaciones cambian un poco:",
+        tabla: { cab: ["", "ESCREVER (-er)", "SENTIR (-ir)", "PODER"], filas: [
+          ["eu", "escrevo", "sinto", "posso"], ["você / ele / ela", "escreve", "sente", "pode"],
+          ["nós", "escrevemos", "sentimos", "podemos"], ["vocês / eles / elas", "escrevem", "sentem", "podem"]] },
+        lista: ["**-ER**: -o, -e, **-emos**, -em (escrever, comer, beber, aprender).",
+                "**-IR**: -o, -e, **-imos**, -em (partir, abrir; *sentir* cambia en *eu*: **sinto**).",
+                "**poder** es irregular en *eu*: **posso**."],
+        porque: "Lo que más cambia es la terminación de *nós*: fal**amos** (-ar), escrev**emos** (-er), sent**imos** (-ir)." }
+    ],
+    items: [
+      { pt: "segunda-feira", es: "lunes" }, { pt: "terça-feira", es: "martes" }, { pt: "quarta-feira", es: "miércoles" },
+      { pt: "quinta-feira", es: "jueves" }, { pt: "sexta-feira", es: "viernes" }, { pt: "sábado", es: "sábado" }, { pt: "domingo", es: "domingo" },
+      { pt: "hoje", es: "hoy" }, { pt: "amanhã", es: "mañana" }, { pt: "ontem", es: "ayer" },
+      { pt: "janeiro", es: "enero" }, { pt: "fevereiro", es: "febrero" }, { pt: "março", es: "marzo" }, { pt: "abril", es: "abril" },
+      { pt: "maio", es: "mayo" }, { pt: "junho", es: "junio" }, { pt: "julho", es: "julio" }, { pt: "agosto", es: "agosto" },
+      { pt: "setembro", es: "septiembre" }, { pt: "outubro", es: "octubre" }, { pt: "novembro", es: "noviembre" }, { pt: "dezembro", es: "diciembre" },
+      { pt: "fim de semana", es: "fin de semana" }, { pt: "dia útil", es: "día laborable" }, { pt: "começo da semana", es: "comienzo de la semana" },
+      { pt: "semana que vem", es: "la semana que viene" }, { pt: "um desses dias", es: "uno de estos días" }, { pt: "todo dia", es: "todos los días" },
+      { pt: "Bom fim de semana!", es: "¡Buen fin de semana!" }, { pt: "Até terça!", es: "¡Hasta el martes!" },
+      { pt: "férias", es: "vacaciones" }, { pt: "verão", es: "verano" }, { pt: "inverno", es: "invierno" },
+      { pt: "primavera", es: "primavera" }, { pt: "outono", es: "otoño" },
+      { pt: "brincar", es: "jugar (divertirse)" }, { pt: "jogar", es: "jugar (un juego, un deporte)" }, { pt: "limpar", es: "limpiar" },
+      { pt: "escrever", es: "escribir" }, { pt: "desenhar", es: "dibujar" }, { pt: "telefonar", es: "llamar por teléfono" },
+      { pt: "descansar", es: "descansar" }, { pt: "conversar", es: "conversar" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "Em abril, outono no Brasil, há dias em que nós ___ calor e outros em que ___ fresquinho.", resp: ["sentimos", "está"],
+        pista: "(sentir) · (estar)", explica: "sentir: eu sinto · nós **sentimos**. *está* (fresquinho) habla del clima." },
+      { tipo: "completar", frase: "No segundo domingo de maio, comemoramos o Dia das Mães. Gustavo sempre ___ flores para dona Luísa.", resp: ["compra"], pista: "comprar" },
+      { tipo: "completar", frase: "O mês de outubro ___ muito especial. No dia 12 celebramos o Dia da Criança, mas na verdade a festa ___ o mês inteiro.",
+        resp: ["é", "dura"], pista: "(ser) · (durar)" },
+      { tipo: "completar", frase: "Em novembro, os dias já ___ quentinhos e nós ___ ir à praia. As aulas ___ bem no finzinho desse mês.",
+        resp: ["estão", "podemos", "acabam"], pista: "(estar) · (poder) · (acabar)" },
+      { tipo: "completar", frase: "___ domingos brinco no parque com meus pais.", resp: ["aos"], pista: "a + os" },
+      { tipo: "completar", frase: "___ segundas eu estudo e converso com meus colegas.", resp: ["às"], pista: "a + as" },
+      { tipo: "completar", frase: "Às quintas eu ___ para minha mãe.", resp: ["telefono"], pista: "telefonar" },
+      { tipo: "completar", frase: "Aos sábados nós ___.", resp: ["descansamos"], pista: "descansar" },
+      { tipo: "completar", frase: "Às quartas eu ___ e pratico português.", resp: ["escrevo"], pista: "escrever" },
+      { tipo: "completar", frase: "Bom ___ de semana!", resp: ["fim"] },
+      { tipo: "completar", frase: "Minhas férias começam na semana que ___.", resp: ["vem"] },
+      { tipo: "completar", frase: "A reunião será na ___ quinta-feira.", resp: ["próxima"], pista: "próximo, en femenino" },
+      { tipo: "completar", frase: "Os bancos só funcionam em dias ___.", resp: ["úteis"], pista: "plural de útil" },
+      { tipo: "completar", frase: "Eu leio um livro todo ___ antes de dormir.", resp: ["dia"] },
+      { tipo: "completar", frase: "Depois de segunda-feira vem ___.", resp: [["terça-feira", "terça"]] },
+      { tipo: "completar", frase: "Hoje é sexta-feira. Amanhã é ___.", resp: ["sábado"] },
+      { tipo: "completar", frase: "Faço aniversário ___ dia 12 de outubro.", resp: ["no"], pista: "em + o" },
+      { tipo: "completar", frase: "Fevereiro é o mês do ___.", resp: ["Carnaval"] },
+      { tipo: "completar", frase: "Dezembro é o mês em que se inicia o ___ no Brasil.", resp: ["verão"], pista: "verano" },
+      { tipo: "completar", frase: "Eu trabalho ___ segunda-feira.", resp: ["na"], pista: "em + a" },
+      { tipo: "marcar", frase: "*Los sábados* (cada sábado) se dice:", opciones: ["aos sábados", "às sábados", "ao sábados"], resp: 0, explica: "a + os = **aos**.", oir: "aos sábados" },
+      { tipo: "marcar", frase: "*semana* es:", opciones: ["femenino: a semana", "masculino: o semana"], resp: 0 },
+      { tipo: "marcar", frase: "¿Cuál está bien escrita?", opciones: ["Eu trabalho na segunda-feira.", "Eu trabalho na Segunda-feira."], resp: 0,
+        explica: "En medio de la frase, los días van con minúscula.", oir: "Eu trabalho na segunda-feira." },
+      { tipo: "marcar", frase: "*dia útil* significa:", opciones: ["día laborable", "día que sirve para algo"], resp: 0 },
+      { tipo: "marcar", frase: "*semana que vem* significa:", opciones: ["la semana pasada", "la semana que viene"], resp: 1 },
+      { tipo: "marcar", frase: "*Hoje eu trabalho o dia todo* significa:", opciones: ["Hoy trabajo el día entero", "Trabajo todos los días"], resp: 0 },
+      { tipo: "marcar", frase: "Los niños juegan en el parque:", opciones: ["As crianças brincam no parque.", "As crianças jogam no parque."], resp: 0,
+        explica: "Niños divirtiéndose → **brincar**.", oir: "As crianças brincam no parque." },
+      { tipo: "marcar", frase: "Jugamos fútbol los viernes:", opciones: ["Jogamos futebol às sextas.", "Brincamos futebol às sextas."], resp: 0,
+        explica: "Deporte con reglas → **jogar**.", oir: "Jogamos futebol às sextas." },
+      { tipo: "marcar", frase: "En Brasil, el verano empieza en:", opciones: ["dezembro", "junho"], resp: 0, explica: "Hemisferio sur, como Perú." },
+      { tipo: "marcar", frase: "Outubro é o mês das ___.", opciones: ["crianças", "noivas", "mães"], resp: 0 },
+      { tipo: "marcar", frase: "*sexta-feira* es:", opciones: ["jueves", "viernes", "sábado"], resp: 1 },
+      { tipo: "marcar", frase: "*ontem* significa:", opciones: ["hoy", "mañana", "ayer"], resp: 2 }
+    ]
+  },
+
   // ============================ PRÁCTICA EXTRA ============================
   {
     id: "numeros", grupo: "extra", icono: "🔢", titulo: "Números",
@@ -957,45 +1214,6 @@ const LECCIONES = [
       { tipo: "completar", frase: "___ irmão é alto.", resp: ["meu"], pista: "mi (masculino)" },
       { tipo: "marcar", frase: "¿Cuál significa **abuela**?", opciones: ["avô", "avó"], resp: 1 },
       { tipo: "marcar", frase: "A filha da minha tia é a minha ___.", opciones: ["prima", "irmã", "sobrinha"], resp: 0 }
-    ]
-  },
-  {
-    id: "dias", grupo: "extra", icono: "📅", titulo: "Días, meses y fechas",
-    intro: "Para responder 'Quando você faz aniversário?'. De lunes a viernes se cuentan con números: segunda-feira (lunes), terça-feira (martes)...",
-    apuntes: [
-      { t: "Los días",
-        p: "De lunes a viernes: número + **feira**. Al hablar se acortan: **segunda, terça, quarta, quinta, sexta**. Sábado y domingo, como en español.",
-        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
-          ["segunda-feira", "lunes"], ["terça-feira", "martes"], ["quarta-feira", "miércoles"], ["quinta-feira", "jueves"],
-          ["sexta-feira", "viernes"], ["sábado", "sábado"], ["domingo", "domingo"]] },
-        consejos: ["De lunes a viernes los días se cuentan con números y son **femeninos**: *a segunda-feira, a terça-feira*. Por eso se dice **na** segunda (em + a)."],
-        porque: "Viene de la tradición religiosa de contar los días desde el domingo: el lunes era el 'segundo día'." },
-      { t: "Los meses",
-        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
-          ["janeiro", "enero"], ["fevereiro", "febrero"], ["março", "marzo"], ["abril", "abril"], ["maio", "mayo"], ["junho", "junio"],
-          ["julho", "julio"], ["agosto", "agosto"], ["setembro", "septiembre"], ["outubro", "octubre"], ["novembro", "noviembre"], ["dezembro", "diciembre"]] } },
-      { t: "Fechas",
-        ej: [["Faço aniversário no dia doze de outubro.", "Cumplo años el 12 de octubre."], ["Em que mês você faz aniversário?", "¿En qué mes cumples años?"],
-             ["Em março.", "En marzo."], ["na segunda-feira", "el lunes"], ["no sábado", "el sábado"]],
-        porque: "**no dia** (em + o dia) para la fecha exacta, **em** + mes (los meses no llevan artículo), **na** segunda (*feira* es femenino) y **no** sábado." }
-    ],
-    items: [
-      { pt: "segunda-feira", es: "lunes" }, { pt: "terça-feira", es: "martes" }, { pt: "quarta-feira", es: "miércoles" },
-      { pt: "quinta-feira", es: "jueves" }, { pt: "sexta-feira", es: "viernes" }, { pt: "sábado", es: "sábado" }, { pt: "domingo", es: "domingo" },
-      { pt: "hoje", es: "hoy" }, { pt: "amanhã", es: "mañana" }, { pt: "ontem", es: "ayer" },
-      { pt: "janeiro", es: "enero" }, { pt: "fevereiro", es: "febrero" }, { pt: "março", es: "marzo" }, { pt: "abril", es: "abril" },
-      { pt: "maio", es: "mayo" }, { pt: "junho", es: "junio" }, { pt: "julho", es: "julio" }, { pt: "agosto", es: "agosto" },
-      { pt: "setembro", es: "septiembre" }, { pt: "outubro", es: "octubre" }, { pt: "novembro", es: "noviembre" }, { pt: "dezembro", es: "diciembre" }
-    ],
-    ejercicios: [
-      { tipo: "completar", frase: "Depois de segunda-feira vem ___.", resp: [["terça-feira", "terça"]] },
-      { tipo: "completar", frase: "Hoje é sexta-feira. Amanhã é ___.", resp: ["sábado"] },
-      { tipo: "completar", frase: "Faço aniversário ___ dia 12 de outubro.", resp: ["no"], pista: "em + o" },
-      { tipo: "completar", frase: "O Natal é em ___.", resp: ["dezembro"], pista: "diciembre" },
-      { tipo: "completar", frase: "Eu trabalho ___ segunda-feira.", resp: ["na"], pista: "em + a" },
-      { tipo: "marcar", frase: "*sexta-feira* es:", opciones: ["jueves", "viernes", "sábado"], resp: 1 },
-      { tipo: "marcar", frase: "*ontem* significa:", opciones: ["hoy", "mañana", "ayer"], resp: 2 },
-      { tipo: "marcar", frase: "El carnaval de Brasil es en ___ (febrero).", opciones: ["fevereiro", "febreiro", "fevrero"], resp: 0 }
     ]
   },
   {
@@ -1111,7 +1329,8 @@ const filaAudio = (pt, es, nota, quien, pr) => `
 // zh = j francesa · sh = sh inglesa · j = j suave · ñ = nh · lli = lh · dyi / chi = de, di / te, ti
 // aun, ain, oin, ein = nasales · la tilde marca la sílaba fuerte
 const PRON_EXCEPCIONES = {
-  muito: "múintu", muita: "múinta", muitos: "múintus", muitas: "múintas", ainda: "aínda", sexta: "sésta", ao: "au",
+  muito: "múintu", muita: "múinta", muitos: "múintus", muitas: "múintas", ainda: "aínda", sexta: "sésta", sextas: "séstas",
+  ao: "au", aos: "aus", tv: "tevê", paradoxo: "paradóksu", próxima: "prósima", próximo: "prósimu", próximas: "prósimas",
   robert: "jóberchi", brighton: "bráitun", callao: "caiáu", luiz: "luís", werner: "vérner", martinelli: "marchinéli"
 };
 const VOCALES = "aáâãàeéêiíoóôõuú";
@@ -1823,6 +2042,84 @@ const NACIONES = [
   ["espanhol", "espanhola", "Espanha", "a"], ["francês", "francesa", "França", "a"], ["japonês", "japonesa", "Japão", "o"],
   ["italiano", "italiana", "Itália", "a"], ["boliviano", "boliviana", "Bolívia", "a"], ["equatoriano", "equatoriana", "Equador", "o"]
 ];
+// Heterogenéricos: [portugués, plural, género, español con artículo]
+const HETEROGENERICOS = [
+  ["alarme", "alarmes", "m", "la alarma"], ["análise", "análises", "f", "el análisis"], ["árvore", "árvores", "f", "el árbol"],
+  ["baralho", "baralhos", "m", "la baraja"], ["chantagem", "chantagens", "f", "el chantaje"], ["cor", "cores", "f", "el color"],
+  ["coragem", null, "f", "el coraje"], ["costume", "costumes", "m", "la costumbre"], ["creme", "cremes", "m", "la crema"],
+  ["desordem", null, "f", "el desorden"], ["dor", "dores", "f", "el dolor"], ["equipe", "equipes", "f", "el equipo"],
+  ["estante", "estantes", "f", "el estante"], ["garagem", "garagens", "f", "el garaje"], ["homenagem", "homenagens", "f", "el homenaje"],
+  ["leite", null, "m", "la leche"], ["legume", "legumes", "m", "la legumbre"], ["linguagem", "linguagens", "f", "el lenguaje"],
+  ["mel", null, "m", "la miel"], ["mensagem", "mensagens", "f", "el mensaje"], ["nariz", "narizes", "m", "la nariz"],
+  ["paisagem", "paisagens", "f", "el paisaje"], ["ponte", "pontes", "f", "el puente"], ["tatuagem", "tatuagens", "f", "el tatuaje"],
+  ["viagem", "viagens", "f", "el viaje"], ["rádio", "rádios", "m", "la radio"], ["sal", null, "m", "la sal"],
+  ["sangue", null, "m", "la sangre"], ["sorriso", "sorrisos", "m", "la sonrisa"], ["ênfase", null, "f", "el énfasis"],
+  ["pesadelo", "pesadelos", "m", "la pesadilla"], ["paradoxo", "paradoxos", "m", "la paradoja"], ["cume", "cumes", "m", "la cumbre"],
+  ["protesto", "protestos", "m", "la protesta"], ["caneta", "canetas", "f", "el lapicero"], ["sinal", "sinais", "m", "la señal"],
+  ["abacate", "abacates", "m", "la palta"], ["alface", "alfaces", "f", "la lechuga"]
+];
+// Plurales: [singular, plural, plurales incorrectos, regla]
+const PLURALES = [
+  ["maçã", "maçãs", ["maçães", "mações"], "Termina en vocal → + **s**."],
+  ["homem", "homens", ["homems", "homenes"], "-m → **-ns**."], ["viagem", "viagens", ["viagems", "viagenes"], "-m → **-ns**."],
+  ["jovem", "jovens", ["jovems", "jovenes"], "-m → **-ns**."], ["mulher", "mulheres", ["mulhers", "mulheris"], "-r → + **es**."],
+  ["cor", "cores", ["cors", "coris"], "-r → + **es**."], ["flor", "flores", ["flors", "floris"], "-r → + **es**."],
+  ["nariz", "narizes", ["narizs", "narices"], "-z → + **es**."], ["mês", "meses", ["mêses", "mêss"], "-s tónica → + **es** (y pierde el acento)."],
+  ["pão", "pães", ["pãos", "pões"], "Como *panes* → **-ães**."], ["alemão", "alemães", ["alemãos", "alemões"], "Como *alemanes* → **-ães**."],
+  ["capitão", "capitães", ["capitãos", "capitões"], "Como *capitanes* → **-ães**."], ["órgão", "órgãos", ["órgães", "órgões"], "Como *órganos* → **-ãos**."],
+  ["irmão", "irmãos", ["irmães", "irmões"], "Como *hermanos* → **-ãos**."], ["cidadão", "cidadãos", ["cidadães", "cidadões"], "Como *ciudadanos* → **-ãos**."],
+  ["estação", "estações", ["estaçãos", "estaçães"], "Como *estaciones* → **-ões**."], ["limão", "limões", ["limãos", "limães"], "Como *limones* → **-ões**."],
+  ["razão", "razões", ["razãos", "razães"], "Como *razones* → **-ões**."], ["coração", "corações", ["coraçãos", "coraçães"], "Como *corazones* → **-ões**."],
+  ["avião", "aviões", ["aviãos", "aviães"], "Como *aviones* → **-ões**."], ["canção", "canções", ["cançãos", "cançães"], "Como *canciones* → **-ões**."],
+  ["animal", "animais", ["animales", "animals"], "-al → **-ais**."], ["papel", "papéis", ["papeles", "papels"], "-el → **-éis**."],
+  ["hotel", "hotéis", ["hoteles", "hotels"], "-el → **-éis**."], ["sinal", "sinais", ["sinales", "sinals"], "-al → **-ais**."],
+  ["azul", "azuis", ["azules", "azuls"], "-ul → **-uis**."], ["legal", "legais", ["legales", "legals"], "-al → **-ais**."],
+  ["útil", "úteis", ["útiles", "útils"], "-il no tónica → **-eis**."], ["responsável", "responsáveis", ["responsáveles", "responsávels"], "-vel → **-veis**."],
+  ["ônibus", "ônibus", ["ônibuses", "ônibusos"], "-s no tónica → **no cambia**."], ["lápis", "lápis", ["lápises", "lápiss"], "-s no tónica → **no cambia**."]
+];
+// Frases que muestran el género: [sustantivo, género, verbo, adjetivo masculino, español]
+const FRASES_GENERO = [
+  ["mel", "m", "é", "delicioso", "la miel"], ["viagem", "f", "foi", "longo", "el viaje"], ["leite", "m", "está", "frio", "la leche"],
+  ["árvore", "f", "é", "alto", "el árbol"], ["sorriso", "m", "é", "lindo", "la sonrisa"], ["ponte", "f", "é", "antigo", "el puente"],
+  ["nariz", "m", "é", "pequeno", "la nariz"], ["paisagem", "f", "é", "maravilhoso", "el paisaje"], ["garagem", "f", "está", "cheio", "el garaje"],
+  ["creme", "m", "é", "caro", "la crema"], ["tatuagem", "f", "é", "novo", "el tatuaje"], ["costume", "m", "é", "antigo", "la costumbre"],
+  ["equipe", "f", "está", "pronto", "el equipo"], ["alarme", "m", "está", "ligado", "la alarma"], ["pesadelo", "m", "foi", "longo", "la pesadilla"],
+  ["mensagem", "f", "é", "curto", "el mensaje"], ["abacate", "m", "está", "maduro", "la palta"], ["alface", "f", "está", "fresco", "la lechuga"],
+  ["dor", "f", "é", "intenso", "el dolor"], ["rádio", "m", "é", "velho", "la radio"], ["estante", "f", "está", "cheio", "el estante"],
+  ["protesto", "m", "foi", "pacífico", "la protesta"], ["análise", "f", "está", "completo", "el análisis"], ["sangue", "m", "é", "vermelho", "la sangre"],
+  ["cor", "f", "é", "bonito", "el color"], ["homenagem", "f", "foi", "bonito", "el homenaje"], ["cume", "m", "é", "alto", "la cumbre"]
+];
+const BANCO_SEMANA = [
+  { f: "___ domingos brinco no parque.", o: ["Aos", "Às", "Ao"], r: 0, x: "*os domingos* → a + os = **aos**." },
+  { f: "___ segundas eu estudo português.", o: ["Às", "Aos", "À"], r: 0, x: "*as segundas* → a + as = **às**." },
+  { f: "Bom ___ de semana!", o: ["fim", "final", "fin"], r: 0 },
+  { f: "Minhas férias começam na semana que ___.", o: ["vem", "vai", "viene"], r: 0 },
+  { f: "A reunião será na ___ quinta-feira.", o: ["próxima", "próximo", "passada"], r: 0, x: "*quinta-feira* es femenino → **próxima**." },
+  { f: "Os bancos só funcionam em dias ___.", o: ["úteis", "útils", "útiles"], r: 0, x: "*útil* → plural **úteis** (*dia útil* = día laborable)." },
+  { f: "Eu leio um livro todo ___ antes de dormir.", o: ["dia", "dias", "día"], r: 0, x: "*todo dia* = todos los días." },
+  { f: "*Até terça!* significa:", o: ["¡Hasta el martes!", "¡Hasta el jueves!", "¡Hasta la tarde!"], r: 0 },
+  { f: "*dia útil* significa:", o: ["día laborable", "día que sirve para algo", "feriado"], r: 0 },
+  { f: "*Hoje eu trabalho o dia todo* significa:", o: ["Hoy trabajo el día entero", "Trabajo todos los días"], r: 0 },
+  { f: "Fevereiro é o mês do ___.", o: ["Carnaval", "Natal", "Dia das Mães"], r: 0 },
+  { f: "Abril é o mês da ___.", o: ["Páscoa", "mulher", "primavera"], r: 0 },
+  { f: "Outubro é o mês das ___.", o: ["crianças", "noivas", "mães"], r: 0 },
+  { f: "Maio é o mês das ___.", o: ["noivas", "crianças", "férias"], r: 0 },
+  { f: "Março é o mês da ___.", o: ["mulher", "Páscoa", "criança"], r: 0 },
+  { f: "No Brasil, o verão começa em ___.", o: ["dezembro", "junho", "março"], r: 0, x: "Hemisferio sur, como Perú." },
+  { f: "No Brasil, o inverno começa em ___.", o: ["junho", "dezembro", "setembro"], r: 0, x: "Hemisferio sur, como Perú." },
+  { f: "No Brasil, a primavera começa em ___.", o: ["setembro", "março", "junho"], r: 0 },
+  { f: "As crianças ___ no parque.", o: ["brincam", "jogam", "brinca"], r: 0, x: "Niños divirtiéndose → **brincar**." },
+  { f: "Nós ___ futebol às sextas.", o: ["jogamos", "brincamos", "jogam"], r: 0, x: "Deporte con reglas → **jogar**." },
+  { f: "*semana* es:", o: ["femenino: a semana", "masculino: o semana"], r: 0 },
+  { f: "*sábado* es:", o: ["masculino: o sábado", "femenino: a sábado"], r: 0 },
+  { f: "Eu trabalho ___ segunda-feira.", o: ["na", "no", "em"], r: 0, x: "*a segunda-feira* (femenino) → em + a = **na**." },
+  { f: "Vamos à praia ___ fim de semana?", o: ["no", "na", "em"], r: 0, x: "*o fim de semana* → em + o = **no**." },
+  { f: "Nós ___ calor em abril.", o: ["sentimos", "sentamos", "sintimos"], r: 0, x: "sentir: eu sinto · ele sente · nós **sentimos**." },
+  { f: "Nós ___ ir à praia em novembro.", o: ["podemos", "posso", "pode"], r: 0, x: "poder: eu posso · ele pode · nós **podemos**." },
+  { f: "Eu ___ um livro todo dia.", o: ["escrevo", "escreve", "escrevemos"], r: 0, x: "-ER: eu **-o**, ele -e, nós -emos, eles -em." },
+  { f: "Gustavo sempre ___ flores para dona Luísa.", o: ["compra", "compro", "compram"], r: 0 },
+  { f: "Às quintas eu telefono ___ minha mãe.", o: ["para", "a", "com"], r: 0, x: "*telefonar **para** alguém* = llamar a alguien." }
+];
 const DIAS = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo"];
 const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 const UNIDADES = ["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze",
@@ -1888,6 +2185,30 @@ function genArticulo() {
   return { clave: `art-${sing}-${plural}-${definido}`, sub: `Artículo ${definido ? "definido" : "indefinido"} · ${es}${plural ? " (plural)" : ""}`,
            pregunta: `___ ${palabra}`, ...armar(correcta, formas), oir: `${correcta} ${palabra}`, escribible: true,
            explica: `*${sing}* es **${g === "m" ? "masculino" : "femenino"}**${truco ? ": " + truco : ""}.` };
+}
+function genHeterogenerico() {
+  const [pt, plur, g, es] = azar(HETEROGENERICOS);
+  const plural = plur && Math.random() < 0.3;
+  const formas = ["o", "a", "os", "as"];
+  const correcta = formas[(g === "m" ? 0 : 1) + (plural ? 2 : 0)];
+  const palabra = plural ? plur : pt;
+  return { clave: `het-${pt}-${plural}`, sub: `En español: *${es}*${plural ? " (plural)" : ""}`, pregunta: `___ ${palabra}`,
+           ...armar(correcta, formas), oir: `${correcta} ${palabra}`, escribible: true,
+           explica: `*${es}* → **${g === "m" ? "o" : "a"} ${pt}**: en portugués es ${g === "m" ? "masculino" : "femenino"}.` };
+}
+function genPlural() {
+  const [sing, plur, malos, regla] = azar(PLURALES);
+  return { clave: `plu-${sing}`, sub: "¿Cuál es el plural?", pregunta: `**${sing}**`, ...armar(plur, malos),
+           oir: plur, explica: regla, escribible: true };
+}
+function genGeneroFrase() {
+  const [sust, g, verbo, adj, es] = azar(FRASES_GENERO);
+  const fem = adj.replace(/o$/, "a");
+  const correcta = g === "m" ? `O … ${adj}` : `A … ${fem}`;
+  return { clave: `gfr-${sust}`, sub: `Artículo y adjetivo · ${es} · ${adj}`, pregunta: `___ ${sust} ${verbo} ___.`,
+           ...armar(correcta, [`O … ${adj}`, `A … ${fem}`, `O … ${fem}`, `A … ${adj}`]),
+           oir: rellenar(`___ ${sust} ${verbo} ___.`, correcta),
+           explica: `*${sust}* es **${g === "m" ? "masculino" : "femenino"}** en portugués (en español: *${es}*), y el adjetivo concuerda.` };
 }
 function genAdjetivo() {
   const a = azar(ADJETIVOS);
@@ -2006,18 +2327,20 @@ const CATEGORIAS = [
   { id: "todo", t: "🎲 Todo" },
   { id: "verbos", t: "⚙️ Verbos", g: [genConjugacion, genConjugacion, genConjugacion, () => genBanco(BANCO_VERBOS), () => genBanco(BANCO_VERBOS), () => genCurso(["serestar", "verbosar"])] },
   { id: "articulos", t: "📌 Artículos", g: [genArticulo, genArticulo, genContraccion, genContraccion, () => genCurso(["articulos"])] },
+  { id: "genero", t: "🔀 Género y plural", g: [genHeterogenerico, genHeterogenerico, genPlural, genPlural, genGeneroFrase, genGeneroFrase, () => genCurso(["genero"])] },
   { id: "presentarse", t: "🙋 Presentarse", g: [genNacionalidad, () => genBanco(BANCO_PRESENTARSE), () => genBanco(BANCO_PRESENTARSE), () => genVocab(["saludos", "presentarse"]), () => genCurso(["saludos", "presentarse"])] },
   { id: "descripciones", t: "🧑 Descripciones", g: [genAdjetivo, genAdjetivo, () => genVocab(["descripciones", "colores", "familia"]), () => genCurso(["descripciones"])] },
   { id: "vocab", t: "📖 Vocabulario", g: [() => genVocab(null)] },
   { id: "frases", t: "💬 Frases", g: [genFrase] },
   { id: "escucha", t: "🎧 Escucha", g: [genEscucha] },
-  { id: "numeros", t: "🔢 Números y fechas", g: [genNumero, genNumero, genDiaMes, () => genVocab(["numeros", "dias"])] },
+  { id: "numeros", t: "🔢 Números y semana", g: [genNumero, genNumero, genDiaMes, () => genBanco(BANCO_SEMANA), () => genBanco(BANCO_SEMANA),
+                                                () => genVocab(["numeros", "dias"]), () => genCurso(["dias"])] },
   { id: "errores", t: "🔁 Mis errores", g: [genError] }
 ];
 CATEGORIAS[0].g = CATEGORIAS.slice(1, -1).flatMap(c => c.g).concat([() => genCurso(null), genError]);
 const CATEGORIA_DE_LECCION = {
   alfabeto: "escucha", saludos: "presentarse", presentarse: "presentarse", serestar: "verbos", verbosar: "verbos",
-  descripciones: "descripciones", articulos: "articulos", numeros: "numeros", dias: "numeros"
+  descripciones: "descripciones", articulos: "articulos", genero: "genero", numeros: "numeros", dias: "numeros"
 };
 
 // ---------- estado y pantalla ----------
