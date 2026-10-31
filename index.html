@@ -2337,6 +2337,129 @@ const LECCIONES = [
     ]
   },
 
+  {
+    id: "posesivos", grupo: "curso", icono: "👜", titulo: "Pronombres posesivos (meu, seu, nosso, dele)",
+    intro: "Os pronomes possessivos indican posesión: que algo pertenece a una persona. Son muy importantes para hablar bien portugués.",
+    apuntes: [
+      { t: "Os pronomes possessivos",
+        p: "Cada persona tiene su posesivo. Y como el sustantivo puede ser masculino o femenino, singular o plural, cada posesivo tiene **cuatro formas**:",
+        tabla: { cab: ["Persona", "Masc.", "Fem.", "Masc. plural", "Fem. plural"], filas: [
+          ["eu", "meu", "minha", "meus", "minhas"], ["você", "seu", "sua", "seus", "suas"],
+          ["ele / ela", "dele / dela", "dele / dela", "dele / dela", "dele / dela"], ["nós", "nosso", "nossa", "nossos", "nossas"],
+          ["vocês", "seus / de vocês", "suas / de vocês", "seus", "suas"], ["eles / elas", "deles / delas", "deles / delas", "deles / delas", "deles / delas"]] },
+        porque: "En español *mi* sirve para todo (mi carro, mi casa), pero en portugués cambia **como «nuestro / nuestra»**: *meu carro*, *minha casa*, *meus livros*, *minhas canetas*." },
+      { t: "Con pronunciación y traducción",
+        tabla: { cab: ["Português", "Español"], pron: [0], filas: [
+          ["meu / minha", "mi (de yo)"], ["meus / minhas", "mis"], ["seu / sua", "tu, su (de você)"], ["seus / suas", "tus, sus"],
+          ["dele / dela", "de él / de ella"], ["nosso / nossa", "nuestro / nuestra"], ["nossos / nossas", "nuestros / nuestras"],
+          ["deles / delas", "de ellos / de ellas"], ["de vocês", "de ustedes"]] } },
+      { t: "La regla de oro: concuerda con la COSA",
+        p: "**meu, seu, nosso** cambian según el **sustantivo que viene después** (la cosa que se posee), **no** según la persona dueña:",
+        ej: [["o meu carro", "mi carro (carro = masculino)"], ["a minha casa", "mi casa (casa = femenino)"], ["os meus livros", "mis libros (masculino plural)"],
+             ["as minhas canetas", "mis lapiceros (femenino plural)"], ["O meu pai e a minha mãe.", "Mi papá y mi mamá."]],
+        porque: "Un hombre dice *minha mãe* y una mujer dice *meu pai*: lo que manda es la palabra **mãe** (femenina) o **pai** (masculina), no quien habla." },
+      { t: "DELE, DELA, DELES, DELAS",
+        p: "Para *ele / ela / eles / elas* los brasileños prefieren **dele, dela, deles, delas** (= de + ele...). Van **después** del sustantivo y concuerdan con el **dueño**:",
+        tabla: { cab: ["Unión", "Resultado", "Ejemplo"], pron: [1], filas: [
+          ["de + ele", "dele", "o carro **dele** (el carro de él)"], ["de + ela", "dela", "a casa **dela** (la casa de ella)"],
+          ["de + eles", "deles", "os filhos **deles** (los hijos de ellos)"], ["de + elas", "delas", "a mãe **delas** (la mamá de ellas)"]] },
+        ej: [["Ele sempre sai com o amigo dele.", "Él siempre sale con su amigo."], ["O carro dela é amarelo.", "El carro de ella es amarillo."],
+             ["Eu falei com a mãe dele.", "Hablé con la mamá de él."], ["A casa deles é grande.", "La casa de ellos es grande."]],
+        porque: "¿Por qué no usar *seu*? Porque **seu** también significa «tu» (de *você*), y la frase quedaría confusa: *o seu carro* = ¿tu carro o el carro de él? Con **dele / dela** queda clarísimo." },
+      { t: "Exemplos do curso",
+        p: "El posesivo puede ir **después del verbo ser** (sin artículo) o **antes del sustantivo** (con artículo):",
+        ej: [["O livro em cima da mesa é meu.", "El libro sobre la mesa es mío."], ["José, esse caderno aí é seu?", "José, ¿ese cuaderno es tuyo?"],
+             ["Estas havaianas são nossas.", "Estas sandalias son nuestras."], ["Juliana e Jaime, esses computadores são seus?", "Juliana y Jaime, ¿estas computadoras son suyas?"],
+             ["Ele sempre sai com o amigo dele.", "Él siempre sale con su amigo."], ["Este é o meu livro.", "Este es mi libro."],
+             ["José, esse é o seu caderno?", "José, ¿ese es tu cuaderno?"], ["Aquela é a sua mãe.", "Aquella es tu mamá."],
+             ["Estas são as nossas havaianas.", "Estas son nuestras sandalias."], ["Juliana e Jaime, esses são os seus computadores.", "Juliana y Jaime, estas son sus computadoras."]],
+        porque: "*É meu* = «es **mío**» · *o meu livro* = «**mi** libro». En portugués es la **misma palabra** para los dos (en español cambiamos *mi / mío*).",
+        consejos: ["**Havaianas** es la marca de sandalias más famosa de Brasil: tanto, que ya se usa como nombre común.",
+                   "El artículo antes del posesivo (*o meu livro*) es **opcional** en Brasil: *meu livro* también está bien."] },
+      { t: "Más ejemplos", extra: true,
+        ej: [["Minha irmã mora em Lima.", "Mi hermana vive en Lima."], ["Meus amigos são brasileiros.", "Mis amigos son brasileños."],
+             ["Qual é o seu nome?", "¿Cuál es tu nombre?"], ["Nossa casa é pequena.", "Nuestra casa es pequeña."],
+             ["Nossos filhos estudam na Ciunac.", "Nuestros hijos estudian en Ciunac."], ["O carro de vocês é novo?", "¿El carro de ustedes es nuevo?"],
+             ["As canetas são minhas.", "Los lapiceros son míos."], ["A bolsa dela é preta.", "La cartera de ella es negra."]],
+        consejos: ["Con *vocês*, para no confundir, se dice mucho **de vocês**: *a casa de vocês* (la casa de ustedes)."] }
+    ],
+    resolver: {
+      p: "El ejercicio del curso dice: el pronombre cambia según **la persona entre paréntesis** y según **el sustantivo**. Son dos preguntas:",
+      pasos: ["**Paso 1: ¿de quién es?** Mira la persona entre paréntesis: eu → **meu**, você → **seu**, nós → **nosso**, ele / ela → **dele / dela**.",
+              "**Paso 2: ¿cómo es la cosa?** Mira el sustantivo: masculino → **-o / -eu** · femenino → **-a** · plural → agrega **-s** (meu → minha / meus / minhas).",
+              "**Paso 3 (solo dele / dela):** no cambian con la cosa; van **después** del sustantivo y dependen del dueño: *o carro **dela***."],
+      resueltos: [
+        { f: "___ nome é João. (eu)", r: "Meu",
+          x: "Paso 1: (eu) → *meu*. Paso 2: *nome* es **masculino singular** → se queda **meu**. En español «**mi** nombre es João»." },
+        { f: "Onde está a ___ caneta? (você)", r: "sua",
+          x: "Paso 1: (você) → *seu*. Paso 2: *caneta* es **femenina** → *seu* cambia a **sua**. «¿Dónde está **tu** lapicero?»" },
+        { f: "Eu falei com a mãe ___ (ele).", r: "dele",
+          x: "Paso 1: (ele) → **dele**. Paso 3: va después del sustantivo y depende del dueño (él), aunque *mãe* sea femenina → **dele**. «Hablé con la mamá **de él**»." },
+        { f: "O carro ___ é amarelo. (ela)", r: "dela",
+          x: "Paso 1: (ela) → **dela**. Ya está después de *carro*. Aunque *carro* es masculino, el dueño es ella → **dela**." },
+        { f: "___ casas são pequenas. (nós)", r: "Nossas",
+          x: "Paso 1: (nós) → *nosso*. Paso 2: *casas* es **femenino plural** → *nosso* → **nossas**. «**Nuestras** casas son pequeñas»." },
+        { f: "Essas anotações são ___ (eu).", r: "minhas",
+          x: "Paso 1: (eu) → *meu*. Paso 2: ¿de qué hablamos? *anotações* (**femenino plural**) → **minhas**. «Esas anotaciones son **mías**»." },
+        { f: "Estes livros são ___ (eu).", r: "meus",
+          x: "Paso 1: (eu) → *meu*. Paso 2: *livros* es **masculino plural** → **meus**. «Estos libros son **míos**»." }],
+      consejos: ["**El truco final:** piensa en español con «nuestro», que también cambia: *nuestro carro / nuestra casa / nuestras casas*. Los posesivos portugueses cambian **igual**.",
+                 "**Resumen:** meu / minha / meus / minhas · seu / sua / seus / suas · nosso / nossa / nossos / nossas · dele / dela / deles / delas (después del sustantivo)."]
+    },
+    items: [
+      { pt: "meu", es: "mi, mío (masc.)" }, { pt: "minha", es: "mi, mía (fem.)" }, { pt: "meus", es: "mis, míos" }, { pt: "minhas", es: "mis, mías" },
+      { pt: "seu", es: "tu, su (masc.)" }, { pt: "sua", es: "tu, su (fem.)" }, { pt: "nosso", es: "nuestro" }, { pt: "nossa", es: "nuestra" },
+      { pt: "nossos", es: "nuestros" }, { pt: "nossas", es: "nuestras" }, { pt: "dele", es: "de él" }, { pt: "dela", es: "de ella" },
+      { pt: "deles", es: "de ellos" }, { pt: "delas", es: "de ellas" }, { pt: "de vocês", es: "de ustedes" },
+      { pt: "o caderno", es: "el cuaderno" }, { pt: "a caneta", es: "el lapicero" }, { pt: "as havaianas", es: "las sandalias" },
+      { pt: "as anotações", es: "los apuntes" }, { pt: "em cima da mesa", es: "sobre la mesa" }
+    ],
+    ejercicios: [
+      { tipo: "completar", frase: "___ nome é João.", resp: ["meu"], pista: "(eu)",
+        explica: "(eu) → *meu*. *nome* es masculino singular → **Meu**. «**Mi** nombre es João»." },
+      { tipo: "completar", frase: "Onde está o ___ carro?", resp: ["seu"], pista: "(você)",
+        explica: "(você) → *seu*. *carro* es masculino → **seu**. «¿Dónde está **tu** carro?»" },
+      { tipo: "completar", frase: "Onde está a ___ caneta?", resp: ["sua"], pista: "(você)",
+        explica: "(você) → *seu*, pero *caneta* es **femenina** → **sua**." },
+      { tipo: "completar", frase: "Eu falei com a mãe ___.", resp: ["dele"], pista: "(ele)",
+        explica: "(ele) → **dele** (de + ele). Va después del sustantivo y depende del dueño, no de *mãe*." },
+      { tipo: "completar", frase: "O ___ carro é azul.", resp: ["nosso"], pista: "(nós)",
+        explica: "(nós) → *nosso*. *carro* es masculino singular → **nosso**." },
+      { tipo: "completar", frase: "O carro ___ é amarelo.", resp: ["dela"], pista: "(ela)",
+        explica: "(ela) → **dela** (de + ela). Depende de la dueña, aunque *carro* sea masculino." },
+      { tipo: "completar", frase: "___ casas são pequenas.", resp: ["nossas"], pista: "(nós)",
+        explica: "(nós) → *nosso*. *casas* es **femenino plural** → **Nossas**." },
+      { tipo: "completar", frase: "___ aula de português online é muito divertida!", resp: ["nossa"], pista: "(nós)",
+        explica: "(nós) → *nosso*. *aula* es **femenina** (a aula) → **Nossa**. ¡Fíjate en *divertida* (femenino)!" },
+      { tipo: "completar", frase: "Nas ___ atividades na rua nós conhecemos muito o Rio.", resp: ["nossas"], pista: "(nós)",
+        explica: "(nós) → *nosso*. *atividades* es **femenino plural** → **nossas**. (*nas* = em + as)." },
+      { tipo: "completar", frase: "Essas anotações são ___.", resp: ["minhas"], pista: "(eu)",
+        explica: "(eu) → *meu*. Hablamos de *anotações* (**femenino plural**) → **minhas** («mías»)." },
+      { tipo: "completar", frase: "Estes livros são ___.", resp: ["meus"], pista: "(eu)",
+        explica: "(eu) → *meu*. *livros* es **masculino plural** → **meus** («míos»)." },
+      { tipo: "completar", frase: "A ___ irmã mora em Lima.", resp: ["minha"], pista: "(eu)",
+        explica: "(eu) → *meu*. *irmã* es femenina → **minha**." },
+      { tipo: "completar", frase: "Os ___ filhos estudam muito.", resp: ["nossos"], pista: "(nós)",
+        explica: "(nós) → *nosso*. *filhos* es masculino plural → **nossos**." },
+      { tipo: "completar", frase: "A casa ___ é grande.", resp: ["deles"], pista: "(eles)",
+        explica: "(eles) → **deles** (de + eles), después del sustantivo." },
+      { tipo: "completar", frase: "Qual é o ___ nome?", resp: ["seu"], pista: "(você)",
+        explica: "(você) → *seu*. *nome* es masculino → **seu**. «¿Cuál es **tu** nombre?»" },
+      { tipo: "marcar", frase: "Un hombre habla de su mamá: ___ mãe.", opciones: ["minha", "meu"], resp: 0, oir: "minha mãe",
+        explica: "Concuerda con la **cosa** (*mãe*, femenina), no con quien habla → **minha**." },
+      { tipo: "marcar", frase: "Una mujer habla de su papá: ___ pai.", opciones: ["meu", "minha"], resp: 0, oir: "meu pai",
+        explica: "*pai* es masculino → **meu**, aunque hable una mujer." },
+      { tipo: "marcar", frase: "*o carro dela* significa:", opciones: ["el carro de ella", "su carro (de él)", "tu carro"], resp: 0,
+        explica: "**dela** = de + ela = de **ella**." },
+      { tipo: "marcar", frase: "¿Por qué los brasileños prefieren *dele* en vez de *seu*?", opciones: ["Porque *seu* también puede ser «tu» y confunde", "Porque *seu* es incorrecto"], resp: 0,
+        explica: "*seu* sirve para *você* y para *ele*: *o seu carro* ¿es tu carro o el de él? Con **dele** no hay duda." },
+      { tipo: "marcar", frase: "*O livro é meu* significa:", opciones: ["El libro es mío", "El libro es mi"], resp: 0,
+        explica: "Después de *ser*, **meu** = «mío». Antes del sustantivo (*meu livro*) = «mi»." },
+      { tipo: "marcar", frase: "Estas havaianas são ___. (nós)", opciones: ["nossas", "nossos", "nosso"], resp: 0,
+        explica: "*havaianas* es femenino plural → **nossas**." }
+    ]
+  },
+
   // ============================ PRÁCTICA EXTRA ============================
   {
     id: "numeros", grupo: "extra", icono: "🔢", titulo: "Números",
@@ -3753,6 +3876,33 @@ function genTiempo() {
            ...armar(t, tiempos), oir: `${["Eu", "Ele", "", "Eles"][pp]} ${forma}.`,
            explica: `En español sería «${conjugarEs(es, t, pp)}» → **${t}**. Compara: presente *${conjugar(inf, "presente", pp)}* · pasado *${conjugar(inf, "pasado", pp)}* · futuro *${conjugar(inf, "futuro", pp)}*.` };
 }
+// Posesivos: [sustantivo, género, número, español]
+const COSAS_POSESIVO = [
+  ["carro", "m", "s", "carro"], ["casa", "f", "s", "casa"], ["livros", "m", "p", "libros"], ["canetas", "f", "p", "lapiceros"],
+  ["nome", "m", "s", "nombre"], ["mãe", "f", "s", "mamá"], ["pai", "m", "s", "papá"], ["amigos", "m", "p", "amigos"],
+  ["irmãs", "f", "p", "hermanas"], ["caderno", "m", "s", "cuaderno"], ["bolsa", "f", "s", "cartera"], ["filhos", "m", "p", "hijos"],
+  ["aula", "f", "s", "clase"], ["computadores", "m", "p", "computadoras"], ["havaianas", "f", "p", "sandalias"], ["professor", "m", "s", "profesor"]
+];
+const POSESIVOS = { eu: ["meu", "minha", "meus", "minhas"], você: ["seu", "sua", "seus", "suas"], nós: ["nosso", "nossa", "nossos", "nossas"] };
+function genPosesivo() {
+  const [cosa, g, n, es] = azar(COSAS_POSESIVO);
+  const k = (g === "m" ? 0 : 1) + (n === "p" ? 2 : 0);
+  const genTxt = ["masculino singular", "femenino singular", "masculino plural", "femenino plural"][k];
+  const art = ["o", "a", "os", "as"][k];
+  if (Math.random() < 0.3) {
+    // dele / dela / deles / delas: depende del dueño
+    const dueno = azar(["ele", "ela", "eles", "elas"]);
+    const correcta = "d" + dueno;
+    return { clave: `pos-${cosa}-${dueno}`, sub: `(${dueno}) · ${es}`, pregunta: `${art[0].toUpperCase() + art.slice(1)} ${cosa} ___.`,
+             ...armar(correcta, ["dele", "dela", "deles", "delas", POSESIVOS.nós[k]]), oir: `${art[0].toUpperCase() + art.slice(1)} ${cosa} ${correcta}.`, escribible: true,
+             explica: `Paso 1: (${dueno}) → **${correcta}** (de + ${dueno}). Va **después** del sustantivo y depende del **dueño**, no de *${cosa}*.` };
+  }
+  const dueno = azar(Object.keys(POSESIVOS));
+  const correcta = POSESIVOS[dueno][k];
+  return { clave: `pos-${cosa}-${dueno}`, sub: `(${dueno}) · ${es}`, pregunta: `${art[0].toUpperCase() + art.slice(1)} ___ ${cosa}.`,
+           ...armar(correcta, POSESIVOS[dueno]), oir: `${art[0].toUpperCase() + art.slice(1)} ${correcta} ${cosa}.`, escribible: true,
+           explica: `Paso 1: (${dueno}) → *${POSESIVOS[dueno][0]}*. Paso 2: *${cosa}* es **${genTxt}** → **${correcta}**.` };
+}
 function genHeterogenerico() {
   const [pt, plur, g, es] = azar(HETEROGENERICOS);
   const plural = plur && Math.random() < 0.3;
@@ -3894,6 +4044,7 @@ const CATEGORIAS = [
   { id: "todo", t: "🎲 Todo" },
   { id: "verbos", t: "⚙️ Verbos", g: [genConjugacion, genConjugacion, genConjugacion, genConjugacion, () => genBanco(BANCO_VERBOS), () => genBanco(BANCO_VERBOS),
                                       () => genBanco(BANCO_IR), () => genBanco(BANCO_IR), () => genCurso(["serestar", "verbosar", "presente", "ir"])] },
+  { id: "posesivos", t: "👜 Posesivos", g: [genPosesivo, genPosesivo, genPosesivo, () => genCurso(["posesivos"])] },
   { id: "tiempos", t: "⏳ Presente, pasado, futuro", g: [genTiempo, genTiempo, genTiempo, () => genCurso(["verbosreg"])] },
   { id: "gustos", t: "🎨 Gustos", g: [() => genBanco(BANCO_GOSTOS), () => genBanco(BANCO_GOSTOS), () => genVocab(["passatempos"]), () => genCurso(["passatempos"])] },
   { id: "articulos", t: "📌 Artículos", g: [genArticulo, genArticulo, genContraccion, genContraccion, () => genCurso(["articulos"])] },
@@ -3911,7 +4062,7 @@ CATEGORIAS[0].g = CATEGORIAS.slice(1, -1).flatMap(c => c.g).concat([() => genCur
 const CATEGORIA_DE_LECCION = {
   alfabeto: "escucha", saludos: "presentarse", presentarse: "presentarse", serestar: "verbos", verbosar: "verbos",
   descripciones: "descripciones", articulos: "articulos", genero: "genero", numeros: "numeros", dias: "numeros",
-  presente: "verbos", ir: "verbos", passatempos: "gustos", verbosreg: "tiempos"
+  presente: "verbos", ir: "verbos", passatempos: "gustos", verbosreg: "tiempos", posesivos: "posesivos"
 };
 
 // ---------- estado y pantalla ----------
