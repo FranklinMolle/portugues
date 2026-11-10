@@ -262,6 +262,22 @@
   .pr-res .frase-oir { font-weight: 600; margin-top: 6px; }
   .pr-res .trad { color: var(--gris); font-size: .9rem; }
   .btn.ancho { width: 100%; padding: 16px; font-size: 1.1rem; }
+
+  /* Computadora: aprovechar el ancho de la pantalla */
+  @media (min-width: 900px) {
+    main { max-width: 1200px; padding: 24px 32px 60px; }
+    header { padding-left: 32px; padding-right: 32px; }
+    header > * { max-width: 1136px; margin-left: auto; margin-right: auto; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+    .lista.dialogo { display: flex; }                 /* los diálogos se leen en orden, en una columna */
+    .angosto { max-width: 720px; margin: 0 auto; }    /* tarjetas, quiz y práctica: una pregunta a la vez */
+    .intro, .pestanas { max-width: none; }
+  }
+  @media (min-width: 900px) {
+    .teoria { max-width: 980px; margin: 0 auto; }   /* la teoría se lee en orden: una columna ancha y centrada */
+    .apunte { padding: 18px 22px; }
+  }
 </style>
 </head>
 <body>
@@ -3027,7 +3043,7 @@ function pintarLeccion() {
     <h2 style="margin:6px 0 0">${leccion.icono} ${esc(leccion.titulo)}</h2>
     <div class="intro">${esc(leccion.intro)}</div>
     ${barra}
-    ${cuerpo}`;
+    ${["tarjetas", "quiz"].includes(pestana) ? `<div class="angosto">${cuerpo}</div>` : cuerpo}`;
 }
 
 // Prueba del audio
@@ -3101,14 +3117,14 @@ function htmlApuntes() {
   const r = leccion.resolver;
   const bloques = r ? leccion.apuntes.concat([{ id: "resolver", t: "🧩 Cómo resolver los ejercicios", p: r.p, lista: r.pasos,
                                                 resueltos: r.resueltos, consejos: r.consejos }]) : leccion.apuntes;
-  return bloques.map(a => `
+  return `<div class="teoria">` + bloques.map(a => `
     <div class="apunte" ${a.id ? `id="${a.id}"` : ""}>
       ${a.t ? `<h3>${esc(a.t)}${a.extra ? `<span class="etiqueta-extra">➕ Extra</span>` : ""}</h3>` : ""}
       ${a.p ? `<p>${md(a.p)}</p>` : ""}
       ${a.tabla ? tabla(a.tabla) : ""}
       ${a.lista ? `<ul>${a.lista.map(x => `<li>${md(x)}</li>`).join("")}</ul>` : ""}
       ${a.ej ? `<div class="lista">${a.ej.map(([pt, es, pr]) => filaAudio(pt, es, null, null, pr)).join("")}</div>` : ""}
-      ${a.dialogo ? `<div class="lista">${a.dialogo.map(([quien, pt, es, pr]) => filaAudio(pt, es, null, quien, pr)).join("")}</div>` : ""}
+      ${a.dialogo ? `<div class="lista dialogo">${a.dialogo.map(([quien, pt, es, pr]) => filaAudio(pt, es, null, quien, pr)).join("")}</div>` : ""}
       ${a.resueltos ? a.resueltos.map((x, i) => {
         const antes = x.f.split("___")[0];
         const r = sinParentesis(x.r);
@@ -3127,7 +3143,7 @@ function htmlApuntes() {
       ${a.consejos ? `<div class="consejo">💡 <strong>Consejos</strong><ul>${a.consejos.map(x => `<li>${md(x)}</li>`).join("")}</ul></div>` : ""}
       ${a.porque ? `<div class="porque">🤔 <strong>¿Por qué?</strong> ${md(a.porque)}</div>` : ""}
       ${a.ojo ? `<div class="ojo">⚠️ <strong>Ojo:</strong> ${md(a.ojo)}</div>` : ""}
-    </div>`).join("") + siguientePaso("ejercicios", "Practicar con ejercicios →");
+    </div>`).join("") + `</div>` + siguientePaso("ejercicios", "Practicar con ejercicios →");
 }
 
 // Vocabulario
@@ -4173,7 +4189,7 @@ function pintarPractica() {
         <div class="controles"><button class="btn ancho" onclick="nuevaPregunta()">Siguiente →</button></div>`;
     }
   }
-  $app.innerHTML = `
+  $app.innerHTML = `<div class="angosto">
     <button class="volver" onclick="location.hash='#/'">← Inicio</button>
     <h2 style="margin:6px 0 0">🚌 Práctica sin fin</h2>
     <div class="chips">${chips}</div>
@@ -4182,7 +4198,7 @@ function pintarPractica() {
       <button class="chip ${modoEscribir ? "activa" : ""}" onclick="cambiarModo(true)">✍️ Escribir</button>
     </div>
     <div class="stats"><span>✅ ${s.bien} · ❌ ${s.mal}</span><span>🔥 Racha ${s.racha}</span><span>🏆 ${statsPr.record}</span></div>
-    ${cuerpo}`;
+    ${cuerpo}</div>`;
 }
 
 // ---------- inicio ----------
