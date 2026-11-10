@@ -91,6 +91,7 @@
 
   .seccion { font-size: 1.05rem; margin: 18px 0 10px; }
   .seccion:first-child { margin-top: 0; }
+  .sub-seccion { font-weight: 400; color: var(--gris); font-size: .8rem; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   .tarjeta-leccion {
     background: var(--tarjeta); border-radius: var(--radio); padding: 16px 14px;
@@ -3539,6 +3540,7 @@ let pestana = "aprender";
 let tarjetaIdx = 0, volteada = false, mazo = [];
 let quiz = null;
 let ejRes = [];       // resultado de cada ejercicio: null (sin responder), true o false
+let ejActuales = [];  // ejercicios en pantalla: los del curso + los generados
 
 // ---------- utilidades ----------
 const $app = document.getElementById("app");
@@ -4041,7 +4043,10 @@ function pestanasDe(l) { return PESTANAS.filter(p => p.hay(l)); }
 function prepararPestana() {
   if (pestana === "tarjetas") { mazo = leccion.items.map((_, i) => i); tarjetaIdx = 0; volteada = false; }
   if (pestana === "quiz") quiz = crearQuiz(leccion.items);
-  if (pestana === "ejercicios") ejRes = leccion.ejercicios.map(() => null);
+  if (pestana === "ejercicios") {
+    ejActuales = leccion.ejercicios.concat(crearEjerciciosExtra(leccion));
+    ejRes = ejActuales.map(() => null);
+  }
   if (pestana === "entrenar") ent = crearEntrenamiento(leccion.id);
 }
 function cambiarPestana(p) {
@@ -4063,7 +4068,7 @@ function tarjetaLeccion(l) {
       ${nota ? `<span class="insignia">${hecha ? "✓ " : ""}${nota}%</span>` : ""}
       <div class="ico">${l.icono}</div>
       <h3>${esc(l.titulo)}</h3>
-      <small>${l.items.length} palabras · ${(l.ejercicios || []).length} ejercicios${ENTRENAR[l.id] ? " + 🎯 100" : ""}</small>
+      <small>${l.items.length} palabras · ${(l.ejercicios || []).length + cuantosExtra(l)} ejercicios${ENTRENAR[l.id] ? " + 🎯 entrenar" : ""}</small>
       ${notaEj !== undefined ? `<small>✏️ Ejercicios: ${notaEj}%</small>` : ""}
     </div>`;
 }
@@ -4138,6 +4143,7 @@ function apilar(cont, minAncho) {
 function apilarTodo() {
   apilar(document.querySelector("#app .teoria"), 560);
   apilar(document.getElementById("ejLista"), 340);
+  apilar(document.getElementById("ejLista2"), 340);
 }
 let esperaApilar;
 window.addEventListener("resize", () => { clearTimeout(esperaApilar); esperaApilar = setTimeout(apilarTodo, 150); });
@@ -4289,16 +4295,24 @@ function verResolver() {
   setTimeout(() => { const b = document.getElementById("resolver"); if (b) b.scrollIntoView({ behavior: "smooth" }); }, 60);
 }
 function htmlEjercicios() {
+  const nCurso = leccion.ejercicios.length, hayExtra = ejActuales.length > nCurso;
+  const tarjeta = (e, i) => e.tipo === "marcar" ? htmlMarcar(e, i) : htmlCompletar(e, i);
   return `
     ${leccion.resolver || (leccion.apuntes || []).some(a => a.id === "resolver")
       ? `<div class="controles izq" style="margin:0 0 10px"><button class="btn sec peq" onclick="verResolver()">🧩 ¿Cómo se resuelven? Ver ejemplos resueltos</button></div>` : ""}
     <div class="marcador" id="ejMarcador">${textoMarcador()}</div>
     ${ENTRENAR[leccion.id] ? `<div class="controles izq" style="margin:0 0 10px"><button class="btn peq" onclick="cambiarPestana('entrenar')">🎯 Entrenar con 100 ejercicios más de este tema</button></div>` : ""}
+    ${hayExtra ? `<h3 class="seccion">📘 Ejercicios del curso</h3>` : ""}
     <div class="lista" id="ejLista">
-      ${leccion.ejercicios.map((e, i) => e.tipo === "marcar" ? htmlMarcar(e, i) : htmlCompletar(e, i)).join("")}
+      ${ejActuales.slice(0, nCurso).map((e, i) => tarjeta(e, i)).join("")}
     </div>
+    ${hayExtra ? `
+    <h3 class="seccion">➕ Más ejercicios de este tema <small class="sub-seccion">· cambian cada vez que entras o reinicias</small></h3>
+    <div class="lista" id="ejLista2">
+      ${ejActuales.slice(nCurso).map((e, j) => tarjeta(e, nCurso + j)).join("")}
+    </div>` : ""}
     <div class="controles">
-      <button class="btn sec" onclick="cambiarPestana('ejercicios')">↺ Reiniciar ejercicios</button>
+      <button class="btn sec" onclick="cambiarPestana('ejercicios')">↺ Reiniciar${hayExtra ? " (con ejercicios nuevos)" : " ejercicios"}</button>
       <button class="btn" onclick="location.hash='#/practica/${CATEGORIA_DE_LECCION[leccion.id] || "todo"}'">🚌 Seguir practicando (sin fin)</button>
     </div>`;
 }
@@ -4312,7 +4326,7 @@ function htmlCompletar(e, i) {
   }
   return `
     <div class="ej" id="ej-${i}">
-      <div class="tipo">✏️ Completa${e.pista ? ` · <em>${esc(e.pista)}</em>` : ""}</div>
+      <div class="tipo">✏️ Completa${e.pista ? ` · <em>${md(e.pista)}</em>` : ""}</div>
       <div class="frase">${frase}</div>
       ${e.trad ? `<div class="trad">${esc(e.trad)}</div>` : ""}
       <div class="controles izq"><button class="btn peq" onclick="comprobarCompletar(${i})">Comprobar</button></div>
@@ -4322,7 +4336,8 @@ function htmlCompletar(e, i) {
 function htmlMarcar(e, i) {
   return `
     <div class="ej" id="ej-${i}">
-      <div class="tipo">☑️ Marca la correcta</div>
+      <div class="tipo">☑️ Marca la correcta${e.sub ? ` · <em>${md(e.sub)}</em>` : ""}</div>
+      ${e.escucha ? `<button class="btn sec peq" data-pt="${esc(e.escucha)}" onclick="hablar(this.dataset.pt)">🔊 Escuchar</button>` : ""}
       <div class="frase">${md(e.frase)}</div>
       <div class="opciones">
         ${e.opciones.map((o, k) => `<button class="opcion" onclick="marcar(${i}, ${k})">${esc(o)}</button>`).join("")}
@@ -4335,7 +4350,7 @@ function fraseCompleta(e) {
 }
 function comprobarCompletar(i) {
   if (ejRes[i] !== null) return;
-  const e = leccion.ejercicios[i];
+  const e = ejActuales[i];
   const caja = document.getElementById("ej-" + i);
   const inputs = [...caja.querySelectorAll("input")];
   const res = caja.querySelector(".res");
@@ -4360,9 +4375,10 @@ function comprobarCompletar(i) {
           : `❌ Respuesta: <strong>${esc(correcta)}</strong>`;
   msg += `<div class="pron">🗣️ ${esc(pron(correcta))}</div>`;
   if (!todoBien && !casi && inputs.length === 1) msg += lineaTuRespuesta(inputs[0].value.trim(), [].concat(e.resp[0])[0]);
+  if (e.traduccion) msg += `<div class="trad">${esc(e.traduccion)}</div>`;
   const explica = e.explica || explicarAuto(e);
   if (explica) msg += `<div class="explica">💡 ${conTerminos(md(explica))}</div>`;
-  msg += lineaEspanol(enEspanol(e));
+  msg += lineaEspanol(e.espanol || enEspanol(e));
   msg += lineaPalabras(correcta);
   res.innerHTML = msg;
   caja.querySelector(".controles").remove();
@@ -4371,7 +4387,7 @@ function comprobarCompletar(i) {
 }
 function marcar(i, k) {
   if (ejRes[i] !== null) return;
-  const e = leccion.ejercicios[i];
+  const e = ejActuales[i];
   const caja = document.getElementById("ej-" + i);
   const ok = k === e.resp;
   caja.querySelectorAll(".opcion").forEach((b, j) => {
@@ -4382,9 +4398,10 @@ function marcar(i, k) {
   const oir = e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", e.opciones[e.resp]) : null);
   let msg = ok ? "✅ ¡Correcto!" : `❌ La correcta es: <strong>${esc(e.opciones[e.resp])}</strong>`;
   if (oir) msg += `<div class="pron">🗣️ ${esc(pron(oir))}</div>`;
+  if (e.traduccion) msg += `<div class="trad">${esc(e.traduccion)}</div>`;
   if (!ok && e.frase.includes("___")) msg += lineaTuRespuesta(e.opciones[k], e.opciones[e.resp]);
   if (e.explica) msg += `<div class="explica">💡 ${conTerminos(md(e.explica))}</div>`;
-  msg += lineaEspanol(enEspanol(e));
+  msg += lineaEspanol(e.espanol || enEspanol(e));
   msg += lineaPalabras(oir);
   caja.querySelector(".res").innerHTML = msg;
   if (oir) hablar(oir);
@@ -5833,7 +5850,7 @@ function genFalso() {
 }
 
 // Qué generadores usa cada tema (cada ronda: 100 preguntas distintas)
-const enCurso = (...ids) => () => genCurso(ids, true);
+const enCurso = (...ids) => Object.assign(() => genCurso(ids, true), { curso: true });   // repite los ejercicios del curso
 const enVocab = (...ids) => () => genVocab(ids);
 const enFrases = id => () => genFraseLec(id);
 const conjDe = (...infs) => () => genConjugacion(VERBOS.filter(v => infs.includes(v.inf)));
@@ -5862,6 +5879,32 @@ const ENTRENAR = {
   falsos: [enCurso("falsos"), genFalso, genFalso, genFalso, enVocab("falsos"), enFrases("falsos")]
 };
 const claveUnica = q => `${q.sub || ""}|${q.pregunta || q.escucha || ""}|${q.validas ? q.validas[0] : q.opciones[q.resp]}`;
+
+// Pestaña Ejercicios: los del curso + otros generados (distintos entre sí y nuevos cada vez que entras o reinicias)
+const TOTAL_EJERCICIOS = 100;
+const cuantosExtra = l => ENTRENAR[l.id] ? Math.max(40, TOTAL_EJERCICIOS - l.ejercicios.length) : 0;
+function crearEjerciciosExtra(l) {
+  const gens = (ENTRENAR[l.id] || []).filter(g => !g.curso);
+  const n = cuantosExtra(l), extra = [];
+  const vistas = new Set(l.ejercicios.map(e => sinMd(e.frase)));
+  for (let k = 0; k < 6000 && extra.length < n && gens.length; k++) {
+    const q = azar(gens)();
+    if (!q || !q.opciones) continue;
+    const c = claveUnica(q);
+    if (vistas.has(c) || vistas.has(sinMd(q.pregunta || ""))) continue;
+    vistas.add(c);
+    extra.push(aEjercicio(q));
+  }
+  return extra;
+}
+// Convierte una pregunta generada en una tarjeta de ejercicio (a veces para escribir, como los «Completa» del curso)
+function aEjercicio(q) {
+  const comun = { sub: q.sub, oir: q.oir || q.escucha, escucha: q.escucha, explica: q.explica, espanol: q.espanol, traduccion: q.traduccion };
+  const unHueco = (q.pregunta || "").split("___").length === 2;
+  if (q.escribible && unHueco && !q.pregunta.includes("…") && Math.random() < 0.35)
+    return { ...comun, tipo: "completar", frase: sinMd(q.pregunta), resp: [q.validas || [q.opciones[q.resp]]], pista: q.sub };
+  return { ...comun, tipo: "marcar", frase: q.pregunta || "🎧 Escucha y elige la respuesta:", opciones: q.opciones, resp: q.resp };
+}
 let ent = null;
 function crearEntrenamiento(id, n = 100) {
   const gens = ENTRENAR[id], vistas = new Set(), lista = [];
