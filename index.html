@@ -265,18 +265,16 @@
 
   /* Computadora: aprovechar el ancho de la pantalla */
   @media (min-width: 900px) {
-    main { max-width: 1200px; padding: 24px 32px 60px; }
-    header { padding-left: 32px; padding-right: 32px; }
-    header > * { max-width: 1136px; margin-left: auto; margin-right: auto; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-    .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
-    .lista.dialogo { display: flex; }                 /* los diálogos se leen en orden, en una columna */
-    .angosto { max-width: 720px; margin: 0 auto; }    /* tarjetas, quiz y práctica: una pregunta a la vez */
-    .intro, .pestanas { max-width: none; }
-  }
-  @media (min-width: 900px) {
-    .teoria { max-width: 980px; margin: 0 auto; }   /* la teoría se lee en orden: una columna ancha y centrada */
-    .apunte { padding: 18px 22px; }
+    main { max-width: none; padding: 24px 40px 60px; }                  /* usa todo el ancho de la pantalla */
+    header { padding-left: 40px; padding-right: 40px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+    .lista.dialogo { display: flex; }                                    /* los diálogos se leen en orden */
+    .angosto { max-width: 1000px; margin: 0 auto; }                      /* tarjetas, quiz y práctica */
+    /* Teoría: bloques uno al lado del otro, en orden de izquierda a derecha */
+    .teoria { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 16px; align-items: start; }
+    .teoria .apunte { margin-bottom: 0; padding: 18px 22px; }
+    .teoria .apunte .lista { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
   }
 </style>
 </head>
