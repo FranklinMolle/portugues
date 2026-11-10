@@ -235,6 +235,10 @@
   input.hueco.casi { border-color: var(--casi); background: var(--casi-claro); }
   .res { margin-top: 8px; font-size: .95rem; }
   .res .explica { color: var(--azul); font-size: .88rem; margin-top: 4px; }
+  .res .tu-resp { color: var(--error); font-size: .88rem; margin-top: 4px; }
+  .res .palabras { color: var(--gris); font-size: .84rem; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--borde); }
+  .barra-ent { height: 6px; background: var(--suave); border-radius: 99px; overflow: hidden; margin: -4px 0 12px; }
+  .barra-ent > div { height: 100%; background: var(--verde); }
   .res .aviso { color: var(--casi); }
 
   /* Quiz */
@@ -338,6 +342,10 @@
     .teoria { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 16px; align-items: start; }
     .teoria .apunte { margin-bottom: 0; padding: 18px 22px; }
     .teoria .apunte .lista { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    /* Tarjetas apiladas en columnas (sin huecos): cada una va a la columna más corta, en orden */
+    .teoria.apilado, .lista.apilado { display: flex; flex-direction: row; gap: 16px; align-items: flex-start; }
+    .apilado > .col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+    .lista.apilado, .lista.apilado > .col { gap: 12px; }
   }
 </style>
 </head>
@@ -950,6 +958,8 @@ const LECCIONES = [
                   ["Ricardo", "Eu sou Ricardo.", "Yo soy Ricardo."]],
         porque: "**Zé** es el apodo de *José*, muy común en Brasil. Y fíjate en **gosto de dançar**: el verbo *gostar* siempre va con **de**." },
       { t: "Eu me chamo: el verbo chamar-se",
+        ej: [["Eu me chamo Carlos.", "Me llamo Carlos."], ["Como você se chama?", "¿Cómo te llamas?"], ["Ela se chama Ana.", "Ella se llama Ana."],
+             ["Nós nos chamamos Pedro e Paulo.", "Nos llamamos Pedro y Pablo."], ["Como eles se chamam?", "¿Cómo se llaman ellos?"]],
         p: "Funciona igual que 'llamarse' en español:",
         tabla: { cab: ["Pronombre", "Chamar-se", "Español"], pron: [1], filas: [
           ["eu", "**me** chamo", "me llamo"], ["você / ele / ela", "**se** chama", "te llamas / se llama"],
@@ -969,31 +979,43 @@ const LECCIONES = [
              ["Quais são os seus interesses?", "¿Cuáles son tus intereses?"], ["Eu gosto de música e de fazer exercício.", "Me gusta la música y hacer ejercicio."]],
         porque: "**apelido** NO es apellido: es el **apodo**. Apellido se dice **sobrenome**. ¡Es un falso amigo clásico!" },
       { t: "Pronombres interrogativos",
+        ej: [["Como você está?", "¿Cómo estás?"], ["Onde você mora?", "¿Dónde vives?"], ["De onde você é?", "¿De dónde eres?"],
+             ["O que você faz?", "¿Qué haces? / ¿A qué te dedicas?"], ["Qual é o seu telefone?", "¿Cuál es tu teléfono?"],
+             ["Quando é o seu aniversário?", "¿Cuándo es tu cumpleaños?"], ["Quantos irmãos você tem?", "¿Cuántos hermanos tienes?"], ["Quem é ela?", "¿Quién es ella?"]],
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["Como?", "¿Cómo?"], ["Onde? / De onde?", "¿Dónde? / ¿De dónde?"], ["O que?", "¿Qué?"], ["Qual? / Quais?", "¿Cuál? / ¿Cuáles?"],
           ["Quando?", "¿Cuándo?"], ["Quantos? / Quantas?", "¿Cuántos? / ¿Cuántas?"], ["Quem?", "¿Quién?"]] },
         porque: "Las palabras en negrita de la tabla anterior son estos interrogativos. Con ellos puedes armar cualquier pregunta. **Qual** se usa más que en español: *Qual é o seu nome?*" },
-      { t: "Ser DE + lugar: ¿do, da o de?", extra: true,
+      { t: "Ser DE + lugar: ¿do, da o de?",
+        ej: [["Eu sou do Peru.", "Soy del Perú."], ["Ela é da Argentina.", "Ella es de Argentina."], ["Nós somos de Lima.", "Somos de Lima."],
+             ["Ele é do Rio de Janeiro.", "Él es de Río de Janeiro."], ["Você é de Portugal?", "¿Eres de Portugal?"], ["Elas são da Bahia.", "Ellas son de Bahía."]], extra: true,
         p: "Al decir de dónde eres, el **de** se une con el artículo del lugar:",
         tabla: { cab: ["Lugar", "Se dice", "Por qué"], filas: [
           ["o Brasil, o Peru, o Chile, o Rio", "sou **do** Peru", "de + o = do"],
           ["a Argentina, a Bahia", "sou **da** Argentina", "de + a = da"],
           ["Lima, São Paulo, Portugal", "sou **de** Lima", "las ciudades (y algunos países) no llevan artículo"]] },
         porque: "Por eso Carlos dice *sou **do** Rio* y Robert *sou **de** Brighton*." },
-      { t: "Nacionalidades", extra: true,
+      { t: "Nacionalidades",
+        ej: [["Eu sou peruano.", "Soy peruano."], ["Ela é peruana.", "Ella es peruana."], ["Ele é brasileiro e ela é brasileira.", "Él es brasileño y ella es brasileña."],
+             ["Meu professor é português.", "Mi profesor es portugués."], ["A Catarina é portuguesa.", "Catarina es portuguesa."], ["Eles são ingleses.", "Ellos son ingleses."]], extra: true,
         tabla: { cab: ["Masculino", "Femenino", "País"], filas: [
           ["peruano", "peruana", "o Peru"], ["brasileiro", "brasileira", "o Brasil"], ["argentino", "argentina", "a Argentina"],
           ["chileno", "chilena", "o Chile"], ["colombiano", "colombiana", "a Colômbia"], ["angolano", "angolana", "Angola"],
           ["português", "portuguesa", "Portugal"], ["inglês", "inglesa", "a Inglaterra"], ["espanhol", "espanhola", "a Espanha"]] },
         porque: "Regla: **-o → -a** (peruano → peruana), **-ês → -esa** (inglês → inglesa), **-ol → -ola** (espanhol → espanhola). Se escriben con **minúscula**." },
-      { t: "Profesiones", extra: true,
+      { t: "Profesiones",
+        ej: [["Eu sou estudante.", "Soy estudiante."], ["Ela é advogada.", "Ella es abogada."], ["Meu pai é engenheiro.", "Mi papá es ingeniero."],
+             ["Você é professora?", "¿Eres profesora?"], ["Ele trabalha como jornalista.", "Él trabaja como periodista."]], extra: true,
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["professor / professora", "profesor(a)"], ["estudante", "estudiante"], ["jornalista", "periodista"],
           ["advogado / advogada", "abogado(a)"], ["médico / médica", "médico(a)"], ["engenheiro / engenheira", "ingeniero(a)"],
           ["administrador / administradora", "administrador(a)"], ["jogador / jogadora", "jugador(a)"],
           ["fazendeiro / fazendeira", "hacendado(a)"], ["dono / dona de restaurante", "dueño(a) de restaurante"]] },
         porque: "Como en español, la profesión va **sin artículo**: *Eu sou professor* (no *Eu sou um professor*)." },
-      { t: "Verbo fazer (hacer)", extra: true,
+      { t: "Verbo fazer (hacer)",
+        ej: [["O que você faz?", "¿A qué te dedicas? / ¿Qué haces?"], ["Eu faço exercício de manhã.", "Hago ejercicio en la mañana."],
+             ["Ela faz aniversário em maio.", "Ella cumple años en mayo."], ["Nós fazemos o almoço juntos.", "Hacemos el almuerzo juntos."],
+             ["Eles fazem compras aos sábados.", "Ellos hacen compras los sábados."]], extra: true,
         tabla: { cab: ["Pronombre", "Fazer", "Español"], pron: [1], filas: [
           ["eu", "faço", "hago"], ["você / ele / ela", "faz", "haces / hace"], ["nós", "fazemos", "hacemos"], ["vocês / eles / elas", "fazem", "hacen"]] },
         porque: "Aparece en dos preguntas del curso: *O que você **faz** da vida?* (¿A qué te dedicas?) y *Quando você **faz** aniversário?* (¿Cuándo cumples años?)." },
@@ -1091,6 +1113,9 @@ const LECCIONES = [
     intro: "Son los tres verbos más importantes del curso: con ellos dices quién eres (ser), cómo o dónde estás (estar) y qué tienes (ter).",
     apuntes: [
       { t: "Pronomes pessoais",
+        ej: [["Eu sou peruano.", "Yo soy peruano."], ["Você é muito simpática.", "Tú eres muy simpática."], ["Ele é médico e ela é professora.", "Él es médico y ella es profesora."],
+             ["Nós somos amigos.", "Nosotros somos amigos."], ["A gente é do Peru.", "Nosotros somos del Perú."], ["Vocês são irmãos?", "¿Ustedes son hermanos?"],
+             ["O senhor é daqui?", "¿Usted es de aquí?"]],
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["eu", "yo"], ["você (= tu)", "tú / usted"], ["o senhor / a senhora", "usted (con respeto)"], ["ele / ela", "él / ella"],
           ["nós (= a gente)", "nosotros"], ["vocês", "ustedes"], ["eles / elas", "ellos / ellas"]] },
@@ -1099,6 +1124,8 @@ const LECCIONES = [
         consejos: ["**o senhor** (a un hombre) y **a senhora** (a una mujer) equivalen a *usted*: se usan con respeto, con una persona mayor, un cliente o un jefe. También se conjugan como *ele*: *O senhor **é** daqui?* = ¿Usted es de aquí?",
                    "¿Por qué los pronombres van junto con **ser, estar y ter**? Porque el pronombre solo dice **quién**, y el verbo dice **qué es, cómo está o qué tiene**. Separados no forman una frase: por eso se aprenden juntos (*eu sou, eu estou, eu tenho*)."] },
       { t: "Verbo SER — cualidad permanente",
+        ej: [["Eu sou estudante.", "Soy estudiante."], ["Ela é alta e simpática.", "Ella es alta y simpática."], ["Nós somos do Peru.", "Somos del Perú."],
+             ["Eles são brasileiros.", "Ellos son brasileños."], ["Você é muito inteligente.", "Eres muy inteligente."]],
         tabla: { cab: ["Pronombre", "SER", "Español"], pron: [1], filas: [
           ["eu", "sou", "yo soy"], ["tu \\*", "és", "tú eres"], ["ele / ela / você", "é", "él / ella es · tú eres"],
           ["nós", "somos", "nosotros somos"], ["vós \\*", "sois", "vosotros sois"], ["eles / elas / vocês", "são", "ellos / ellas son · ustedes son"]] },
@@ -1112,7 +1139,9 @@ const LECCIONES = [
         lista: ["**ESTAR** → cualidad **temporal**: cómo te sientes, dónde estás ahora, estado civil."],
         ej: [["Eu sou a Ana. Eu sou brasileira. Eu estou no Chile.", "Soy Ana. Soy brasileña. Estoy en Chile."]],
         porque: "Ana **es** brasileña (eso no cambia), pero **está** en Chile (ahora; puede irse). Es la misma lógica que en español." },
-      { t: "SER o ESTAR: comparando", extra: true,
+      { t: "SER o ESTAR: comparando",
+        ej: [["Ele é feliz.", "Él es feliz (es una persona feliz)."], ["Ele está feliz hoje.", "Él está feliz hoy."],
+             ["A sopa é boa.", "La sopa es buena (siempre)."], ["A sopa está fria.", "La sopa está fría (ahora)."]], extra: true,
         tabla: { cab: ["SER (permanente)", "ESTAR (temporal)"], filas: [
           ["Ele **é** nervoso. (es así)", "Ele **está** nervoso. (ahora)"], ["Ela **é** alegre.", "Ela **está** alegre hoje."],
           ["O café **é** bom. (en general)", "O café **está** quente. (ahora)"], ["Eu **sou** professor.", "Eu **estou** cansado."]] },
@@ -1238,7 +1267,9 @@ const LECCIONES = [
              ["Eles falam em morar aqui?", "¿Ellos hablan de vivir aquí?"], ["Paula fala muito no seu namorado.", "Paula habla mucho de su novio."],
              ["Nós falamos sobre educação.", "Hablamos sobre educación."]],
         porque: "Las terminaciones son siempre las mismas: **-o, -a, -amos, -am**. Quitas el **-ar** y pones la terminación: fal**ar** → fal**o**, fal**a**, fal**amos**, fal**am**." },
-      { t: "El mismo modelo para muchos verbos", extra: true,
+      { t: "El mismo modelo para muchos verbos",
+        ej: [["Eu moro em Lima.", "Vivo en Lima."], ["Ela trabalha num banco.", "Ella trabaja en un banco."], ["Nós estudamos português.", "Estudiamos portugués."],
+             ["Eles dançam muito bem.", "Ellos bailan muy bien."], ["Você viaja muito?", "¿Viajas mucho?"]], extra: true,
         tabla: { cab: ["Verbo", "eu", "você / ele", "nós", "vocês / eles"], filas: [
           ["morar (vivir)", "moro", "mora", "moramos", "moram"], ["trabalhar (trabajar)", "trabalho", "trabalha", "trabalhamos", "trabalham"],
           ["estudar (estudiar)", "estudo", "estuda", "estudamos", "estudam"], ["dançar (bailar)", "danço", "dança", "dançamos", "dançam"],
@@ -1262,12 +1293,15 @@ const LECCIONES = [
           ["o + masculino", "**do**", "Gosto **do** Brasil."], ["a + femenino", "**da**", "Gosto **da** caipirinha."],
           ["os + masculino plural", "**dos**", "Gosto **dos** doces."], ["as + femenino plural", "**das**", "Gosto **das** praias."]] },
         porque: "El **de** de *gostar* se une con el artículo (o, a, os, as). Es la misma regla de las contracciones que verás en *Artículos*." },
-      { t: "Negar, preguntar y responder", extra: true,
+      { t: "Negar, preguntar y responder",
+        ej: [["Eu não falo inglês.", "No hablo inglés."], ["Você fala espanhol?", "¿Hablas español?"], ["— Você gosta de café? — Gosto!", "—¿Te gusta el café? —¡Sí, me gusta!"],
+             ["— Você mora aqui? — Não, não moro.", "—¿Vives aquí? —No, no vivo aquí."]], extra: true,
         lista: ["Para negar, pon **não** antes del verbo: Ele **não** fala muito.",
                 "Para preguntar no cambia el orden: solo sube la entonación. *Você fala inglês?*",
                 "Para responder 'sí', se repite el verbo: — Você gosta de café? — **Gosto!**"],
         porque: "En Brasil casi nunca se responde solo *sim*: lo natural es repetir el verbo (*Gosto*, *Falo*, *Moro*)." },
-      { t: "Falar EM", extra: true,
+      { t: "Falar EM",
+        ej: [["Ela fala muito no namorado.", "Ella habla mucho de su novio."], ["Eles falam em viajar.", "Ellos hablan de viajar."], ["Não fale nisso!", "¡No hables de eso! (nisso = em + isso)"]], extra: true,
         p: "**falar em** = mencionar, hablar de algo o alguien. *Paula fala muito **no** namorado* = Paula habla mucho de su novio (**no** = em + o)." }
     ],
     items: [
@@ -1342,6 +1376,8 @@ const LECCIONES = [
           ["**ESTAR**", "cómo está ahora", "Ela **está** bronzeada. (volvió de la playa)"]] },
         porque: "Es la misma lógica de la lección anterior: SER = permanente, ESTAR = temporal, TER = lo que posees. Con *ter* y partes del cuerpo, el artículo es opcional: *Ela tem cabelo liso* y *Ela tem o cabelo liso* están bien las dos." },
       { t: "Características físicas",
+        ej: [["Ela é alta e magra.", "Ella es alta y delgada."], ["Meu tio é careca.", "Mi tío es calvo."], ["O bebê é gordinho.", "El bebé es gordito."],
+             ["Eles são fortes.", "Ellos son fuertes."]],
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["alto / alta", "alto / alta"], ["baixo / baixa", "bajo / baja"], ["gordo / gorda", "gordo / gorda"], ["magro / magra", "delgado / delgada"],
           ["forte", "fuerte"], ["fraco / fraca", "débil"], ["jovem", "joven"], ["idoso / idosa", "persona mayor"],
@@ -1354,6 +1390,8 @@ const LECCIONES = [
           ["cabelo longo / curto", "cabello largo / corto"], ["olhos verdes / azuis / castanhos / pretos", "ojos verdes / azules / castaños / negros"]] },
         porque: "**longo** = largo (de longitud). *Largo* en portugués significa **ancho**: *nariz largo* = nariz ancha. ¡Otro falso amigo!" },
       { t: "Características psicológicas (personalidad)",
+        ej: [["Meu amigo é muito engraçado.", "Mi amigo es muy chistoso."], ["Que professor chato!", "¡Qué profesor tan aburrido!"],
+             ["Ela é amável e responsável.", "Ella es amable y responsable."], ["Ele é metido.", "Él es creído."]],
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["engraçado/a", "chistoso, gracioso"], ["nervoso/a", "nervioso, enojón"], ["responsável", "responsable"], ["amável", "amable"],
           ["chato/a", "aburrido, pesado"], ["legal", "genial, chévere"], ["metido/a", "creído"], ["invejoso/a", "envidioso"], ["corajoso/a", "valiente"]] },
@@ -1464,10 +1502,14 @@ const LECCIONES = [
                 "En Brasil es muy común poner artículo **antes de nombres de personas y de posesivos**, algo que en español no hacemos:"],
         ej: [["O José está no escritório.", "José está en la oficina."], ["A minha mãe é baixinha.", "Mi mamá es bajita."], ["Eu sou a Ana.", "Yo soy Ana."]] },
       { t: "Contrações: EM + artículo",
+        ej: [["Eu moro no Brasil.", "Vivo en Brasil."], ["Ela está na praia.", "Ella está en la playa."], ["Os livros estão nos quartos.", "Los libros están en los cuartos."],
+             ["As chaves estão nas gavetas.", "Las llaves están en los cajones."]],
         p: "Es más fácil de lo que parece. En español ya hacemos esto con **del** (de + el) y **al** (a + el). En portugués pasa lo mismo, pero con **todos** los artículos. **EM** significa 'en', y cuando va antes de un artículo se junta con él:",
         tabla: { cab: ["Se junta", "Resultado", "Equivale a"], pron: [1], filas: [
           ["em + o", "no", "en el"], ["em + a", "na", "en la"], ["em + os", "nos", "en los"], ["em + as", "nas", "en las"]] } },
       { t: "Contrações: DE + artículo",
+        ej: [["O carro do José.", "El auto de José."], ["A casa da Ana.", "La casa de Ana."], ["Os filhos dos meus amigos.", "Los hijos de mis amigos."],
+             ["O nome das ruas.", "El nombre de las calles."]],
         p: "**DE** significa 'de', y también se junta:",
         tabla: { cab: ["Se junta", "Resultado", "Equivale a"], pron: [1], filas: [
           ["de + o", "do", "del"], ["de + a", "da", "de la"], ["de + os", "dos", "de los"], ["de + as", "das", "de las"]] },
@@ -1588,6 +1630,8 @@ const LECCIONES = [
         consejos: ["Aprende cada palabra **con su artículo**: no memorices *viagem*, memoriza **a viagem**.",
                    "Hay patrones que se repiten (abajo): con ellos te ahorras memorizar la mitad de la lista."] },
       { t: "Masculino en español → FEMENINO en portugués",
+        ej: [["A viagem foi ótima.", "El viaje fue excelente."], ["A cor do carro é azul.", "El color del auto es azul."],
+             ["Tenho uma dor de cabeça.", "Tengo dolor de cabeza."], ["A ponte é muito longa.", "El puente es muy largo."]],
         tabla: { cab: ["Español", "Português"], pron: [1], filas: [
           ["el análisis", "a análise"], ["el árbol", "a árvore"], ["el color", "a cor"], ["el coraje", "a coragem"], ["el desorden", "a desordem"],
           ["el dolor", "a dor"], ["el énfasis", "a ênfase"], ["el equipo", "a equipe"], ["el estante", "a estante"], ["el puente", "a ponte"],
@@ -1597,6 +1641,8 @@ const LECCIONES = [
         porque: "Todas las palabras en **-agem** son **femeninas**, aunque en español *-aje* sea masculino. Con esa sola regla ya cubres 10 palabras de la lista.",
         ojo: "*El alma* en español en realidad es femenina (se dice *el* solo por el sonido: *el alma pura*). En portugués es **a alma**." },
       { t: "Femenino en español → MASCULINO en portugués",
+        ej: [["O leite está quente.", "La leche está caliente."], ["O sangue é vermelho.", "La sangre es roja."], ["O nariz dele é grande.", "La nariz de él es grande."],
+             ["Tive um pesadelo horrível.", "Tuve una pesadilla horrible."]],
         tabla: { cab: ["Español", "Português"], pron: [1], filas: [
           ["la alarma", "o alarme"], ["la baraja", "o baralho"], ["la costumbre", "o costume"], ["la cumbre", "o cume"], ["la crema", "o creme"],
           ["la leche", "o leite"], ["la legumbre, la verdura", "o legume"], ["la miel", "o mel"], ["la nariz", "o nariz"], ["la radio", "o rádio"],
@@ -1738,6 +1784,8 @@ const LECCIONES = [
              ["Às sextas eu jogo futebol.", "Los viernes juego fútbol."], ["Todas as quintas eu estudo português.", "Todos los jueves estudio portugués."]],
         porque: "Es igual que *em + o = no*, pero con la preposición **a**. Esa unión (a + a) se llama **crase** y se marca con el acento grave (`): **à / às**." },
       { t: "Meses do ano",
+        ej: [["Meu aniversário é em março.", "Mi cumpleaños es en marzo."], ["Em julho faz frio em Lima.", "En julio hace frío en Lima."],
+             ["O Carnaval geralmente é em fevereiro.", "El Carnaval generalmente es en febrero."]],
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["janeiro", "enero"], ["fevereiro", "febrero"], ["março", "marzo"], ["abril", "abril"], ["maio", "mayo"], ["junho", "junio"],
           ["julho", "julio"], ["agosto", "agosto"], ["setembro", "septiembre"], ["outubro", "octubre"], ["novembro", "noviembre"], ["dezembro", "diciembre"]] },
@@ -1927,6 +1975,8 @@ const LECCIONES = [
         ej: [["Eu falo com você agora.", "Hablo contigo ahora."], ["Eu trabalho de segunda a sexta.", "Trabajo de lunes a viernes."],
              ["A água ferve a 100 graus.", "El agua hierve a 100 grados."], ["Amanhã eu viajo para Lima.", "Mañana viajo a Lima."]] },
       { t: "Las tres conjugaciones: -AR, -ER, -IR",
+        ej: [["Eu trabalho muito.", "Trabajo mucho."], ["Ele come arroz.", "Él come arroz."], ["Nós partimos amanhã.", "Partimos mañana."],
+             ["Eles trabalham juntos.", "Ellos trabajan juntos."]],
         p: "Casi todos los verbos en infinitivo terminan en **-AR**, **-ER** o **-IR** (la excepción más conocida es *pôr*, poner). Para conjugar: quita esa terminación (te queda la *raíz*) y agrega la terminación de cada persona:",
         tabla: { cab: ["Pronombre", "TRABALHAR", "COMER", "PARTIR"], filas: [
           ["eu", "trabalh**o**", "com**o**", "part**o**"], ["ele / ela / você / a gente", "trabalh**a**", "com**e**", "part**e**"],
@@ -2139,6 +2189,8 @@ const LECCIONES = [
     intro: "IR es irregular y casi siempre va con una preposición. Según lo que digas después del verbo, usarás de, a o para.",
     apuntes: [
       { t: "O verbo IR no presente",
+        ej: [["Eu vou à praia.", "Voy a la playa."], ["Você vai ao cinema?", "¿Vas al cine?"], ["Ela vai de ônibus.", "Ella va en bus."],
+             ["Nós vamos para casa.", "Vamos a casa."], ["Eles vão viajar amanhã.", "Ellos van a viajar mañana."]],
         tabla: { cab: ["Pronombre", "IR", "Español"], pron: [1], filas: [
           ["eu", "vou", "yo voy"], ["você", "vai", "tú vas"], ["ele / ela / a gente", "vai", "él / ella va · nosotros vamos"],
           ["nós", "vamos", "nosotros vamos"], ["vocês", "vão", "ustedes van"], ["eles / elas", "vão", "ellos / ellas van"]] },
@@ -2656,6 +2708,8 @@ const LECCIONES = [
     intro: "Os pronomes possessivos indican posesión: que algo pertenece a una persona. Son muy importantes para hablar bien portugués.",
     apuntes: [
       { t: "Os pronomes possessivos",
+        ej: [["Meu carro é vermelho.", "Mi auto es rojo."], ["Minha avó tem oitenta anos.", "Mi abuela tiene ochenta años."], ["Seus olhos são verdes.", "Tus ojos son verdes."],
+             ["Nossas aulas são às oito.", "Nuestras clases son a las ocho."]],
         p: "Cada persona tiene su posesivo. Y como el sustantivo puede ser masculino o femenino, singular o plural, cada posesivo tiene **cuatro formas**:",
         tabla: { cab: ["Persona", "Masc.", "Fem.", "Masc. plural", "Fem. plural"], filas: [
           ["eu", "meu", "minha", "meus", "minhas"], ["você", "seu", "sua", "seus", "suas"],
@@ -3473,6 +3527,7 @@ const PESTANAS = [
   { id: "aprender",   ico: "📖", txt: "Vocabulario", hay: l => l.items && l.items.length },
   { id: "tarjetas",   ico: "🃏", txt: "Tarjetas",    hay: l => l.items && l.items.length },
   { id: "ejercicios", ico: "✏️", txt: "Ejercicios",  hay: l => l.ejercicios && l.ejercicios.length },
+  { id: "entrenar",   ico: "🎯", txt: "Entrenar",    hay: l => !!ENTRENAR[l.id] },
   { id: "quiz",       ico: "✅", txt: "Quiz",        hay: l => l.items && l.items.length >= 4 }
 ];
 
@@ -3968,7 +4023,7 @@ function pintarMenu() {
 }
 function irBloque(i) {
   cerrarMenu();
-  const b = document.querySelectorAll(".apunte")[i];
+  const b = document.querySelector(`.apunte[data-i="${i}"]`);
   if (b) b.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 function abrirMenu() { document.getElementById("menu").classList.add("abierto"); document.getElementById("velo").classList.add("visible"); }
@@ -3987,6 +4042,7 @@ function prepararPestana() {
   if (pestana === "tarjetas") { mazo = leccion.items.map((_, i) => i); tarjetaIdx = 0; volteada = false; }
   if (pestana === "quiz") quiz = crearQuiz(leccion.items);
   if (pestana === "ejercicios") ejRes = leccion.ejercicios.map(() => null);
+  if (pestana === "entrenar") ent = crearEntrenamiento(leccion.id);
 }
 function cambiarPestana(p) {
   pestana = p;
@@ -4007,7 +4063,7 @@ function tarjetaLeccion(l) {
       ${nota ? `<span class="insignia">${hecha ? "✓ " : ""}${nota}%</span>` : ""}
       <div class="ico">${l.icono}</div>
       <h3>${esc(l.titulo)}</h3>
-      <small>${l.items.length} palabras · ${(l.ejercicios || []).length} ejercicios</small>
+      <small>${l.items.length} palabras · ${(l.ejercicios || []).length} ejercicios${ENTRENAR[l.id] ? " + 🎯 100" : ""}</small>
       ${notaEj !== undefined ? `<small>✏️ Ejercicios: ${notaEj}%</small>` : ""}
     </div>`;
 }
@@ -4054,15 +4110,37 @@ function pintarLeccion() {
     </div>`;
   const cuerpo = {
     apuntes: htmlApuntes, aprender: htmlAprender, tarjetas: htmlTarjetas,
-    ejercicios: htmlEjercicios, quiz: htmlQuiz
+    ejercicios: htmlEjercicios, entrenar: htmlEntrenar, quiz: htmlQuiz
   }[pestana]();
   $app.innerHTML = `
     <button class="volver" onclick="location.hash='#/'">← Lecciones</button>
     <h2 style="margin:6px 0 0">${leccion.icono} ${esc(leccion.titulo)}</h2>
     <div class="intro">${esc(leccion.intro)}</div>
     ${barra}
-    ${["tarjetas", "quiz"].includes(pestana) ? `<div class="angosto">${cuerpo}</div>` : cuerpo}`;
+    ${["tarjetas", "quiz", "entrenar"].includes(pestana) ? `<div class="angosto">${cuerpo}</div>` : cuerpo}`;
+  apilarTodo();
 }
+
+// Computadora: reparte las tarjetas en columnas; cada una va a la columna más corta, en orden (así no quedan huecos)
+function apilar(cont, minAncho) {
+  if (!cont) return;
+  if (!cont._tarjetas) cont._tarjetas = [...cont.children];
+  const gap = 16;
+  const n = innerWidth < 900 ? 1 : Math.max(1, Math.floor((cont.clientWidth + gap) / (minAncho + gap)));
+  if (cont._n === n) return;
+  cont._n = n;
+  cont.innerHTML = "";
+  if (n === 1) { cont.classList.remove("apilado"); cont._tarjetas.forEach(t => cont.appendChild(t)); return; }
+  cont.classList.add("apilado");
+  const cols = Array.from({ length: n }, () => cont.appendChild(Object.assign(document.createElement("div"), { className: "col" })));
+  cont._tarjetas.forEach(t => cols.reduce((a, b) => b.offsetHeight < a.offsetHeight ? b : a).appendChild(t));
+}
+function apilarTodo() {
+  apilar(document.querySelector("#app .teoria"), 560);
+  apilar(document.getElementById("ejLista"), 340);
+}
+let esperaApilar;
+window.addEventListener("resize", () => { clearTimeout(esperaApilar); esperaApilar = setTimeout(apilarTodo, 150); });
 
 // Prueba del audio
 function pintarAudio() {
@@ -4135,12 +4213,12 @@ function htmlApuntes() {
   const r = leccion.resolver;
   const bloques = r ? leccion.apuntes.concat([{ id: "resolver", t: "🧩 Cómo resolver los ejercicios", p: r.p, lista: r.pasos,
                                                 resueltos: r.resueltos, consejos: r.consejos }]) : leccion.apuntes;
-  return `<div class="teoria">` + bloques.map(a => {
+  return `<div class="teoria">` + bloques.map((a, bi) => {
     const usados = new Set();                       // cada palabra de gramática se subraya una vez por bloque
     const mdT = s => conTerminos(md(s), usados);
     const facil = a.facil || FACIL[a.t];
     return `
-    <div class="apunte" ${a.id ? `id="${a.id}"` : ""}>
+    <div class="apunte" data-i="${bi}" ${a.id ? `id="${a.id}"` : ""}>
       ${a.t ? `<h3>${esc(a.t)}${a.extra ? `<span class="etiqueta-extra">➕ Extra</span>` : ""}</h3>` : ""}
       ${facil ? `<div class="facil">🧒 <strong>En palabras simples:</strong> ${mdT(facil)}</div>` : ""}
       ${a.p ? `<p>${mdT(a.p)}</p>` : ""}
@@ -4215,7 +4293,8 @@ function htmlEjercicios() {
     ${leccion.resolver || (leccion.apuntes || []).some(a => a.id === "resolver")
       ? `<div class="controles izq" style="margin:0 0 10px"><button class="btn sec peq" onclick="verResolver()">🧩 ¿Cómo se resuelven? Ver ejemplos resueltos</button></div>` : ""}
     <div class="marcador" id="ejMarcador">${textoMarcador()}</div>
-    <div class="lista">
+    ${ENTRENAR[leccion.id] ? `<div class="controles izq" style="margin:0 0 10px"><button class="btn peq" onclick="cambiarPestana('entrenar')">🎯 Entrenar con 100 ejercicios más de este tema</button></div>` : ""}
+    <div class="lista" id="ejLista">
       ${leccion.ejercicios.map((e, i) => e.tipo === "marcar" ? htmlMarcar(e, i) : htmlCompletar(e, i)).join("")}
     </div>
     <div class="controles">
@@ -4280,9 +4359,11 @@ function comprobarCompletar(i) {
           : casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>`
           : `❌ Respuesta: <strong>${esc(correcta)}</strong>`;
   msg += `<div class="pron">🗣️ ${esc(pron(correcta))}</div>`;
+  if (!todoBien && !casi && inputs.length === 1) msg += lineaTuRespuesta(inputs[0].value.trim(), [].concat(e.resp[0])[0]);
   const explica = e.explica || explicarAuto(e);
   if (explica) msg += `<div class="explica">💡 ${conTerminos(md(explica))}</div>`;
   msg += lineaEspanol(enEspanol(e));
+  msg += lineaPalabras(correcta);
   res.innerHTML = msg;
   caja.querySelector(".controles").remove();
   hablar(correcta.replace(/ · /g, ", "));
@@ -4301,8 +4382,10 @@ function marcar(i, k) {
   const oir = e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", e.opciones[e.resp]) : null);
   let msg = ok ? "✅ ¡Correcto!" : `❌ La correcta es: <strong>${esc(e.opciones[e.resp])}</strong>`;
   if (oir) msg += `<div class="pron">🗣️ ${esc(pron(oir))}</div>`;
+  if (!ok && e.frase.includes("___")) msg += lineaTuRespuesta(e.opciones[k], e.opciones[e.resp]);
   if (e.explica) msg += `<div class="explica">💡 ${conTerminos(md(e.explica))}</div>`;
   msg += lineaEspanol(enEspanol(e));
+  msg += lineaPalabras(oir);
   caja.querySelector(".res").innerHTML = msg;
   if (oir) hablar(oir);
   terminarEjercicio(i, ok);
@@ -4934,8 +5017,8 @@ const FRASES = LECCIONES.flatMap(l => (l.apuntes || []).flatMap(a => [
   .filter(f => f.pt.includes(" ") && !f.pt.includes("..."));
 
 // ---------- generadores ----------
-function genConjugacion() {
-  const v = azar(VERBOS);
+function genConjugacion(lista = VERBOS) {
+  const v = azar(lista);
   const sujetos = v.soloSing ? SUJETOS.filter(s => ["Eu", "Você", "Ele", "Ela"].includes(s[0])) : SUJETOS;
   const [suj, p] = azar(sujetos);
   const comp = azar(v.comp);
@@ -5052,8 +5135,8 @@ const COSAS_POSESIVO = [
   ["aula", "f", "s", "clase"], ["computadores", "m", "p", "computadoras"], ["havaianas", "f", "p", "sandalias"], ["professor", "m", "s", "profesor"]
 ];
 const POSESIVOS = { eu: ["meu", "minha", "meus", "minhas"], você: ["seu", "sua", "seus", "suas"], nós: ["nosso", "nossa", "nossos", "nossas"] };
-function genPosesivo() {
-  const [cosa, g, n, es] = azar(COSAS_POSESIVO);
+function genPosesivo(lista = COSAS_POSESIVO) {
+  const [cosa, g, n, es] = azar(lista);
   const k = (g === "m" ? 0 : 1) + (n === "p" ? 2 : 0);
   const genTxt = ["masculino singular", "femenino singular", "masculino plural", "femenino plural"][k];
   const art = ["o", "a", "os", "as"][k];
@@ -5207,7 +5290,7 @@ function genEscucha() {
   const q = genNumero();
   return q.escucha ? q : genEscucha();
 }
-function genCurso(lecciones) {
+function genCurso(lecciones, escribirSiempre) {
   const l = azar(LECCIONES.filter(x => !lecciones || lecciones.includes(x.id)));
   const i = Math.floor(Math.random() * l.ejercicios.length);
   const e = l.ejercicios[i];
@@ -5217,7 +5300,7 @@ function genCurso(lecciones) {
     return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${l.titulo}`, pregunta: e.frase, opciones, resp: opciones.indexOf(correcta),
              oir: e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", correcta) : null), explica: e.explica, espanol: enEspanol(e) };
   }
-  if (!modoEscribir || e.resp.length !== 1) return null;   // los de completar solo en modo escribir
+  if (!(modoEscribir || escribirSiempre) || e.resp.length !== 1) return null;   // los de completar solo en modo escribir
   return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${e.pista || l.titulo}`, pregunta: e.frase, soloEscribir: true,
            validas: [].concat(e.resp[0]), oir: e.frase === "___" ? null : fraseCompleta(e), explica: e.explica || explicarAuto(e), espanol: enEspanol(e) };
 }
@@ -5255,6 +5338,622 @@ const CATEGORIA_DE_LECCION = {
   descripciones: "descripciones", articulos: "articulos", genero: "genero", numeros: "numeros", dias: "numeros",
   presente: "verbos", ir: "verbos", passatempos: "gustos", verbosreg: "tiempos", posesivos: "posesivos"
 };
+
+// =====================================================================
+// PALABRA POR PALABRA: diccionario portugués → español para explicar cada frase
+// =====================================================================
+const PALABRAS_CLAVE = {
+  // pronombres
+  "eu": "«yo»", "você": "«tú» (o «usted»)", "ele": "«él»", "ela": "«ella»", "nós": "«nosotros»", "vocês": "«ustedes»",
+  "eles": "«ellos»", "elas": "«ellas»", "a gente": "«nosotros» (se conjuga como *ele*)", "o senhor": "«usted» (a un hombre)",
+  "a senhora": "«usted» (a una mujer)", "me": "«me»", "te": "«te»", "se": "«se» (o «si»)", "lhe": "«le»",
+  // artículos
+  "o": "«el» (artículo; suena *u*)", "a": "«la» (artículo) o «a» (preposición)", "os": "«los»", "as": "«las»",
+  "um": "«un» / «uno»", "uma": "«una»", "uns": "«unos»", "umas": "«unas»",
+  // preposiciones y contracciones
+  "de": "«de» (suena *dyi*)", "em": "«en»", "para": "«para» / «a» (hacia)", "pra": "«para» (forma hablada)", "pro": "«para el» (pra + o)",
+  "com": "«con»", "sem": "«sin»", "por": "«por»", "até": "«hasta»", "entre": "«entre»", "sobre": "«sobre»",
+  "no": "«en el» (em + o)", "na": "«en la» (em + a)", "nos": "«en los» (em + os) o «nos»", "nas": "«en las» (em + as)",
+  "do": "«del» (de + o)", "da": "«de la» (de + a)", "dos": "«de los» (de + os)", "das": "«de las» (de + as)",
+  "ao": "«al» (a + o)", "à": "«a la» (a + a, con crase)", "aos": "«a los» (a + os)", "às": "«a las» (a + as)",
+  "num": "«en un» (em + um)", "numa": "«en una» (em + uma)", "pelo": "«por el» (por + o)", "pela": "«por la» (por + a)",
+  "pelos": "«por los» (por + os)", "pelas": "«por las» (por + as)", "dele": "«de él» (de + ele)", "dela": "«de ella» (de + ela)",
+  "deles": "«de ellos» (de + eles)", "delas": "«de ellas» (de + elas)",
+  // posesivos
+  "meu": "«mi» / «mío»", "minha": "«mi» / «mía»", "meus": "«mis»", "minhas": "«mis»", "seu": "«tu» / «su»", "sua": "«tu» / «su»",
+  "seus": "«tus» / «sus»", "suas": "«tus» / «sus»", "nosso": "«nuestro»", "nossa": "«nuestra»", "nossos": "«nuestros»", "nossas": "«nuestras»",
+  // demostrativos
+  "este": "«este»", "esta": "«esta»", "esse": "«ese»", "essa": "«esa»", "esses": "«esos»", "essas": "«esas»", "isso": "«eso»", "isto": "«esto»",
+  "aquele": "«aquel»", "aquela": "«aquella»", "dessa": "«de esa» (de + essa)", "desse": "«de ese» (de + esse)", "nesse": "«en ese»", "nessa": "«en esa»",
+  // preguntas
+  "que": "«que» / «qué»", "o que": "«qué»", "quem": "«quién»", "onde": "«dónde»", "quando": "«cuándo»",
+  "como": "«cómo» / «como» (o «yo como», de *comer*)", "qual": "«cuál»", "quais": "«cuáles»", "quanto": "«cuánto»", "quantos": "«cuántos»",
+  "quanta": "«cuánta»", "quantas": "«cuántas»", "por que": "«por qué»", "porque": "«porque»", "cadê": "«¿dónde está?» (informal)",
+  // conectores, adverbios y expresiones
+  "e": "«y» (suena *i*)", "é": "«es» (verbo *ser*)", "mas": "«pero»", "mais": "«más»", "ou": "«o»", "não": "«no»", "sim": "«sí»",
+  "também": "«también»", "muito": "«mucho» / «muy»", "muita": "«mucha»", "muitos": "«muchos»", "muitas": "«muchas»", "bem": "«bien»",
+  "mal": "«mal»", "já": "«ya»", "ainda": "«todavía»", "sempre": "«siempre»", "nunca": "«nunca»", "às vezes": "«a veces»",
+  "aqui": "«aquí»", "aí": "«ahí»", "ali": "«allí»", "lá": "«allá»", "hoje": "«hoy»", "amanhã": "«mañana»", "ontem": "«ayer»",
+  "agora": "«ahora»", "depois": "«después»", "antes": "«antes»", "cedo": "«temprano»", "tarde": "«tarde»", "noite": "«noche»",
+  "manhã": "«mañana» (parte del día)", "dia": "«día»", "todo": "«todo» / «cada»", "toda": "«toda» / «cada»", "todos": "«todos»",
+  "todas": "«todas»", "tudo": "«todo» (todas las cosas)", "nada": "«nada»", "nenhum": "«ningún»", "nenhuma": "«ninguna»",
+  "algum": "«algún»", "alguma": "«alguna»", "outro": "«otro»", "outra": "«otra»", "perto": "«cerca»", "longe": "«lejos»",
+  "juntos": "«juntos»", "só": "«solo»", "né": "«¿no?» (= não é)", "tá": "«está» (forma hablada)", "oi": "«hola»", "olá": "«hola»",
+  "tchau": "«chau»", "obrigado": "«gracias» (lo dice un hombre)", "obrigada": "«gracias» (lo dice una mujer)", "por favor": "«por favor»",
+  "de nada": "«de nada»", "bom": "«bueno» / «buen»", "boa": "«buena»", "bons": "«buenos»", "boas": "«buenas»", "há": "«hay» (formal)",
+  "tem": "«tiene» (verbo *ter*) o «hay» (hablado)", "vem": "«viene» (verbo *vir*)", "que vem": "«que viene» (= próximo)",
+  "vez": "«vez»", "vezes": "«veces»", "semana": "«semana»", "fim de semana": "«fin de semana»", "café da manhã": "«desayuno»",
+  "a pé": "«a pie»", "a cavalo": "«a caballo»", "muito prazer": "«mucho gusto»", "tudo bem": "«todo bien»", "até logo": "«hasta luego»",
+  "claro": "«claro»", "desculpa": "«perdón»", "vamos": "«vamos»", "aula": "«clase»", "casa": "«casa»", "rua": "«calle»"
+};
+// Más palabras frecuentes de los ejercicios (formato "portugués=español", separadas por |)
+const PALABRAS_EXTRA = `favor=favor|escritório=oficina|anos=años|ano=año|parque=parque|crianças=niños|criança=niño, niña|escola=escuela|filme=película|
+banco=banco|chama=llama (verbo chamar)|chamo=llamo (verbo chamar)|chamam=llaman|música=música|cabelo=cabello|camisa=camisa|camisas=camisas|
+violão=guitarra (acústica)|centro=centro|foi=fue (ser o ir, pasado)|domingos=domingos|sábados=sábados|segundas=lunes|terças=martes|quartas=miércoles|
+quintas=jueves|sextas=viernes|blusa=blusa|delicioso=delicioso|deliciosa=deliciosa|ajuda=ayuda|bebê=bebé|supermercado=supermercado|farmácia=farmacia|
+fome=hambre|tias=tías|passar=pasar|passa=pasa|vestido=vestido|cadeiras=sillas|caipirinha=caipiriña (trago de Brasil)|exercício=ejercicio|
+comida=comida|conta=cuenta|família=familia|jogando=jugando|bola=pelota|festa=fiesta|foto=foto|fotos=fotos|brincam=juegan (verbo brincar)|
+brincando=jugando|brinco=juego (verbo brincar)|chover=llover|professora=profesora|hora=hora|horas=horas|esquisita=rara|reunião=reunión|loja=tienda|
+calor=calor|frio=frío|samba=samba|liso=lacio|marca=marca|piano=piano|conhecê-lo=conocerlo|conhecê-la=conocerla|tênis=tenis|gavetas=cajones|
+próxima=próxima|interessante=interesante|maravilhosa=maravillosa|maravilhoso=maravilloso|adoro=me encanta (verbo adorar)|inicia=inicia|
+será=será (ser, futuro)|feijoada=feijoada (guiso de frejoles)|vê=ve (verbo ver)|vejo=veo (verbo ver)|agência=agencia|nervoso=nervioso|
+prova=prueba, examen|praticando=practicando|pratico=practico|telefono=llamo por teléfono|vaqueiro=vaquero|rodeio=rodeo|metrô=metro|
+gostaria=me gustaría|repetir=repetir|carioca=de Río de Janeiro|cacheado=rizado|surfar=surfear|ruas=calles|olha=mira (verbo olhar)|cômoda=cómoda|
+converso=converso|colegas=compañeros|começa=empieza (verbo começar)|começam=empiezan|começo=comienzo|desses=de esos (de + esses)|desta=de esta (de + esta)|
+nesta=en esta (em + esta)|bancos=bancos|funcionam=funcionan|pizza=pizza|trem=tren|tempo=tiempo|jornal=periódico|alunos=alumnos|grávida=embarazada|
+contestou=cuestionó|decisão=decisión|juiz=juez|agá=hache (letra H)|xis=equis (letra X)|jota=jota (letra J)|devagar=despacio|licença=permiso|
+bronzeada=bronceada|amor=amor|grisalho=canoso|baixinha=bajita|baixinho=bajito|lendo=leyendo (verbo ler)|interior=interior|televisão=televisión|
+estação=estación|dona=dueña|dono=dueño|cumpre=cumple (verbo cumprir)|promessas=promesas|sai=sale (verbo sair)|amigo=amigo|amiga=amiga|
+tomava=tomaba|bela=bella|jogador=jugador|bonita=bonita|bonito=bonito|interesses=intereses|gostando=gustando|coisas=cosas|coisa=cosa|
+malho=hago ejercicio (verbo malhar)|joga=juega (verbo jogar)|jogo=juego|jogamos=jugamos|tiro=saco (verbo tirar)|tira=saca (verbo tirar)|
+presentes=regalos|longa=larga|longo=largo|hospital=hospital|segundo=segundo|antiga=antigua|antigo=antiguo|comemoramos=celebramos|celebramos=celebramos|
+celebra=celebra|marcar=marcar|relatórios=informes|doce=dulce|carta=carta|meditar=meditar|ligo=llamo por teléfono (verbo ligar)|crescem=crecen|
+atividades=actividades|pequena=pequeña|pequenas=pequeñas|cima=encima (em cima de = encima de)|céu=cielo|larga=ancha|sanduíche=sándwich|última=última|
+último=último|linda=linda|lindo=lindo|ofereceu=ofreció|guarda=policía, guardia|terminei=terminé|dentes=dientes|caro=caro|molho=salsa|
+engenheiro=ingeniero|basquete=básquet|médica=médica|fria=fría|cansados=cansados|educação=educación|castanhos=castaños|tatuagens=tatuajes|
+entra=entra|quartos=cuartos|sala=sala|planos=planes|arquitetos=arquitectos|almoçamos=almorzamos|maduro=maduro|fresca=fresca|limão=limón|cheia=llena|
+colocar=poner|papo=charla|noivas=novias (que se casan)|agitado=agitado|vídeo=video|canal=canal|descansamos=descansamos|mundo=mundo|relaxar=relajarse|
+palavra=palabra|sozinha=sola|sozinho=solo|frutas=frutas|documentos=documentos|quadro=cuadro|lembra=recuerda (verbo lembrar)|visto=visto|
+advogados=abogados|logotipo=logotipo|matéria=materia, asignatura|passei=aprobé, pasé|braços=brazos|mau=malo|morreu=murió|fez=hizo|vovó=abuelita|
+fazendeiro=hacendado|estado=estado|empresa=empresa|estrangeira=extranjera|adaptou=adaptó|feliz=feliz|ótima=excelente|ótimo=excelente|bonecas=muñecas|
+prontos=listos|favorita=favorita|cremes=cremas|pastas=pastas|ponto=punto|completa=completa|intensa=intensa|fiquei=me quedé (verbo ficar)|
+pergunta=pregunta|problema=problema|problemas=problemas|trabalho=trabajo|filho=hijo|filha=hija|filhos=hijos|irmão=hermano|irmã=hermana|pai=papá|
+mãe=mamá|pais=padres|praia=playa|ônibus=bus|carro=auto|cidade=ciudad|país=país|nome=nombre|sobrenome=apellido|apelido=apodo|idade=edad|
+água=agua|café=café|livro=libro|porta=puerta|janela=ventana|mesa=mesa|hoje=hoy|semana=semana|mês=mes|vida=vida|gente=gente|
+bicicleta=bicicleta|nadar=nadar|aulas=clases|compras=compras|médico=médico|telefone=teléfono|levei=llevé (verbo levar)|sair=salir|
+advogada=abogada|fale=habla (orden, verbo falar)|nisso=en eso (em + isso)|moto=moto|cuidado=cuidado|divertida=divertida|gato=gato|
+solteira=soltera|solteiro=soltero|chamamos=llamamos|vemos=vemos|turistas=turistas|geralmente=generalmente|bastante=bastante|odeia=odia|
+fora=fuera|pagar=pagar|óculos=lentes, anteojos|começamos=empezamos|barco=barco|esquina=esquina|daqui=de aquí (de + aqui)|esposo=esposo|
+estudantes=estudiantes|primeiro=primero|importante=importante|caminhar=caminar|quarto=cuarto, dormitorio|pouco=poco|estava=estaba|estavam=estaban`;
+let DICC = null;
+function dicc() {
+  if (DICC) return DICC;
+  const d = DICC = new Map();
+  const poner = (pt, es) => { const k = String(pt).toLowerCase().trim(); if (k && es && !d.has(k)) d.set(k, es); };
+  const limpiar = s => String(s).replace(/\s*\([^)]*\)/g, "").split(" → ")[0].split(" · ")[0].trim();
+  const sinArt = s => s.replace(/^(el|la|los|las|un|una) /i, "");
+  Object.entries(PALABRAS_CLAVE).forEach(([pt, es]) => poner(pt, es));
+  PALABRAS_EXTRA.split("|").forEach(par => { const [pt, es] = par.split("="); poner(pt, `«${es.trim()}»`); });
+  const esDia = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+  DIAS.forEach((x, i) => { poner(x, `«${esDia[i]}»`); if (i < 5) poner(x.replace("-feira", ""), `«${esDia[i]}» (${x})`); });
+  const esMes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  MESES.forEach((x, i) => poner(x, `«${esMes[i]}»`));
+  for (let n = 0; n <= 100; n++) if (!numeroPt(n).includes(" ")) poner(numeroPt(n), `«${numeroEs(n)}» (${n})`);
+  poner("duas", "«dos» (con femeninos)");
+  VERBOS.forEach(v => {
+    poner(v.inf, `«${v.es}» (infinitivo)`);
+    v.f.forEach((f, p) => { const es = formaEspanol(v.inf, "presente", p); poner(f, es ? `«${es}» (verbo *${v.inf}*)` : `forma del verbo *${v.inf}*`); });
+  });
+  VERBOS_REGULARES.forEach(([inf, es]) => {
+    poner(inf, `«${es}» (infinitivo)`);
+    ["presente", "pasado", "futuro"].forEach(t => [0, 1, 2, 3].forEach(p =>
+      poner(conjugar(inf, t, p), `«${formaEspanol(inf, t, p) || conjugarEs(es, t, p)}» (verbo *${inf}*${t === "presente" ? "" : ", " + t})`)));
+    if (!/eer$/.test(es)) poner(inf.slice(0, -1) + "ndo", `«${es.slice(0, -2) + (es.endsWith("ar") ? "ando" : "iendo")}» (gerundio)`);
+  });
+  const esPl = w => /[aeiouáéó]$/.test(w) ? w + "s" : /z$/.test(w) ? w.slice(0, -1) + "ces" : w + "es";
+  ADJETIVOS.forEach(a => {
+    const base = a[4].split(",")[0].trim(), fem = base.endsWith("o") ? base.slice(0, -1) + "a" : base;
+    [base, fem, esPl(base), esPl(fem)].forEach((e, k) => poner(a[k], `«${e}»`));
+  });
+  ITEMS_TODOS.forEach(it => poner(it.pt.replace(/^(o|a|os|as|um|uma) /i, ""), `«${sinArt(limpiar(it.es))}»`));
+  LECCIONES.forEach(l => (l.apuntes || []).forEach(a => (a.ej || []).forEach(([pt, es]) => {
+    if (!/\s/.test(pt.trim()) && !/^[A-Z]$/.test(es)) poner(pt, `«${sinArt(limpiar(es))}»`);
+  })));
+  SUSTANTIVOS.forEach(([s, p, , es]) => { poner(s, `«${es}»`); if (p) poner(p, `«${ES_PLURAL[s] || esPl(es)}»`); });
+  HETEROGENERICOS.forEach(([s, , , es]) => poner(s, `«${sinArt(es)}»`));
+  PLURALES.forEach(([s, p]) => { if (ES_PLURAL[s]) poner(p, `«${ES_PLURAL[s]}»`); });
+  COSAS_POSESIVO.concat(FAMILIA_NOMES).forEach(([s, , , es]) => poner(s, `«${es}»`));
+  COMIDAS.forEach(([s, , es]) => poner(s, `«${sinArt(es)}»`));
+  COLORES.forEach(c => {
+    const b = c[4], f = b.endsWith("o") ? b.slice(0, -1) + "a" : b, pl = w => w === "marrón" ? "marrones" : esPl(w);
+    const es = b === "naranja" ? [b, b, b, b] : [b, f, pl(b), pl(f)];
+    c.slice(0, 4).forEach((x, k) => poner(x, `«${es[k]}»`));
+  });
+  const ES_NAC = { peruano: "peruano", brasileiro: "brasileño", argentino: "argentino", chileno: "chileno", colombiano: "colombiano",
+                   mexicano: "mexicano", angolano: "angoleño", português: "portugués", inglês: "inglés", espanhol: "español", francês: "francés",
+                   japonês: "japonés", italiano: "italiano", boliviano: "boliviano", equatoriano: "ecuatoriano" };
+  NACIONES.forEach(([m, f]) => {
+    const e = ES_NAC[m];
+    if (!e) return;
+    const eF = e.endsWith("o") ? e.slice(0, -1) + "a" : e.endsWith("és") ? e.slice(0, -2) + "esa" : e + "a";
+    poner(m, `«${e}»`); poner(f, `«${eF}»`);
+    poner(m.endsWith("ês") ? m.slice(0, -2) + "eses" : m + "s", `«${e.endsWith("és") ? e.slice(0, -2) + "eses" : e.endsWith("o") ? e + "s" : e + "es"}»`);
+  });
+  FAMILIA_ACERTIJOS.forEach(([, r, es]) => poner(r, `«${es.match(/\*\*(.+?)\*\*/)[1]}»`));
+  FALSOS.forEach(([pt, real]) => poner(pt, `«${real}»`));
+  return d;
+}
+// Traduce una frase palabra por palabra (primero grupos de 3 y 2 palabras: «a gente», «fim de semana»)
+function glosarFrase(texto) {
+  const D = dicc();
+  const limpia = w => w.replace(/^[¿¡("«]+|[.,!?;:)"»…]+$/g, "");
+  const palabras = sinMd(texto).split(/\s+/).map(limpia).filter(Boolean);
+  const partes = [];
+  let conocidas = 0;
+  for (let i = 0; i < palabras.length; i++) {
+    let grupo = null;
+    for (const n of [3, 2]) {
+      const g = palabras.slice(i, i + n).join(" ");
+      if (i + n <= palabras.length && D.has(g.toLowerCase())) { grupo = [g, D.get(g.toLowerCase()), n]; break; }
+    }
+    if (grupo) { partes.push(`*${grupo[0]}* = ${grupo[1]}`); conocidas += grupo[2]; i += grupo[2] - 1; continue; }
+    const w = palabras[i], k = w.toLowerCase(), sig = palabras[i + 1] || "";
+    let g = D.get(k);
+    if ((k === "a" || k === "o") && /^[A-ZÁÉÍÓÚÂÊÔ]/.test(sig) && !D.has(sig.toLowerCase()))
+      g = `${k === "a" ? "«la»" : "«el»"}: artículo antes de un nombre (en Brasil se pone antes de personas y de muchos países: *a Ana*, *o Chile*; en español, no)`;
+    if (g) { partes.push(`*${w}* = ${g}`); conocidas++; }
+    else partes.push(`*${w}*`);
+  }
+  return conocidas ? partes.join(" · ") : "";
+}
+function glosaCorta(texto) {
+  if (!texto) return "";
+  const k = sinMd(String(texto)).toLowerCase().replace(/[.,!?¿¡]/g, "").trim();
+  const D = dicc();
+  if (D.has(k)) return D.get(k);
+  if (k.includes(" … ")) return k.split(" … ").map(x => D.get(x) ? `*${x}* = ${D.get(x)}` : "").filter(Boolean).join(" · ");
+  return "";
+}
+// «Elegiste X: significa...» (solo si la opción elegida es una palabra portuguesa conocida)
+function lineaTuRespuesta(elegida, correcta) {
+  if (!elegida || normalizar(String(elegida)) === normalizar(String(correcta))) return "";
+  const ge = glosaCorta(elegida);
+  if (!ge) return "";
+  const gc = glosaCorta(correcta);
+  if (ge === gc) return `<div class="tu-resp">✋ ${md(`Elegiste *${elegida}*: es la misma palabra, pero aquí la forma correcta es *${correcta}*.`)}</div>`;
+  return `<div class="tu-resp">✋ ${md(`Elegiste *${elegida}*: ${ge}.${gc ? ` La correcta es *${correcta}*: ${gc}.` : ""}`)}</div>`;
+}
+function lineaPalabras(texto) {
+  if (!texto || !/\s/.test(sinMd(texto).trim())) return "";
+  const g = glosarFrase(texto);
+  return g ? `<div class="palabras">🔎 <strong>Palabra por palabra:</strong> ${md(g)}</div>` : "";
+}
+// Respuesta de una pregunta de práctica o de entrenamiento: qué era, por qué, en español y palabra por palabra
+function htmlFeedback(q, ok, casi, correcta, elegida) {
+  const texto = q.oir || q.escucha;
+  let msg = ok ? "✅ ¡Correcto!" : casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>` : `❌ Correcta: <strong>${esc(correcta)}</strong>`;
+  if (texto) msg += `<div class="frase-oir">${esc(texto)}</div><div class="pron">🗣️ ${esc(pron(texto))}</div>`;
+  if (q.traduccion) msg += `<div class="trad">${esc(q.traduccion)}</div>`;
+  if (!ok && !casi && (q.pregunta || "").includes("___")) msg += lineaTuRespuesta(elegida, correcta);   // solo si las opciones van en la frase
+  if (q.explica) msg += `<div class="explica">💡 ${conTerminos(md(q.explica))}</div>`;
+  msg += lineaEspanol(q.espanol);
+  msg += lineaPalabras(texto);
+  return msg;
+}
+
+// =====================================================================
+// ENTRENAR: 100 ejercicios por tema, generados con los datos de cada lección
+// =====================================================================
+const cap = s => s[0].toUpperCase() + s.slice(1);
+// Frases de la teoría de una lección: ¿qué significa? / ¿cómo se dice?
+const FRASES_LEC = {};
+function genFraseLec(id) {
+  const lista = FRASES_LEC[id] || (FRASES_LEC[id] = LECCIONES.find(l => l.id === id).apuntes
+    .flatMap(a => [...(a.ej || []).map(x => ({ pt: x[0], es: x[1] })), ...(a.dialogo || []).map(x => ({ pt: x[1], es: x[2] }))])
+    .map(f => ({ pt: f.pt, es: f.es.split(" → ")[0].split(" · ")[0] }))
+    .filter(f => f.pt.includes(" ") && !f.pt.includes("...")));
+  if (lista.length < 2) return null;
+  const f = azar(lista);
+  const otras = parecidas(f, lista.length >= 6 ? lista : FRASES);
+  if (Math.random() < 0.55)
+    return { clave: `fr-${f.pt}-pt`, sub: "¿Qué significa?", pregunta: f.pt, ...armar(f.es, otras.map(x => x.es)), oir: f.pt, espanol: `«${f.es}»` };
+  return { clave: `fr-${f.pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: f.es, ...armar(f.pt, otras.map(x => x.pt)), oir: f.pt, espanol: `«${f.es}»` };
+}
+
+// Alfabeto: ¿cómo se pronuncia? Cada opción incorrecta «deshace» una regla de Brasil (como lo leería un hispanohablante)
+function lecturasMalas(w, p) {
+  const s = w.toLowerCase(), malas = [];
+  let espanola = p;
+  const regla = (cond, f) => {
+    if (!cond) return;
+    const v = f(p);
+    if (v && v !== p) malas.push(v);
+    const v2 = f(espanola);
+    if (v2) espanola = v2;
+  };
+  regla(/ch/.test(p), x => x.replace(/ch/g, "t"));
+  regla(/dy/.test(p), x => x.replace(/dy/g, "d"));
+  regla(/zh/.test(p), x => x.replace(/zh/g, "j").replace(/Zh/g, "J"));
+  regla(/sh/i.test(p), x => x.replace(/sh/g, s.includes("ch") ? "ch" : "ks").replace(/Sh/g, s.includes("ch") ? "Ch" : "Ks"));
+  regla(/ñ/.test(p), x => x.replace(/ñ/g, "n"));
+  regla(/ll/.test(p), x => x.replace(/lli?/g, "l"));
+  regla(/j/i.test(p), x => x.replace(/j/g, s.includes("rr") ? "rr" : "r").replace(/J/g, "R"));
+  regla(/z(?!h)/.test(p), x => x.replace(/z(?!h)/, s.includes("x") && !s.includes("z") ? "ks" : "s").replace(/z(?!h)/g, "s"));
+  regla(/os?$/.test(s) && /us?$/.test(p), x => x.replace(/u(s?)$/, "o$1"));
+  regla(/es?$/.test(s) && /is?$/.test(p) && !/[aeiou]is?$/.test(s), x => x.replace(/i(s?)$/, "e$1"));
+  regla(/[^u]l$/.test(s) && /u$/.test(p), x => x.replace(/u$/, "l"));
+  const ml = s.match(/[^u]l([bcdfgjkmnpqrstvxz])/);
+  regla(!!ml, x => { const i = x.indexOf("u" + (ml ? ml[1] : "")); return i > 0 ? x.slice(0, i) + "l" + x.slice(i + 1) : null; });
+  regla(/ão/.test(s) && /aun/.test(p), x => x.replace(/aun/g, "ao"));
+  regla(/[aeiou]m$/.test(s) && /n$/.test(p), x => x.replace(/(ein|aun)$/, m => m === "ein" ? "em" : "am").replace(/n$/, "m"));
+  regla(/[aeouáéóêôú][sz]$/.test(s) && /is$/.test(p), x => x.replace(/is$/, "s"));
+  return { malas: [...new Set(malas)], espanola };
+}
+function reglasDe(w, p) {
+  const s = w.toLowerCase(), r = [];
+  if (/ch/.test(p)) r.push("**t + sonido i** suena *ch*");
+  if (/dy/.test(p)) r.push("**d + sonido i** suena *dy*");
+  if (/zh/i.test(p)) r.push("**j / ge / gi** suenan *zh*");
+  if (/sh/i.test(p)) r.push(s.includes("ch") ? "**ch** suena *sh*" : "aquí la **x** suena *sh*");
+  if (/ñ/.test(p)) r.push("**nh** = *ñ*");
+  if (/ll/.test(p)) r.push("**lh** suena *lli*");
+  if (/j/i.test(p)) r.push(s.includes("rr") ? "**rr** suena *j* suave" : "la **r** del inicio (o después de n, l, s) suena *j* suave");
+  if (/[aeiouáéíóúâêô]s[aeiouáéíóúâêô]/.test(s) && /z(?!h)/.test(p)) r.push("**s entre vocales** suena *z*");
+  if (s.includes("x") && /z(?!h)/.test(p)) r.push("**ex + vocal**: la x suena *z*");
+  if (/z./.test(s) && /z(?!h)/.test(p)) r.push("la **z** zumba, como una abeja (no suena *s*)");
+  if (s.includes("x") && /ks/.test(p)) r.push("aquí la **x** suena *ks*");
+  if (/[^u]l([bcdfgjkmnpqrstvxz]|$)/.test(s)) r.push("la **l** al final de sílaba suena *u*");
+  if (/ç/.test(s)) r.push("**ç** suena *s*");
+  if (/ão/.test(s)) r.push("**ão** suena *aun* (nasal)");
+  if (/[aeiou]m$/.test(s)) r.push("**m** final: no se cierran los labios (vocal nasal)");
+  if (/os?$/.test(s) && /us?$/.test(p)) r.push("la **o** final débil suena *u*");
+  if (/es?$/.test(s) && /is?$/.test(p) && !/[aeiou]is?$/.test(s)) r.push("la **e** final débil suena *i*");
+  if (/[aeouáéóêôú][sz]$/.test(s) && /is$/.test(p)) r.push("se cuela una **i** antes de la s final");
+  return r;
+}
+let PAL_SONIDO = null;
+function genSonido() {
+  if (!PAL_SONIDO) {
+    const vistos = new Set();
+    PAL_SONIDO = LECCIONES.find(x => x.id === "alfabeto").apuntes.flatMap(a => a.ej || [])
+      .filter(([pt, es]) => !/\s/.test(pt.trim()) && !/^[A-Z]$/.test(es) && !vistos.has(pt.toLowerCase()) && vistos.add(pt.toLowerCase()))
+      .map(([pt, es]) => ({ w: pt, es: es.split(" (")[0] }));
+  }
+  const { w, es } = azar(PAL_SONIDO);
+  const p = pronPalabra(w);
+  const { malas, espanola } = lecturasMalas(w, p);
+  if (malas.length < 2) return null;
+  const reglas = reglasDe(w, p);
+  return { clave: `son-${w}`, sub: `🗣️ Pronunciación · ${es}`, pregunta: `¿Cómo se pronuncia **${w}** en Brasil?`, ...armar(p, malas), oir: w,
+           explica: `*${w}* → *${p}*${reglas.length ? ": " + reglas.join(" · ") : "."}`,
+           espanol: espanola !== p ? `si lo leyeras como en español dirías *${espanola}*; en Brasil se dice *${p}*.` : null };
+}
+
+// Saludos: la hora, obrigado / obrigada y qué responder
+const NOMBRES_M = ["João", "Pedro", "Carlos", "Lucas", "Marcos", "Rafael", "Tiago", "Paulo"];
+const NOMBRES_F = ["Ana", "Maria", "Júlia", "Lúcia", "Fernanda", "Camila", "Beatriz", "Paula"];
+const PERSONAS_SALUDO = ["a tu vecino", "a tu profesora", "a un amigo", "a tu jefe", "a la recepcionista"];
+const RESPUESTAS_SALUDO = [
+  ["Obrigado!", "De nada.", "«¡Gracias!» → «De nada.»", "A *obrigado / obrigada* se responde **De nada** (o *Por nada*)."],
+  ["Muito prazer!", "O prazer é meu.", "«¡Mucho gusto!» → «El gusto es mío.»", "A *Muito prazer* se responde **O prazer é meu** (el gusto es mío)."],
+  ["Tudo bem?", "Tudo bem, e você?", "«¿Todo bien?» → «Todo bien, ¿y tú?»", "Se responde repitiendo **Tudo bem** y se devuelve la pregunta: *e você?*"],
+  ["Como vai?", "Vou bem, obrigado.", "«¿Cómo te va?» → «Me va bien, gracias.»", "*Como vai?* usa el verbo **ir**: se responde **Vou bem** (me va bien)."],
+  ["Desculpa!", "Não tem problema.", "«¡Perdón!» → «No hay problema.»", "A una disculpa se responde **Não tem problema** (no hay problema)."],
+  ["Como você se chama?", "Eu me chamo Ana.", "«¿Cómo te llamas?» → «Me llamo Ana.»", "Te preguntan el nombre → **Eu me chamo...**"],
+  ["De onde você é?", "Sou do Peru.", "«¿De dónde eres?» → «Soy del Perú.»", "Te preguntan de dónde eres → **Sou de / do / da** + lugar."],
+  ["Quantos anos você tem?", "Tenho trinta anos.", "«¿Cuántos años tienes?» → «Tengo treinta años.»", "La edad va con **ter**: *Tenho... anos*."],
+  ["Boa noite!", "Boa noite!", "«¡Buenas noches!» → «¡Buenas noches!»", "A un saludo se responde con el **mismo saludo**."],
+  ["O que você faz?", "Sou professor.", "«¿A qué te dedicas?» → «Soy profesor.»", "Te preguntan tu trabajo → **Sou** + profesión (sin *um*)."]
+];
+function genSaludo() {
+  const r = Math.random();
+  if (r < 0.45) {
+    const hora = azar([6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23]);
+    const quien = azar(PERSONAS_SALUDO);
+    const parte = hora < 12 ? 0 : hora < 18 ? 1 : 2;
+    const correcta = ["Bom dia!", "Boa tarde!", "Boa noite!"][parte];
+    return { clave: `sal-${hora}-${quien}`, sub: "¿Qué saludo usas?", pregunta: `Son las ${hora}:00 y saludas ${quien}. ¿Qué dices?`,
+             ...armar(correcta, ["Bom dia!", "Boa tarde!", "Boa noite!"]), oir: correcta,
+             explica: `Paso 1: mira la hora: las ${hora}:00 es de **${["mañana", "tarde", "noche"][parte]}**. Paso 2: ${["mañana → *Bom dia*", "tarde → *Boa tarde*", "noche → *Boa noite*"][parte]}.`,
+             espanol: `«${["Buenos días", "Buenas tardes", "Buenas noches"][parte]}» → *${correcta}* (en portugués va en singular).` };
+  }
+  if (r < 0.75) {
+    const mujer = Math.random() < 0.5, muito = Math.random() < 0.5;
+    const nombre = azar(mujer ? NOMBRES_F : NOMBRES_M);
+    const base = muito ? "Muito obrigad" : "Obrigad";
+    const correcta = base + (mujer ? "a!" : "o!");
+    return { clave: `obr-${nombre}-${muito}`, sub: "¿Obrigado u obrigada?", pregunta: `${nombre} recibe un regalo. ${mujer ? "Ella" : "Él"} dice: ___`,
+             ...armar(correcta, [base + "o!", base + "a!"]), oir: correcta,
+             explica: `Quien agradece es ${mujer ? "una **mujer**" : "un **hombre**"} → **${correcta}**. Cambia según quién habla, no según a quién le agradeces.`,
+             espanol: `«${muito ? "Muchas gracias" : "Gracias"}» no cambia en español; en portugués sí: *obrigado* (hombre) / *obrigada* (mujer).` };
+  }
+  const [dice, responde, es, x] = azar(RESPUESTAS_SALUDO);
+  return { clave: `res-${dice}`, sub: "¿Qué respondes?", pregunta: `Te dicen: «${dice}»`, ...armar(responde, RESPUESTAS_SALUDO.map(y => y[1])),
+           oir: `${dice} ${responde}`, explica: x, espanol: es };
+}
+
+// Colores: concuerdan como los adjetivos
+const COLORES = [
+  ["vermelho", "vermelha", "vermelhos", "vermelhas", "rojo"], ["preto", "preta", "pretos", "pretas", "negro"],
+  ["branco", "branca", "brancos", "brancas", "blanco"], ["amarelo", "amarela", "amarelos", "amarelas", "amarillo"],
+  ["roxo", "roxa", "roxos", "roxas", "morado"], ["azul", "azul", "azuis", "azuis", "azul"], ["verde", "verde", "verdes", "verdes", "verde"],
+  ["marrom", "marrom", "marrons", "marrons", "marrón"], ["laranja", "laranja", "laranja", "laranja", "naranja"],
+  ["rosa", "rosa", "rosa", "rosa", "rosado"], ["cinza", "cinza", "cinza", "cinza", "gris"]
+];
+const COSAS_COLOR = [
+  ["o carro", "m", "s", "el auto"], ["a casa", "f", "s", "la casa"], ["os sapatos", "m", "p", "los zapatos"], ["as flores", "f", "p", "las flores"],
+  ["a blusa", "f", "s", "la blusa"], ["o vestido", "m", "s", "el vestido"], ["as camisas", "f", "p", "las camisas"], ["os olhos", "m", "p", "los ojos"],
+  ["a bolsa", "f", "s", "la cartera"], ["o caderno", "m", "s", "el cuaderno"], ["as cadeiras", "f", "p", "las sillas"], ["os livros", "m", "p", "los libros"]
+];
+function genColor() {
+  const c = azar(COLORES), [cosa, g, n, es] = azar(COSAS_COLOR);
+  const k = (g === "m" ? 0 : 1) + (n === "p" ? 2 : 0);
+  const correcta = c[k], verbo = n === "p" ? "são" : "é";
+  const inv = c[0] === c[2], sinGenero = c[0] === c[1];
+  const malas = [...new Set([...c.slice(0, 4), c[0].replace(/o$/, "a"), c[0].replace(/a$/, "o"), c[0] + "s"])].filter(x => x !== correcta);
+  const base = c[4];
+  const esFem = base.endsWith("o") ? base.slice(0, -1) + "a" : base;
+  const esPl = w => w === "marrón" ? "marrones" : /[aeiou]$/.test(w) ? w + "s" : w + "es";
+  const esForma = base === "naranja" ? base : [base, esFem, esPl(base), esPl(esFem)][k];
+  const genTxt = ["masculino singular", "femenino singular", "masculino plural", "femenino plural"][k];
+  return { clave: `col-${c[0]}-${cosa}`, sub: `Color: ${base}`, pregunta: `${cap(cosa)} ${verbo} ___.`, ...armar(correcta, malas),
+           oir: `${cap(cosa)} ${verbo} ${correcta}.`, escribible: true,
+           explica: inv ? `*${c[0]}* **no cambia nunca**: ni en femenino ni en plural (*${cosa}* ${verbo} ${c[0]}).`
+                  : sinGenero ? `*${c[0]}* no termina en -o: no cambia con el femenino. En plural → **${c[2]}**.`
+                  : `*${cosa.split(" ")[1]}* es **${genTxt}** → **${correcta}** (-o masculino, -a femenino, + s plural).`,
+           espanol: `«${cap(es)} ${n === "p" ? "son" : "es"} ${esForma}»${inv ? ": en portugués este color no cambia." : ": concuerda igual que en español."}` };
+}
+
+// Familia: posesivos con parientes y adivinanzas de parentesco
+const FAMILIA_NOMES = [
+  ["pai", "m", "s", "papá"], ["mãe", "f", "s", "mamá"], ["irmão", "m", "s", "hermano"], ["irmã", "f", "s", "hermana"], ["filho", "m", "s", "hijo"],
+  ["filha", "f", "s", "hija"], ["avô", "m", "s", "abuelo"], ["avó", "f", "s", "abuela"], ["tio", "m", "s", "tío"], ["tia", "f", "s", "tía"],
+  ["primo", "m", "s", "primo"], ["prima", "f", "s", "prima"], ["marido", "m", "s", "esposo"], ["esposa", "f", "s", "esposa"],
+  ["irmãos", "m", "p", "hermanos"], ["irmãs", "f", "p", "hermanas"], ["pais", "m", "p", "padres"], ["avós", "m", "p", "abuelos"],
+  ["filhos", "m", "p", "hijos"], ["primas", "f", "p", "primas"], ["tios", "m", "p", "tíos"], ["netos", "m", "p", "nietos"]
+];
+const FAMILIA_ACERTIJOS = [
+  ["O pai do meu pai é o meu ___.", "avô", "el padre de mi padre es mi **abuelo**"],
+  ["A mãe da minha mãe é a minha ___.", "avó", "la madre de mi madre es mi **abuela**"],
+  ["O irmão do meu pai é o meu ___.", "tio", "el hermano de mi padre es mi **tío**"],
+  ["A irmã da minha mãe é a minha ___.", "tia", "la hermana de mi madre es mi **tía**"],
+  ["O filho do meu tio é o meu ___.", "primo", "el hijo de mi tío es mi **primo**"],
+  ["A filha da minha tia é a minha ___.", "prima", "la hija de mi tía es mi **prima**"],
+  ["O filho dos meus pais é o meu ___.", "irmão", "el hijo de mis padres es mi **hermano**"],
+  ["A filha dos meus pais é a minha ___.", "irmã", "la hija de mis padres es mi **hermana**"],
+  ["O meu pai e a minha mãe são os meus ___.", "pais", "mi padre y mi madre son mis **padres**"],
+  ["O filho do meu filho é o meu ___.", "neto", "el hijo de mi hijo es mi **nieto**"],
+  ["A filha da minha filha é a minha ___.", "neta", "la hija de mi hija es mi **nieta**"],
+  ["A mãe do meu marido é a minha ___.", "sogra", "la madre de mi esposo es mi **suegra**"],
+  ["O pai da minha esposa é o meu ___.", "sogro", "el padre de mi esposa es mi **suegro**"],
+  ["O marido da minha irmã é o meu ___.", "cunhado", "el esposo de mi hermana es mi **cuñado**"],
+  ["A esposa do meu irmão é a minha ___.", "cunhada", "la esposa de mi hermano es mi **cuñada**"],
+  ["O pai do meu avô é o meu ___.", "bisavô", "el padre de mi abuelo es mi **bisabuelo**"]
+];
+function genFamilia() {
+  if (Math.random() < 0.6) return genPosesivo(FAMILIA_NOMES);
+  const [frase, resp, es] = azar(FAMILIA_ACERTIJOS);
+  return { clave: "fam-" + frase, sub: "¿Quién es?", pregunta: frase, ...armar(resp, FAMILIA_ACERTIJOS.map(x => x[1])),
+           oir: frase.replace("___", resp), escribible: true,
+           explica: `Paso 1: resuélvelo en español: ${es}. Paso 2: tradúcelo → **${resp}**.`,
+           espanol: `${cap(es)} → *${resp}*.` };
+}
+
+// Comida: género (con trampas) y vocabulario
+const COMIDAS = [
+  ["água", "f", "el agua", "f"], ["pão", "m", "el pan", "m"], ["café", "m", "el café", "m"], ["leite", "m", "la leche", "f", 1],
+  ["carne", "f", "la carne", "f"], ["frango", "m", "el pollo", "m"], ["peixe", "m", "el pescado", "m"], ["ovo", "m", "el huevo", "m"],
+  ["queijo", "m", "el queso", "m"], ["fruta", "f", "la fruta", "f"], ["maçã", "f", "la manzana", "f"], ["banana", "f", "el plátano", "m"],
+  ["laranja", "f", "la naranja", "f"], ["suco", "m", "el jugo", "m"], ["sorvete", "m", "el helado", "m"], ["feijão", "m", "el frejol", "m"],
+  ["arroz", "m", "el arroz", "m"], ["salada", "f", "la ensalada", "f"], ["sopa", "f", "la sopa", "f"], ["bolo", "m", "la torta", "f"],
+  ["chá", "m", "el té", "m"], ["açúcar", "m", "el azúcar", "m"], ["sal", "m", "la sal", "f", 1], ["manteiga", "f", "la mantequilla", "f"],
+  ["batata", "f", "la papa", "f"], ["tomate", "m", "el tomate", "m"], ["alface", "f", "la lechuga", "f"], ["abacaxi", "m", "la piña", "f"],
+  ["abacate", "m", "la palta", "f", 1], ["cerveja", "f", "la cerveza", "f"], ["vinho", "m", "el vino", "m"], ["mel", "m", "la miel", "f", 1],
+  ["legume", "m", "la verdura", "f", 1], ["sobremesa", "f", "el postre", "m"], ["almoço", "m", "el almuerzo", "m"], ["jantar", "m", "la cena", "f"],
+  ["lanche", "m", "la merienda", "f"], ["pimenta", "f", "la pimienta", "f"], ["uva", "f", "la uva", "f"], ["morango", "m", "la fresa", "f"]
+];
+function genComida() {
+  const [pt, g, es, gEs, het] = azar(COMIDAS);
+  const esSin = es.replace(/^(el|la) /, "");
+  const r = Math.random();
+  if (r < 0.5) {
+    const def = Math.random() < 0.6;
+    const formas = def ? ["o", "a"] : ["um", "uma"];
+    const correcta = formas[g === "m" ? 0 : 1];
+    const generoPt = g === "m" ? "masculino" : "femenino";
+    return { clave: `com-${pt}-${def}`, sub: `Artículo ${def ? "definido" : "indefinido"} · ${esSin}`, pregunta: `___ ${pt}`,
+             ...armar(correcta, formas), oir: `${correcta} ${pt}`, escribible: true,
+             explica: `*${pt}* es **${generoPt}** en portugués → **${correcta}**.`,
+             espanol: g === gEs ? `mismo género que en español: «${es}» → **${correcta} ${pt}**.`
+                    : het ? `¡heterogenérico! «${es}» es ${gEs === "m" ? "masculino" : "femenino"} en español, pero en portugués *${pt}* es ${generoPt}: **${correcta} ${pt}**.`
+                    : `en español se dice «${es}» (${gEs === "m" ? "masculino" : "femenino"}), pero *${pt}* es ${generoPt}: **${correcta} ${pt}**.` };
+  }
+  const otros = COMIDAS.filter(x => x[0] !== pt);
+  if (r < 0.75) return { clave: `voc-${pt}-pt`, sub: "¿Qué significa?", pregunta: pt, ...armar(esSin, otros.map(x => x[2].replace(/^(el|la) /, ""))),
+                         oir: pt, espanol: `*${pt}* = «${esSin}»` };
+  return { clave: `voc-${pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: esSin, ...armar(pt, otros.map(x => x[0])),
+           oir: pt, escribible: true, espanol: `«${esSin}» = *${pt}*` };
+}
+
+// Falsos amigos: [palabra, significado real, lo que parece, cómo se dice eso en portugués, frase, traducción]
+const FALSOS = [
+  ["apelido", "apodo", "apellido", "sobrenome", "Meu apelido é Zé.", "Mi apodo es Zé."],
+  ["oficina", "taller (mecánico)", "oficina", "escritório", "Levei o carro para a oficina.", "Llevé el auto al taller."],
+  ["largo", "ancho", "largo", "longo", "A rua é muito larga.", "La calle es muy ancha."],
+  ["esquisito", "raro, extraño", "exquisito", "delicioso", "Que comida esquisita!", "¡Qué comida tan rara!"],
+  ["embaraçada", "avergonzada", "embarazada", "grávida", "Fiquei embaraçada com a pergunta.", "Me quedé avergonzada con la pregunta."],
+  ["polvo", "pulpo", "polvo (suciedad)", "pó", "O polvo tem oito braços.", "El pulpo tiene ocho brazos."],
+  ["todavia", "sin embargo", "todavía", "ainda", "Estudei muito; todavia, não passei.", "Estudié mucho; sin embargo, no aprobé."],
+  ["borracha", "goma de borrar", "borracha (ebria)", "bêbada", "Você tem uma borracha?", "¿Tienes una goma de borrar?"],
+  ["cena", "escena", "cena (comida)", "jantar", "A última cena do filme é linda.", "La última escena de la película es linda."],
+  ["copo", "vaso (para beber)", "copo (de nieve)", "floco", "Um copo de água, por favor.", "Un vaso de agua, por favor."],
+  ["rato", "ratón", "rato (momento)", "momento", "Tem um rato na cozinha!", "¡Hay un ratón en la cocina!"],
+  ["pegar", "tomar, agarrar", "pegar (golpear)", "bater", "Vou pegar o ônibus.", "Voy a tomar el bus."],
+  ["acordar", "despertar(se)", "acordarse (recordar)", "lembrar", "Eu acordo às sete.", "Me despierto a las siete."],
+  ["assinatura", "firma", "asignatura", "matéria", "Falta a sua assinatura aqui.", "Falta tu firma aquí."],
+  ["presunto", "jamón", "presunto (supuesto)", "suposto", "Um sanduíche de presunto e queijo.", "Un sándwich de jamón y queso."],
+  ["cadeira", "silla", "cadera", "quadril", "Sente nesta cadeira.", "Siéntate en esta silla."],
+  ["propina", "soborno", "propina (para el mozo)", "gorjeta", "Ele ofereceu uma propina ao guarda.", "Él le ofreció un soborno al policía."],
+  ["brincar", "jugar (los niños)", "brincar (saltar)", "pular", "As crianças brincam no parque.", "Los niños juegan en el parque."],
+  ["pelado", "desnudo", "pelado (calvo)", "careca", "O bebê está pelado.", "El bebé está desnudo."],
+  ["chato", "aburrido, pesado", "chato (de nariz)", null, "Esse filme é muito chato.", "Esa película es muy aburrida."],
+  ["legal", "chévere", "legal (de la ley)", null, "Que festa legal!", "¡Qué fiesta tan chévere!"],
+  ["salsa", "perejil", "salsa (de tomate)", "molho", "Coloque salsa na sopa.", "Ponle perejil a la sopa."],
+  ["vaso", "florero, maceta", "vaso (para beber)", "copo", "As flores estão no vaso.", "Las flores están en el florero."],
+  ["ligar", "llamar por teléfono; encender", "ligar (enamorar)", "paquerar", "Vou ligar para você amanhã.", "Te voy a llamar mañana."],
+  ["tirar", "sacar, quitar", "tirar (lanzar)", "jogar", "Vou tirar uma foto.", "Voy a sacar una foto."],
+  ["cola", "pegamento", "cola (rabo)", "rabo", "Preciso de cola para o papel.", "Necesito pegamento para el papel."],
+  ["escova", "cepillo", "escoba", "vassoura", "Onde está a minha escova de dentes?", "¿Dónde está mi cepillo de dientes?"],
+  ["sobremesa", "postre", "sobremesa (charla después de comer)", null, "De sobremesa, sorvete!", "¡De postre, helado!"],
+  ["mala", "maleta", "mala (adjetivo)", "má", "Fiz a mala para a viagem.", "Hice la maleta para el viaje."],
+  ["logo", "pronto, enseguida", "logo (logotipo)", "logotipo", "Até logo!", "¡Hasta pronto!"],
+  ["fechar", "cerrar", "fechar (poner fecha)", "datar", "Feche a porta, por favor.", "Cierra la puerta, por favor."],
+  ["contestar", "cuestionar, refutar", "contestar (responder)", "responder", "Ele contestou a decisão do juiz.", "Él cuestionó la decisión del juez."],
+  ["firma", "empresa", "firma (en un papel)", "assinatura", "Ele trabalha numa firma de advogados.", "Él trabaja en una empresa de abogados."]
+];
+function genFalso() {
+  const [pt, real, trampa, ptTrampa, frase, fraseEs] = azar(FALSOS);
+  const otros = mezclar(FALSOS.filter(x => x[0] !== pt));
+  const parece = trampa.split(" (")[0];
+  const x = `*${pt}* parece «${parece}», pero significa **${real}**.${ptTrampa ? ` «${parece}» se dice *${ptTrampa}*.` : ""}`;
+  const opciones = lista => { const o = mezclar([...new Set(lista)].slice(0, 3)); return { opciones: o, resp: o.indexOf(lista[0]) }; };
+  const r = Math.random();
+  if (r < 0.4)
+    return { clave: `fal-${pt}-a`, sub: "Falso amigo: ¿qué significa?", pregunta: `*${pt}*`, ...opciones([real, trampa, otros[0][1]]),
+             oir: frase, traduccion: fraseEs, explica: x, espanol: `en español «${trampa}» es otra cosa: no te dejes engañar por el parecido.` };
+  if (r < 0.7 && ptTrampa)
+    return { clave: `fal-${pt}-b`, sub: "¿Cómo se dice en portugués?", pregunta: `«${trampa}»`, ...opciones([ptTrampa, pt, otros[0][0]]),
+             oir: ptTrampa, explica: x, espanol: `*${pt}* parece la palabra española, pero es un falso amigo: «${parece}» = *${ptTrampa}*.` };
+  const raiz = sinTildes(pt.slice(0, Math.max(3, pt.length - 2)).toLowerCase());
+  const forma = frase.split(/[\s.,!?;]+/).find(w => sinTildes(w.toLowerCase()).startsWith(raiz));
+  if (!forma) return null;
+  return { clave: `fal-${pt}-c`, sub: `Completa · significa «${real.split(",")[0].split(";")[0]}»`, pregunta: frase.replace(forma, "___"),
+           ...opciones([forma, ptTrampa || otros[1][0], otros[0][0]]), oir: frase, traduccion: fraseEs, explica: x,
+           espanol: `«${fraseEs}»: aquí *${forma}* = «${real.split(",")[0].split(";")[0]}».` };
+}
+
+// Qué generadores usa cada tema (cada ronda: 100 preguntas distintas)
+const enCurso = (...ids) => () => genCurso(ids, true);
+const enVocab = (...ids) => () => genVocab(ids);
+const enFrases = id => () => genFraseLec(id);
+const conjDe = (...infs) => () => genConjugacion(VERBOS.filter(v => infs.includes(v.inf)));
+const VERBOS_AR = VERBOS.filter(v => /ar$/.test(v.inf)).map(v => v.inf);
+const ENTRENAR = {
+  alfabeto: [genSonido, genSonido, genSonido, genSonido, enCurso("alfabeto"), enVocab("alfabeto")],
+  saludos: [genSaludo, genSaludo, genSaludo, enFrases("saludos"), enFrases("saludos"), enVocab("saludos"), enCurso("saludos")],
+  presentarse: [enCurso("presentarse"), enVocab("presentarse"), enFrases("presentarse"), enFrases("presentarse"), genNacionalidad, genNacionalidad,
+                () => genBanco(BANCO_PRESENTARSE), conjDe("chamar-se", "ser", "morar", "trabalhar", "fazer", "ter")],
+  serestar: [enCurso("serestar"), enVocab("serestar"), enFrases("serestar"), () => genBanco(BANCO_VERBOS), conjDe("ser", "estar", "ter"), conjDe("ser", "estar", "ter")],
+  verbosar: [enCurso("verbosar"), enVocab("verbosar"), enFrases("verbosar"), conjDe(...VERBOS_AR), conjDe(...VERBOS_AR), () => genBanco(BANCO_GOSTOS)],
+  descripciones: [enCurso("descripciones"), enVocab("descripciones"), enVocab("descripciones"), genAdjetivo, genAdjetivo, genAdjetivo],
+  articulos: [enCurso("articulos"), genArticulo, genArticulo, genContraccion, genContraccion, genHeterogenerico, enFrases("articulos")],
+  genero: [enCurso("genero"), genHeterogenerico, genHeterogenerico, genPlural, genGeneroFrase, enVocab("genero")],
+  dias: [enCurso("dias"), genDiaMes, genDiaMes, () => genBanco(BANCO_SEMANA), () => genBanco(BANCO_SEMANA), enVocab("dias"), enFrases("dias")],
+  presente: [enCurso("presente"), genConjugacion, genConjugacion, genConjugacion, () => genBanco(BANCO_VERBOS), enFrases("presente")],
+  ir: [enCurso("ir"), () => genBanco(BANCO_IR), () => genBanco(BANCO_IR), genContraccion, conjDe("ir"), enFrases("ir"), enVocab("ir")],
+  passatempos: [enCurso("passatempos"), () => genBanco(BANCO_GOSTOS), () => genBanco(BANCO_GOSTOS), enVocab("passatempos"), enFrases("passatempos"),
+                conjDe("gostar", "dançar", "tocar", "cozinhar", "ler", "ouvir", "assistir")],
+  verbosreg: [enCurso("verbosreg"), genTiempo, genTiempo, genTiempo, enVocab("verbosreg"), enFrases("verbosreg")],
+  posesivos: [enCurso("posesivos"), genPosesivo, genPosesivo, genPosesivo, enFrases("posesivos")],
+  numeros: [enCurso("numeros"), genNumero, genNumero, genNumero, enVocab("numeros")],
+  colores: [enCurso("colores"), genColor, genColor, genColor, enVocab("colores")],
+  familia: [enCurso("familia"), genFamilia, genFamilia, genFamilia, enVocab("familia")],
+  comida: [enCurso("comida"), genComida, genComida, genComida, enVocab("comida"), enFrases("comida")],
+  falsos: [enCurso("falsos"), genFalso, genFalso, genFalso, enVocab("falsos"), enFrases("falsos")]
+};
+const claveUnica = q => `${q.sub || ""}|${q.pregunta || q.escucha || ""}|${q.validas ? q.validas[0] : q.opciones[q.resp]}`;
+let ent = null;
+function crearEntrenamiento(id, n = 100) {
+  const gens = ENTRENAR[id], vistas = new Set(), lista = [];
+  for (let k = 0; k < 6000 && lista.length < n; k++) {
+    const q = azar(gens)();
+    if (!q || (!q.opciones && !q.validas)) continue;
+    const c = claveUnica(q);
+    if (vistas.has(c)) continue;
+    vistas.add(c);
+    lista.push(q);
+  }
+  return { lista: mezclar(lista), i: 0, bien: 0, mal: 0, respondida: false, ok: false, casi: false, elegida: null, escrito: "" };
+}
+function htmlEntrenar() {
+  const s = ent, total = s.lista.length;
+  if (s.i >= total) {
+    const pct = Math.round(s.bien / total * 100);
+    return `<div class="resultado">
+      <div class="pct">${pct}%</div>
+      <h3>${pct >= 90 ? "🏆 ¡Excelente!" : pct >= 70 ? "🎉 ¡Muy bien!" : "💪 ¡Sigue practicando!"} ${s.bien} de ${total} correctas</h3>
+      <p>${s.mal ? `Tus ${s.mal} errores quedaron guardados en <strong>🔁 Mis errores</strong> (Práctica sin fin) para repasarlos.` : "¡Sin errores!"}</p>
+      <div class="controles">
+        <button class="btn" onclick="ent = crearEntrenamiento(leccion.id); pintarLeccion()">🔁 Otra ronda de ${total}</button>
+        ${s.mal ? `<button class="btn sec" onclick="location.hash='#/practica/errores'">Repasar mis errores</button>` : ""}
+      </div></div>`;
+  }
+  const q = s.lista[s.i];
+  const escribir = !!q.soloEscribir;
+  const correcta = escribir ? q.validas[0] : q.opciones[q.resp];
+  let html = `
+    <div class="marcador">🎯 Entrenamiento · pregunta ${s.i + 1} de ${total} · ✅ ${s.bien} · ❌ ${s.mal}</div>
+    <div class="barra-ent"><div style="width:${s.i / total * 100}%"></div></div>
+    <div class="pregunta">
+      ${q.sub ? `<div class="tipo">${md(q.sub)}</div>` : ""}
+      ${q.escucha ? `<button class="btn-escuchar" onclick="hablar(ent.lista[ent.i].escucha)" aria-label="Escuchar">🔊</button>` : ""}
+      ${q.pregunta ? `<div class="grande">${md(q.pregunta)}</div>` : ""}
+    </div>`;
+  if (escribir) {
+    html += `
+      <div class="escribir">
+        <input id="entInput" class="hueco ${s.respondida ? (s.ok ? "bien" : s.casi ? "casi" : "mal") : ""}" value="${esc(s.escrito)}"
+          ${s.respondida ? "disabled" : ""} autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+          placeholder="Escribe aquí..." onkeydown="if(event.key==='Enter')entComprobar()">
+        ${s.respondida ? "" : `<button class="btn" onclick="entComprobar()">OK</button>`}
+      </div>`;
+  } else {
+    html += `<div class="opciones">${q.opciones.map((o, k) => {
+      const clase = !s.respondida ? "" : k === q.resp ? "bien" : k === s.elegida ? "mal" : "";
+      return `<button class="opcion ${clase}" ${s.respondida ? "disabled" : ""} onclick="entResponder(${k})">${esc(o)}</button>`;
+    }).join("")}</div>`;
+  }
+  if (s.respondida) {
+    html += `<div class="res pr-res">${htmlFeedback(q, s.ok, s.casi, correcta, escribir ? s.escrito : q.opciones[s.elegida])}</div>
+      <div class="controles"><button class="btn ancho" onclick="entSiguiente()">${s.i + 1 < total ? "Siguiente →" : "Ver resultado"}</button></div>`;
+  }
+  return html;
+}
+function entResponder(k) {
+  if (ent.respondida) return;
+  ent.elegida = k;
+  ent.ok = k === ent.lista[ent.i].resp;
+  entRegistrar();
+}
+function entComprobar() {
+  if (ent.respondida) return;
+  const v = document.getElementById("entInput").value;
+  if (!v.trim()) return;
+  const validas = ent.lista[ent.i].validas.map(normalizar);
+  ent.escrito = v;
+  ent.ok = validas.includes(normalizar(v));
+  ent.casi = !ent.ok && validas.some(a => sinTildes(a) === sinTildes(normalizar(v)));
+  entRegistrar();
+}
+function entRegistrar() {
+  const q = ent.lista[ent.i];
+  ent.respondida = true;
+  if (ent.ok) ent.bien++;
+  else { ent.mal++; guardarError(q); }
+  if (ent.i + 1 >= ent.lista.length) guardarNota("ent-" + leccion.id, Math.round(ent.bien / ent.lista.length * 100));
+  pintarLeccion();
+  const t = q.oir || q.escucha;
+  if (t) hablar(t);
+}
+function entSiguiente() {
+  Object.assign(ent, { i: ent.i + 1, respondida: false, ok: false, casi: false, elegida: null, escrito: "" });
+  pintarLeccion();
+  window.scrollTo(0, 0);
+  const q = ent.lista[ent.i];
+  if (q && q.escucha) hablar(q.escucha);
+  const inp = document.getElementById("entInput");
+  if (inp) inp.focus();
+}
 
 // ---------- estado y pantalla ----------
 const ERR_CLAVE = "pt-errores", STATS_CLAVE = "pt-practica";
@@ -5355,12 +6054,7 @@ function pintarPractica() {
       }).join("")}</div>`;
     }
     if (pr.respondida) {
-      const texto = q.oir || q.escucha;
-      let msg = pr.ok ? "✅ ¡Correcto!" : pr.casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>` : `❌ Correcta: <strong>${esc(correcta)}</strong>`;
-      if (texto) msg += `<div class="frase-oir">${esc(texto)}</div><div class="pron">🗣️ ${esc(pron(texto))}</div>`;
-      if (q.traduccion) msg += `<div class="trad">${esc(q.traduccion)}</div>`;
-      if (q.explica) msg += `<div class="explica">💡 ${conTerminos(md(q.explica))}</div>`;
-      msg += lineaEspanol(q.espanol);
+      const msg = htmlFeedback(q, pr.ok, pr.casi, correcta, escribir ? pr.escrito : q.opciones[pr.elegida]);
       cuerpo += `<div class="res pr-res">${msg}</div>
         <div class="controles"><button class="btn ancho" onclick="nuevaPregunta()">Siguiente →</button></div>`;
     }
