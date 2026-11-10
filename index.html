@@ -9,8 +9,8 @@
 <title>Aprende Portugués Básico</title>
 <script>
   // Aplica el tema antes de dibujar la página (evita el parpadeo blanco de noche)
-  document.documentElement.dataset.tema = localStorage.getItem("pt-tema") ||
-    (matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro");
+  // Tema claro por defecto; el oscuro solo si el usuario lo elige con el botón
+  document.documentElement.dataset.tema = localStorage.getItem("pt-tema-elegido") || "claro";
 </script>
 <style>
   :root {
@@ -2712,6 +2712,249 @@ const LECCIONES = [
   }
 ];
 
+// ---------------------------------------------------------------
+// COMPARACIÓN CON EL ESPAÑOL (línea 🇪🇸 debajo de cada explicación)
+// Clave: "frase del ejercicio|respuesta correcta"  ·  "R|frase" para los ejemplos resueltos
+// ---------------------------------------------------------------
+const EN_ESPANOL = {
+  // Alfabeto y pronunciación
+  "¿Cómo se llama la letra **H**?|agá": "la llamamos «hache» y tampoco suena: «hola» se dice *ola*. ¡Igual que en portugués!",
+  "La letra **X** se llama:|xis": "la llamamos «equis»; en portugués es más corta: *xis*.",
+  "En *dia*, la **d** suena:|dyi (yi)": "«día» se dice con d dura; en Brasil la d antes de i se ablanda: *dyía*.",
+  "En *quente*, el **te** final suena:|chi": "«caliente» termina en una *te* clara; en Brasil esa *te* final suena *chi*.",
+  "La **rr** de *carro* suena como:|j suave": "la rr vibra fuerte («carro»); en Brasil suena como una j suave: *cáju*.",
+  "¿Cuál está bien escrita?|cabeça": "«cabeza» se escribe con z; en portugués esa z se vuelve **ç**: cabe**ç**a.",
+  "¿Cuál está bien escrita?|cidade": "igual que «ciudad»: *ci* se escribe con c simple, sin cedilla.",
+  "*muito* se pronuncia:|muinto (nasal)": "«mucho» no tiene sonido nasal; *muito* suena como si tuviera una n escondida: *muinto*.",
+  "___|coração": "cora**zón** → cora**ção**, igual que can**ción** → can**ção**.",
+  "Minha ___ não tomava sol.|avó": "«abuela / abuelo» cambian la última letra; en portugués solo cambia el acento: avó / avô.",
+  "Meu ___ morreu novo.|avô": "«abuelo» → *avô*, con ô cerrada.",
+  "¿En cuál palabra suena **zh**?|gente": "en español la g también cambia: «gato» (g dura) y «gente» (j). En portugués *ge* suena *zh* en vez de j.",
+  "¿En cuál palabra suena **dyi**?|cidade": "«ciudad» termina en una d suave; *cidade* termina en *dyi*.",
+  "¿Cuál significa **auto**?|carro": "igual que en español: *carro* (auto) y *caro* (costoso) se distinguen por la rr.",
+  "¿En cuál palabra suena **chi**?|noite": "«noche» ya tiene *che*; *noite* también termina sonando *chi*: *nóichi*.",
+  "¿En cuál palabra la **x** suena **sh**?|peixe": "en español la x suena *ks* («taxi»); en portugués casi siempre suena *sh*.",
+  "¿Cuál se escribe con **ss**? (masa, pasta)|massa": "«masa» lleva una sola s; en portugués lleva **ss** para que no suene z.",
+  "¿En cuál palabra la **s** suena **z**?|casa": "«casa» se dice con s; en portugués esa s entre vocales zumba: *káza*.",
+  "¿Cuál significa **bella**?|bela": "«bella» y «vela» suenan igual en español; en portugués no: la v se hace con los dientes.",
+  "R|En *quente*, el **te** final suena: ___": "«caliente» termina en una *te* clara; en Brasil esa *te* final suena *chi*.",
+  "R|¿En cuál palabra suena **zh**? gente / gato / gosto → ___": "«gato» (g dura) y «gente» (j): en español la g también cambia antes de e, i.",
+  "R|¿Cuál significa **abuela**? avô / avó → ___": "«abuela / abuelo» cambian la última letra; en portugués, solo el acento.",
+  // Saludos
+  "Boa ___!|noite": "«buenas noches» también sirve para saludar y para despedirse.",
+  "Muito ___!|obrigada": "«muchas gracias» no cambia; en portugués sí: *obrigado* (hombre) / *obrigada* (mujer).",
+  "Prazer em ___!|conhecê-la": "«encantado de conocer**la**»: el mismo *la* para una mujer.",
+  "Lúcia quiere agradecer. Ella dice:|Obrigada!": "«gracias» es igual para todos; en portugués depende de quién habla.",
+  "Son las 9 de la noche y llegas a una reunión. Saludas:|Boa noite!": "«¡Buenas noches!»: igual que en español, se dice al llegar de noche.",
+  "¿Qué es un **carioca**?|Alguien de la ciudad de Río de Janeiro": "como «limeño» (de Lima) o «chalaco» (del Callao): es el gentilicio de una ciudad.",
+  "R|Lúcia quiere agradecer. Ella dice: ___": "«gracias» no cambia; *obrigado / obrigada* sí, como «agradecido / agradecida».",
+  // Presentarse
+  "Ela é ___.|peruana": "igual que en español: peruan**o** → peruan**a**.",
+  "Ela é ___.|portuguesa": "«portugués → portuguesa», igual que en español.",
+  "Fátima mora em ___, mas é do ___.|São Paulo": "«vivo en São Paulo, pero soy de Río»: *morar* = vivir · *ser de* = ser de.",
+  "Matheus tem ___ anos.|vinte e cinco": "«veinticinco» se escribe junto; en portugués va separado y con **e**: *vinte e cinco*.",
+  "Luiz Andrade é de Luanda. Ele é:|angolano": "«angoleño» → en portugués *angolano*.",
+  "Qual é a profissão da Fátima?|jornalista": "«periodista» viene de *periódico*; *jornalista* viene de **jornal** (periódico).",
+  "*Qual é o seu apelido?* pregunta por tu:|apodo": "«apellido» y *apelido* se parecen mucho, pero *apelido* es el apodo.",
+  "Catarina dice *Chamo-me Catarina*. ¿Por qué no *Eu me chamo*?|Es la forma de Portugal": "«me llamo» (Brasil: *eu me chamo*) frente a la forma antigua «llámome» (Portugal: *chamo-me*).",
+  "R|Ela é ___. (peruano, en femenino)": "igual que «peruano → peruana».",
+  // SER, ESTAR y TER
+  "Eu sou brasileira. Eu ___ no Chile.|estou": "«Soy brasileña. **Estoy** en Chile»: el mismo verbo que en español.",
+  "Eles ___ dois filhos.|têm": "«ellos **tienen** dos hijos».",
+  "A gente ___ em casa.|está": "«**estamos** en casa»: en español va con *nosotros*, pero *a gente* va con *está*.",
+  "Meu carro ___ com problemas.|está": "«mi carro **está** con problemas».",
+  "Eu ___ cansado hoje.|estou": "«**estoy** cansado hoy»: igual que en español.",
+  "Ele ___ nervoso porque tem prova amanhã.|está": "«**está** nervioso porque tiene examen mañana».",
+  "Nós ___ de Lima.|somos": "«**somos** de Lima».",
+  "En Brasil, para decir 'tú', normalmente se usa:|você": "funciona como «usted»: se conjuga como *él* → «usted habla» = *você fala*.",
+  "¿Cuál significa 'ellos tienen'?|eles têm": "«tiene / tienen» se distinguen por la n; en portugués, por el acento: *tem / têm*.",
+  "Según el diálogo, ¿dónde está José?|No escritório": "«está en la oficina» → *está no escritório*.",
+  "Según el diálogo, ¿qué está haciendo Magda?|Aprendendo português": "«está aprendiendo portugués»: estar + gerundio, igual que en español.",
+  "*O carro está na oficina* significa:|El auto está en el taller": "«oficina» es donde trabajas; en portugués *oficina* es el taller.",
+  "R|Eles ___ dois filhos.": "«ellos **tienen** dos hijos»; *tem / têm* es como «tiene / tienen».",
+  // Verbos -AR
+  "Nós ___ português na Ciunac.|estudamos": "«**estudiamos**»: la misma terminación *-amos*.",
+  "Eu gosto ___ viajar.|de": "«me gusta viajar» no lleva *de*; en portugués siempre: *gosto **de** viajar*.",
+  "Vocês gostam ___ Brasil?|do": "«¿les gusta **el** Brasil?» → de + o = **do** (como «del»).",
+  "Paula gosta ___ caipirinha.|da": "«le gusta **la** caipiriña» → de + a = **da** («de la»).",
+  "Nós gostamos ___ doces.|dos": "«nos gustan **los** dulces» → de + os = **dos** («de los»).",
+  "Ela gosta ___ praias.|das": "«le gustan **las** playas» → de + as = **das** («de las»).",
+  "— Você fala inglês? La respuesta más natural en Brasil:|Falo, sim!": "decimos «sí, hablo»; en Brasil se empieza por el verbo: *Falo, sim!*",
+  "*Eles falam* se pronuncia:|fálaun (nasal)": "«hablan» termina en una *n* clara; *falam* termina en un sonido nasal: *aun*.",
+  "R|Vocês gostam ___ Brasil?": "como «del» (de + el): *do* = de + o.",
+  "R|Eu gosto ___ viajar.": "«me gusta viajar» → en portugués «gusto **de** viajar».",
+  // Descripciones
+  "Ele ___ olhos verdes.|tem": "«**tiene** ojos verdes»: el mismo verbo.",
+  "Hoje eu ___ cansado.|estou": "«hoy **estoy** cansado».",
+  "A minha irmã é ___.|alta": "igual: «mi hermana es alt**a**».",
+  "O meu avô tem cabelo ___.|grisalho": "«canoso» → *grisalho* (viene de *gris*).",
+  "Ele não tem cabelo, ele é ___.|careca": "«calvo / pelado» → *careca*.",
+  "Ela tem cabelo ___ e sardas.|ruivo": "«pelirrojo» → *ruivo* · «pecas» → *sardas*.",
+  "O professor é muito ___.|engraçado": "«chistoso / gracioso» → *engraçado* (de *graça*, gracia).",
+  "Eles são muito ___.|responsáveis": "«responsable → responsables»; en portugués **-vel → -veis**.",
+  "*Ele é chato* significa:|Él es aburrido / pesado": "«chato» es de nariz aplastada; en Brasil *chato* = pesado, aburrido.",
+  "*Que legal!* significa:|¡Qué chévere!": "«legal» es lo que dice la ley; en Brasil *legal* = chévere.",
+  "Para el cabello y los ojos usamos el verbo:|ter": "«**tiene** el cabello lacio y los ojos verdes»: igual que en español.",
+  "*cabelo cacheado* es:|cabello rizado": "«rizado / con rulos» → *cacheado* (de *cacho*, rulo).",
+  "Ela ___ bronzeada porque foi à praia.|está": "«**está** bronceada porque fue a la playa».",
+  "R|A minha irmã é ___. (alto)": "«mi hermana es alt**a**»: igual que en español.",
+  "R|Eles são muito ___. (responsável)": "«responsables»: en español se agrega -es; en portugués **-vel → -veis**.",
+  // Artículos
+  "___ cachorro · ___ livro · ___ pintura · ___ saia · ___ professores|o": "el perro, el libro, la pintura, la falda, los profesores: los mismos géneros que en español.",
+  "___ pergunta · ___ carro · ___ recepcionista · ___ pessoas · ___ atendente|a": "la pregunta, el carro, el / la recepcionista, las personas, el / la dependiente.",
+  "Onde essas pessoas estão? Eles estão ___ ponto de ônibus. Ela está ___ escola.|no": "«en el paradero», «en la escuela» → *no* = en el · *na* = en la.",
+  "Lima é uma ___ grande.|cidade": "ciu**dad** → ci**dade**.",
+  "Eu gosto desta ___.|canção": "can**ción** → can**ção**.",
+  "A ___ foi ótima!|viagem": "«**el** viaje» (masculino) → *a viagem* (femenino).",
+  "Uso el artículo **indefinido** (um, uma) cuando:|la cosa no está especificada": "igual que «un / una» en español: *um livro* = un libro cualquiera.",
+  // Género y plural
+  "___ viagem · ___ leite · ___ árvore · ___ sorriso · ___ ponte|a": "el viaje, la leche, el árbol, la sonrisa, el puente: ¡todos al revés!",
+  "___ abacate · ___ alface · ___ tomate · ___ couve-flor · ___ repolho|o": "la palta, la lechuga, el tomate, la coliflor, el repollo: solo *abacate* cambia de género.",
+  "A viagem foi ___.|maravilhosa": "«el viaje fue maravillos**o**», pero en portugués *a viagem foi maravilhos**a***.",
+  "*la sonrisa* se dice:|o sorriso": "«**la** sonrisa» → *o sorriso*.",
+  "Plural de *cidadão*:|cidadãos": "«ciudad**anos**» → cidad**ãos**.",
+  "Plural de *capitão*:|capitães": "«capit**anes**» → capit**ães**.",
+  "Plural de *razão*:|razões": "«raz**ones**» → raz**ões**.",
+  "Plural de *papel*:|papéis": "«papel**es**» → en portugués **papéis**.",
+  "¿Qué frase muestra el género de *mel*?|O mel é delicioso.": "«me gusta la miel» tampoco mostraría el género sin el artículo: hace falta artículo o adjetivo.",
+  "R|A viagem foi ___. (maravilhoso)": "«el viaje fue maravillos**o**» → *a viagem foi maravilhos**a***.",
+  // Días, meses y la semana
+  "Em novembro, os dias já ___ quentinhos e nós ___ ir à praia. As aulas ___ bem no finzinho desse mês.|estão": "«los días ya **están** calientitos y **podemos** ir a la playa. Las clases **acaban**…».",
+  "___ domingos brinco no parque com meus pais.|aos": "«**los** domingos juego…»: en español sin preposición; en portugués *aos* (a + os).",
+  "___ segundas eu estudo e converso com meus colegas.|às": "«**los** lunes estudio» → *às segundas*.",
+  "Aos sábados nós ___.|descansamos": "«los sábados **descansamos**»: igual.",
+  "Os bancos só funcionam em dias ___.|úteis": "«días **hábiles / laborables**» → *dias úteis*.",
+  "Depois de segunda-feira vem ___.|terça-feira": "«después del lunes viene el **martes**».",
+  "Fevereiro é o mês do ___.|Carnaval": "«febrero es el mes del Carnaval».",
+  "Dezembro é o mês em que se inicia o ___ no Brasil.|verão": "«verano» → *verão*; igual que en Perú, empieza en diciembre.",
+  "Eu trabalho ___ segunda-feira.|na": "«trabajo **el** lunes» (sin *en*); en portugués *na* (em + a).",
+  "*Los sábados* (cada sábado) se dice:|aos sábados": "«los sábados» → *aos sábados*.",
+  "*dia útil* significa:|día laborable": "«día hábil / laborable».",
+  "*semana que vem* significa:|la semana que viene": "«la semana que **viene**» → *vem*.",
+  "*Hoje eu trabalho o dia todo* significa:|Hoy trabajo el día entero": "igual que «todo el día» frente a «todos los días».",
+  "Los niños juegan en el parque:|As crianças brincam no parque.": "«jugar» sirve para todo; el portugués distingue *brincar* (divertirse) y *jogar* (juego con reglas).",
+  "Jugamos fútbol los viernes:|Jogamos futebol às sextas.": "«jugar fútbol» → *jogar futebol*.",
+  "En Brasil, el verano empieza en:|dezembro": "como en Perú: el verano empieza en diciembre.",
+  "Outubro é o mês das ___.|crianças": "«los niños» → *as crianças* (femenino en portugués).",
+  "*sexta-feira* es:|viernes": "«viernes» es el 6.º día contando desde el domingo.",
+  "*ontem* significa:|ayer": "hoy / mañana / ayer → *hoje / amanhã / ontem*.",
+  "R|___ domingos brinco no parque.": "«**los** domingos juego» → *aos domingos*.",
+  "R|Depois de segunda-feira vem ___.": "«lunes, martes…» tienen nombres propios; en portugués se cuentan con números.",
+  "R|Em novembro, os dias já ___ quentinhos.": "«los días ya **están** calientitos».",
+  "R|Os bancos só funcionam em dias ___.": "«días hábiles / laborables» → *dias úteis*.",
+  // Presente del indicativo
+  "*escrever* es un verbo:|-ER": "«escrib**ir**» es -IR en español, pero *escrev**er*** es -ER.",
+  "*dividir* es un verbo:|-IR": "«divid**ir**»: -IR en los dos idiomas.",
+  "*cantar* es un verbo:|-AR": "«cant**ar**»: -AR en los dos idiomas.",
+  "Ela ___ (escrever) uma carta.|escreve": "«ella escrib**e** una carta»: también termina en *-e*.",
+  "Você ___ (cantar) muito bem.|canta": "«usted cant**a** muy bien»: *você* va como *usted*.",
+  "Nós ___ (dividir) a conta.|dividimos": "«divid**imos** la cuenta»: igual.",
+  "Nós ___ (vender) frutas.|vendemos": "«vend**emos** frutas»: igual.",
+  "¿Cómo se pregunta *¿Comes carne?*|Você come carne?": "en español también basta la entonación, pero se escribe ¿…?; en portugués solo va el ? final.",
+  "La terminación de **nós** en los verbos -IR es:|-imos": "«part**imos**, viv**imos**»: igual que en español.",
+  "*A gente* se conjuga como:|ele / ela": "es como «la gente» en español: «la gente come» (singular), aunque signifique *nosotros*.",
+  "*Eu assisto TV* significa:|Veo televisión": "«asistir» es ir a un evento; *assistir* es ver.",
+  "Eu ___ (fazer) o almoço.|faço": "«**hago** el almuerzo»: en español *hacer* también es irregular con *yo*.",
+  "R|Eu ___ muitos relatórios. (fazer)": "«**hago**»: en español *hacer* también es irregular con *yo* (hago, no *haco*).",
+  // Verbo IR
+  "Ele sempre vai ___ avião ___ os EUA.|de": "«va **en** avión **a** EE. UU.» → *de avião para os EUA*.",
+  "Eu vou para ___ praia.|a": "«voy a **la** playa» → *para a praia*.",
+  "a + a =|à": "en español *a + el = al*; en portugués también se juntan: *a + a = à*.",
+  "*Vou pra praia* es:|la forma hablada de «para a»": "como decir «pa' la playa» al hablar informalmente.",
+  "*ir de* indica:|el transporte": "«ir **en** carro» → *ir de carro*.",
+  "*ir para* indica:|el destino": "«ir **a** la playa» → *ir para a praia*.",
+  // Pasatiempos y GOSTAR
+  "Eu gosto ___ nadar.|de": "«me gusta nadar» (sin *de*) → *gosto **de** nadar*.",
+  "Gosto ___ Brasil.|do": "«me gusta **el** Brasil» → de + o = **do** (como «del»).",
+  "Gostamos ___ Europa.|da": "«nos gusta Europa» → *da Europa* («de la»).",
+  "Ele não gosta ___ Estados Unidos.|dos": "«no le gustan **los** Estados Unidos» → **dos** («de los»).",
+  "Gosto ___ primavera.|da": "«me gusta **la** primavera» → **da** («de la»).",
+  "As crianças gostam ___ verão.|do": "«a los niños les gusta **el** verano» → **do** («del»).",
+  "O bebê gosta ___ maçã.|de": "«le gusta la manzana» (en general) → *gosta de maçã*.",
+  "Você gosta ___ marca Lacoste?|da": "«¿te gusta **la** marca Lacoste?» → **da**.",
+  "Eu gosto ___ Portugal.|de": "«me gusta Portugal» (sin artículo) → solo **de**.",
+  "Nós gostamos ___ ver o pôr do sol.|de": "«nos gusta ver» → *gostamos **de** ver*.",
+  "Não, eu não ___ de correr.|gosto": "«no me gusta correr» → *eu não gosto de correr*: en portugués la persona va primero.",
+  "Eu vou à ___ três vezes por semana.|academia": "«gimnasio» → *academia*; en español una academia es otra cosa.",
+  "Eu ___ violão.|toco": "«**toco** guitarra»: también *tocar* en español.",
+  "Eu ___ música todos os dias.|ouço": "«oigo / escucho música»: *oír* también es irregular en español (oigo).",
+  "*academia* en Brasil es:|el gimnasio": "en español una «academia» es una escuela; en Brasil es el gimnasio.",
+  "*Tocar la guitarra* se dice:|tocar violão": "«tocar la guitarra» → *tocar violão*.",
+  "*Me gusta el helado* (en general):|Gosto de sorvete.": "«me gusta el helado» → *gosto de sorvete* (en portugués, sin artículo).",
+  "*Me gusta el helado de esa tienda*:|Gosto do sorvete dessa loja.": "«el helado de esa tienda» (específico) → *do sorvete*.",
+  "Gosto ___ Lima.|de": "«me gusta Lima» → *gosto de Lima*.",
+  "Gosto ___ inverno.|do": "«me gusta **el** invierno» → **do**.",
+  "*Eu adoro dançar* significa:|Me encanta bailar": "«adoro bailar» también existe en español: *adorar* = encantar.",
+  "*Tomar fotos* se dice:|tirar fotos": "«tomar / sacar fotos» → *tirar fotos* (*tirar* = sacar).",
+  "R|Eu gosto ___ nadar.": "«me gusta nadar» → *gosto **de** nadar*.",
+  "R|Ele não gosta ___ Estados Unidos.": "«los Estados Unidos» → de + os = **dos** («de los»).",
+  "R|Gosto ___ primavera.": "«me gusta la primavera» → **da** («de la»).",
+  "R|O bebê gosta ___ maçã.": "«le gusta la manzana» (cualquiera) → solo **de**.",
+  "R|Você gosta ___ marca Lacoste?": "«¿te gusta la marca Lacoste?» → **da**.",
+  // Verbos regulares
+  "Eu pedi para ___ abrir a porta para mim.|você": "«pedí que **tú** abrieras la puerta» → *você*.",
+  "*Ele viajou para o Brasil* está en:|pasado": "«él viaj**ó** a Brasil»: pasado.",
+  "*João falará a verdade* está en:|futuro": "«João habl**ará** la verdad»: futuro.",
+  "*Nós bebemos juntos no último domingo* está en:|pasado": "en español sería «bebimos» (distinto del presente «bebemos»); en portugués las dos formas son iguales.",
+  "*Pega o ônibus!* significa:|¡Toma el bus!": "«pegar» es golpear; *pegar* es tomar.",
+  "*Eu apago o quadro* significa:|Borro la pizarra": "«borrar la pizarra» → *apagar o quadro*.",
+  "*Você lembra de mim?* significa:|¿Te acuerdas de mí?": "«¿te acuerdas de mí?» → *lembra*.",
+  "*Liga a TV!* significa:|¡Prende la tele!": "«¡prende la tele!» → *liga a TV*.",
+  // Posesivos
+  "Onde está a ___ caneta?|sua": "«**tu** lapicero»: en español *tu* no cambia; en portugués *seu → sua* con femenino.",
+  "Eu falei com a mãe ___.|dele": "«la mamá **de él**» → *a mãe dele*.",
+  "O ___ carro é azul.|nosso": "«**nuestro** carro».",
+  "O carro ___ é amarelo.|dela": "«el carro **de ella**».",
+  "___ casas são pequenas.|nossas": "«**nuestras** casas»: igual que en español.",
+  "___ aula de português online é muito divertida!|nossa": "«**nuestra** clase».",
+  "Nas ___ atividades na rua nós conhecemos muito o Rio.|nossas": "«en **nuestras** actividades».",
+  "A ___ irmã mora em Lima.|minha": "«**mi** hermana»: en español *mi* no cambia; en portugués es *minha*.",
+  "Os ___ filhos estudam muito.|nossos": "«**nuestros** hijos».",
+  "A casa ___ é grande.|deles": "«la casa **de ellos**».",
+  "Un hombre habla de su mamá: ___ mãe.|minha": "en español «mi mamá» no cambia; en portugués sí: *minha*.",
+  "Una mujer habla de su papá: ___ pai.|meu": "«mi papá» → *meu pai*.",
+  "*o carro dela* significa:|el carro de ella": "«el carro de ella» (o «su carro»).",
+  "¿Por qué los brasileños prefieren *dele* en vez de *seu*?|Porque *seu* también puede ser «tu» y confunde": "en español pasa lo mismo con «su»: «su carro» ¿de él, de ella o de usted? Por eso decimos «el carro de él».",
+  "Estas havaianas são ___. (nós)|nossas": "«estas sandalias son **nuestras**».",
+  "R|O carro ___ é amarelo. (ela)": "«el carro **de ella**».",
+  // Números
+  "Eu tenho ___ anos.|vinte e cinco": "«veinticinco» (junto) → *vinte e cinco* (separado, con **e**).",
+  "Eu tenho ___ irmãs.|duas": "«dos» no cambia; en portugués *dois* / *duas*.",
+  "A semana tem ___ dias.|sete": "«siete» → *sete*.",
+  "¿Cómo se escribe 16?|dezesseis": "«dieciséis» → *dezesseis* (dez + e + seis).",
+  "Eu comprei ___ camisas.|duas": "«dos camisas» → *duas camisas*.",
+  "100 exacto se dice:|cem": "igual que «cien» (100) y «ciento uno» (101): *cem* / *cento e um*.",
+  "R|Eu tenho ___ anos. (25)": "«veinticinco» → *vinte e cinco*.",
+  "R|Eu tenho ___ irmãs. (2)": "«dos hermanas» → *duas irmãs*.",
+  "R|100 exacto se dice: ___": "como «cien / ciento»: *cem / cento*.",
+  // Colores
+  "O céu é ___.|azul": "«el cielo es azul»: *azul* tampoco cambia en español.",
+  "A banana é ___.|amarela": "«el plátano es amarill**o**»; *a banana* es femenina → *amarela*.",
+  "O leite é ___.|branco": "«la leche es blanc**a**», pero *o leite* es masculino → *branco*.",
+  "A rosa é ___.|vermelha": "«la rosa es roj**a**» → *vermelha*.",
+  "*roxo* significa:|morado": "«rojo» y *roxo* se parecen, pero *roxo* = morado.",
+  "A camisa é ___.|preta": "«la camisa es negr**a**» → *preta*.",
+  "R|A banana é ___. (amarillo)": "«amarillo / amarilla» → *amarelo / amarela*.",
+  "R|O céu é ___. (azul)": "«azul» tampoco cambia en español.",
+  // Familia
+  "A mãe da minha mãe é a minha ___.|avó": "«mi **abuela**».",
+  "___ mãe se chama Rosa.|minha": "«**mi** mamá»: en español *mi* no cambia; en portugués es *minha*.",
+  "___ irmão é alto.|meu": "«**mi** hermano» → *meu*.",
+  "¿Cuál significa **abuela**?|avó": "«abuela / abuelo» → *avó / avô*.",
+  "R|A mãe da minha mãe é a minha ___.": "«mi abuela» → *a minha avó*.",
+  "R|___ mãe se chama Rosa.": "«mi mamá» → *minha mãe*.",
+  // Comida y falsos amigos
+  "Eu bebo ___ de laranja.|suco": "«jugo» → *suco* (parecido a «zumo»).",
+  "Eu quero arroz com ___.|feijão": "«arroz con frejoles» → *arroz com feijão*.",
+  "La cena se dice:|jantar": "«cena / cenar» → *jantar* (sirve para los dos).",
+  "Qual é o seu ___?|sobrenome": "«apellido» → *sobrenome* (literal: «sobre el nombre»).",
+  "Ela trabalha num ___.|escritório": "«oficina» → *escritório* (parecido a «escritorio»).",
+  "Tu amiga va a tener un bebé. Ela está ___.|grávida": "«embarazada» → *grávida* (como «grávida» en el español culto).",
+  "*O polvo está delicioso* habla de:|pulpo": "«pulpo» → *polvo* · «polvo» → *pó*."
+};
+const enEspanol = e => EN_ESPANOL[e.frase + "|" + (e.tipo === "marcar" ? e.opciones[e.resp] : [].concat(e.resp[0])[0])];
+const lineaEspanol = texto => texto ? `<div class="explica">🇪🇸 <strong>En español:</strong> ${md(texto)}</div>` : "";
+
 const APROBADO = 70; // % mínimo en el quiz para marcar la lección como completada
 const CLAVE = "pt-progreso";
 
@@ -2916,7 +3159,7 @@ function pintarVelocidad() {
 function cambiarTema() {
   const nuevo = document.documentElement.dataset.tema === "oscuro" ? "claro" : "oscuro";
   document.documentElement.dataset.tema = nuevo;
-  localStorage.setItem("pt-tema", nuevo);
+  localStorage.setItem("pt-tema-elegido", nuevo);
   pintarTema();
 }
 function pintarTema() {
@@ -3131,7 +3374,7 @@ function htmlApuntes() {
         return `
         <div class="resuelto">
           <div class="r-frase">${i + 1}. ${md(x.f)}</div>
-          <div class="r-exp">👉 ${md(x.x)}</div>
+          <div class="r-exp">👉 ${md(x.x)}${EN_ESPANOL["R|" + x.f] ? `<br>🇪🇸 <strong>En español:</strong> ${md(EN_ESPANOL["R|" + x.f])}` : ""}</div>
           <div class="r-resp">
             <button class="altavoz" data-pt="${esc(frase)}" onclick="hablar(this.dataset.pt)" aria-label="Escuchar">🔊</button>
             <span>✅ <strong>${esc(x.r)}</strong> → <em>${esc(frase)}</em></span>
@@ -3256,6 +3499,7 @@ function comprobarCompletar(i) {
   msg += `<div class="pron">🗣️ ${esc(pron(correcta))}</div>`;
   const explica = e.explica || explicarAuto(e);
   if (explica) msg += `<div class="explica">💡 ${md(explica)}</div>`;
+  msg += lineaEspanol(enEspanol(e));
   res.innerHTML = msg;
   caja.querySelector(".controles").remove();
   hablar(correcta.replace(/ · /g, ", "));
@@ -3275,6 +3519,7 @@ function marcar(i, k) {
   let msg = ok ? "✅ ¡Correcto!" : `❌ La correcta es: <strong>${esc(e.opciones[e.resp])}</strong>`;
   if (oir) msg += `<div class="pron">🗣️ ${esc(pron(oir))}</div>`;
   if (e.explica) msg += `<div class="explica">💡 ${md(e.explica)}</div>`;
+  msg += lineaEspanol(enEspanol(e));
   caja.querySelector(".res").innerHTML = msg;
   if (oir) hablar(oir);
   terminarEjercicio(i, ok);
@@ -3445,6 +3690,34 @@ function conjugarEs(inf, t, p) {
   }[t][inf.slice(-2)];
   return inf.slice(0, -2) + fin[p];
 }
+// Formas en español para comparar (presente de los verbos irregulares o con giros distintos)
+const ES_PRESENTE = {
+  ser: ["soy", "es", "somos", "son"], estar: ["estoy", "está", "estamos", "están"], ter: ["tengo", "tiene", "tenemos", "tienen"],
+  ir: ["voy", "va", "vamos", "van"], fazer: ["hago", "hace", "hacemos", "hacen"], querer: ["quiero", "quiere", "queremos", "quieren"],
+  poder: ["puedo", "puede", "podemos", "pueden"], ouvir: ["oigo / escucho", "oye / escucha", "oímos / escuchamos", "oyen / escuchan"],
+  dormir: ["duermo", "duerme", "dormimos", "duermen"], dizer: ["digo", "dice", "decimos", "dicen"], saber: ["sé", "sabe", "sabemos", "saben"],
+  "chamar-se": ["me llamo", "se llama", "nos llamamos", "se llaman"], acordar: ["me despierto", "se despierta", "nos despertamos", "se despiertan"],
+  costumar: ["suelo", "suele", "solemos", "suelen"], ficar: ["me quedo", "se queda", "nos quedamos", "se quedan"],
+  crescer: ["crezco", "crece", "crecemos", "crecen"], conhecer: ["conozco", "conoce", "conocemos", "conocen"],
+  gostar: ["me gusta", "le gusta", "nos gusta", "les gusta"], sentir: ["siento", "siente", "sentimos", "sienten"], ver: ["veo", "ve", "vemos", "ven"],
+  ler: ["leo", "lee", "leemos", "leen"], assistir: ["veo", "ve", "vemos", "ven"]
+};
+// Verbos portugueses → verbo español regular equivalente
+const ES_INFINITIVO = {
+  falar: "hablar", morar: "vivir", trabalhar: "trabajar", estudar: "estudiar", dançar: "bailar", viajar: "viajar", comer: "comer",
+  beber: "beber", aprender: "aprender", escrever: "escribir", partir: "partir", abrir: "abrir", tocar: "tocar", cozinhar: "cocinar",
+  precisar: "necesitar", chegar: "llegar", esquecer: "olvidar", curtir: "disfrutar", dividir: "dividir", dirigir: "manejar", comprar: "comprar",
+  durar: "durar", acabar: "acabar", telefonar: "llamar", descansar: "descansar", correr: "correr", vender: "vender", tirar: "sacar",
+  cantar: "cantar", achar: "creer", usar: "usar", tomar: "tomar", amar: "amar", deixar: "dejar", pintar: "pintar", decidir: "decidir",
+  discutir: "discutir", insistir: "insistir", permitir: "permitir", imprimir: "imprimir", desistir: "desistir", viver: "vivir", andar: "caminar"
+};
+function formaEspanol(inf, t, p) {
+  if (t === "presente" && ES_PRESENTE[inf]) return ES_PRESENTE[inf][p];
+  if (ES_PRESENTE[inf]) return null;
+  const es = ES_INFINITIVO[inf] || (VERBOS_REGULARES.find(x => x[0] === inf) || [])[1];
+  if (!es || (t === "pasado" && /eer$/.test(es))) return null;
+  return conjugarEs(es, t, p);
+}
 const QUIEN_PT = ["**eu**", "**ele / ela / você**", "**nós**", "**eles / elas / vocês**"];
 const QUIEN_ES = ["**yo**", "**él, ella o tú (usted)**", "**nosotros**", "**ellos o ustedes**"];
 const IRREGULARES = ["ser", "estar", "ter", "ir", "fazer", "querer", "poder", "ler", "ver", "ouvir", "dormir", "dizer", "saber", "vir", "pôr", "chamar-se"];
@@ -3465,14 +3738,19 @@ function explicarVerbo(e) {
         const tiempo = t === "presente" ? "" : t === "pasado" ? " en **pasado**" : " en **futuro** (infinitivo + terminación)";
         let x = `*${inf}* termina en **-${grp}**. Con ${QUIEN_PT[p]}${tiempo} la terminación es **${finalPt(inf, t, p)}** → **${resp}**.`;
         if (forma !== resp) x += ` (Cambia la escritura para mantener el sonido: *${forma}* → **${resp}**.)`;
-        if (esV) x += ` En español: «${conjugarEs(esV[1], t, p)}».`;
+        const es = formaEspanol(inf, t, p);
+        if (es) x += ` En español: «${es}».`;
         return x;
       }
     }
   }
   const v = VERBOS.find(x => x.inf === inf);
   const p = v ? v.f.indexOf(resp) : -1;
-  if (p >= 0) return `*${inf}* es **irregular**: hay que memorizarlo → eu ${v.f[0]} · ele/você ${v.f[1]} · nós ${v.f[2]} · eles ${v.f[3]}. Con ${QUIEN_PT[p]} → **${resp}**.`;
+  if (p >= 0) {
+    const es = formaEspanol(inf, "presente", p);
+    return `*${inf}* es **irregular**: hay que memorizarlo → eu ${v.f[0]} · ele/você ${v.f[1]} · nós ${v.f[2]} · eles ${v.f[3]}. Con ${QUIEN_PT[p]} → **${resp}**.` +
+           (es ? ` En español: «${es}».` : "");
+  }
   return null;
 }
 // Contracciones: pista "em + o", "de + a", "a + os", "por + a"...
@@ -3492,8 +3770,15 @@ function explicarContraccion(e) {
 function explicarPlural(e) {
   const m = e.frase.match(/^(?:um|uma) ([^,]+), (?:dois|duas) ___/);
   const pl = m && PLURALES.find(x => x[0] === m[1]);
-  return pl ? `*${pl[0]}* → **${pl[1]}**. Regla: ${pl[3]}` : null;
+  return pl ? `*${pl[0]}* → **${pl[1]}**. Regla: ${pl[3]}${ES_PLURAL[pl[0]] ? ` En español: «${ES_PLURAL[pl[0]]}».` : ""}` : null;
 }
+const ES_PLURAL = {
+  maçã: "manzanas", homem: "hombres", viagem: "viajes", jovem: "jóvenes", mulher: "mujeres", cor: "colores", flor: "flores", nariz: "narices",
+  mês: "meses", pão: "panes", alemão: "alemanes", capitão: "capitanes", órgão: "órganos", irmão: "hermanos", cidadão: "ciudadanos",
+  estação: "estaciones", limão: "limones", razão: "razones", coração: "corazones", avião: "aviones", canção: "canciones", animal: "animales",
+  papel: "papeles", hotel: "hoteles", sinal: "señales", azul: "azules", legal: "legales", útil: "útiles", responsável: "responsables",
+  ônibus: "buses", lápis: "lápices"
+};
 const explicarAuto = e => explicarVerbo(e) || explicarContraccion(e) || explicarPlural(e);
 const SUJETOS = [["Eu", 0], ["Você", 1], ["Ele", 1], ["Ela", 1], ["A gente", 1], ["A Ana", 1], ["O meu pai", 1],
                  ["Nós", 2], ["Vocês", 3], ["Eles", 3], ["Elas", 3], ["Os meus amigos", 3]];
@@ -3651,7 +3936,8 @@ const SUSTANTIVOS = [
   ["cachorro", "cachorros", "m", "perro"], ["gata", "gatas", "f", "gata"], ["menino", "meninos", "m", "niño"], ["menina", "meninas", "f", "niña"],
   ["professor", "professores", "m", "profesor"], ["cidade", "cidades", "f", "ciudad"], ["canção", "canções", "f", "canción"],
   ["avião", "aviões", "m", "avión"], ["pergunta", "perguntas", "f", "pregunta"], ["bolsa", "bolsas", "f", "cartera"],
-  ["olho", "olhos", "m", "ojo"], ["ilha", "ilhas", "f", "isla"], ["pessoa", "pessoas", "f", "persona"], ["computador", "computadores", "m", "computadora"],
+  ["olho", "olhos", "m", "ojo"], ["ilha", "ilhas", "f", "isla"], ["pessoa", "pessoas", "f", "persona"],
+  ["computador", "computadores", "m", "computadora", "en español es *la computadora*, pero en portugués es masculino"],
   ["chave", "chaves", "f", "llave"], ["porta", "portas", "f", "puerta"], ["pão", "pães", "m", "pan"], ["sapato", "sapatos", "m", "zapato"],
   ["saia", "saias", "f", "falda"], ["praia", "praias", "f", "playa"], ["restaurante", "restaurantes", "m", "restaurante"],
   ["irmão", "irmãos", "m", "hermano"], ["irmã", "irmãs", "f", "hermana"], ["mão", "mãos", "f", "mano"],
@@ -3766,12 +4052,90 @@ const BANCO_SEMANA = [
   { f: "Gustavo sempre ___ flores para dona Luísa.", o: ["compra", "compro", "compram"], r: 0 },
   { f: "Às quintas eu telefono ___ minha mãe.", o: ["para", "a", "com"], r: 0, x: "*telefonar **para** alguém* = llamar a alguien." }
 ];
+// La frase de cada banco en español (para la línea 🇪🇸 de la práctica)
+const BANCO_ES = {
+  "Ela ___ médica.": "«Ella **es** médica.»", "Eu ___ cansado hoje.": "«Hoy **estoy** cansado.»", "Nós ___ do Peru.": "«**Somos** del Perú.»",
+  "O café ___ quente.": "«El café **está** caliente.»", "Vocês ___ em casa?": "«¿Ustedes **están** en casa?»", "Ele ___ alto e magro.": "«Él **es** alto y delgado.»",
+  "Hoje eu ___ muito feliz!": "«¡Hoy **estoy** muy feliz!»", "A minha mãe ___ professora.": "«Mi mamá **es** profesora.»",
+  "O José ___ no escritório.": "«José **está** en la oficina.»", "Eles ___ brasileiros.": "«Ellos **son** brasileños.»", "A sopa ___ fria.": "«La sopa **está** fría.»",
+  "Eu ___ peruano, mas ___ no Brasil.": "«**Soy** peruano, pero **estoy** en Brasil.»", "Ela ___ vinte anos.": "«Ella **tiene** veinte años.»",
+  "Nós ___ um cachorro.": "«**Tenemos** un perro.»", "Eu ___ fome.": "«**Tengo** hambre.»", "Ele ___ cabelo cacheado.": "«Él **tiene** el cabello rizado.»",
+  "Ela ___ bronzeada depois da praia.": "«Ella **está** bronceada después de la playa.»", "O Brasil ___ muito grande.": "«Brasil **es** muy grande.»",
+  "Meu carro ___ com problemas.": "«Mi carro **está** con problemas.»", "Eles ___ olhos verdes.": "«Ellos **tienen** ojos verdes.»", "Eu ___ estudante.": "«**Soy** estudiante.»",
+  "Onde ___ a Ana agora?": "«¿Dónde **está** Ana ahora?»", "Nós ___ aprendendo português.": "«**Estamos** aprendiendo portugués.»",
+  "Ela ___ muito engraçada.": "«Ella **es** muy chistosa.»", "Vocês ___ dois filhos?": "«¿Ustedes **tienen** dos hijos?»", "A gente ___ no Brasil agora.": "«Ahora **estamos** en Brasil.»",
+  "O João ___ nervoso porque tem prova.": "«João **está** nervioso porque tiene examen.»", "Eu gosto ___ chocolate.": "«Me gusta el chocolate» (en portugués: gusto **de** chocolate).",
+  "Ela gosta ___ Brasil.": "«Le gusta **el** Brasil» → *do* (como «del»).", "Vocês gostam ___ praia?": "«¿Les gusta **la** playa?» → *da* («de la»).",
+  "Nós gostamos ___ viajar.": "«Nos gusta viajar» (en portugués: gustamos **de** viajar).", "Eles gostam ___ doces.": "«Les gustan **los** dulces» → *dos* («de los»).",
+  "Paula gosta ___ caipirinha.": "«A Paula le gusta **la** caipiriña» → *da*.", "Ele ___ fala muito.": "«Él **no** habla mucho.»",
+  "— Você fala inglês? — ___, sim!": "«—¿Hablas inglés? —Sí, hablo.»", "Ela está ___ português agora.": "«Ella está **aprendiendo** portugués ahora.»",
+  "Nós estamos ___ muito.": "«Estamos **practicando** mucho.»",
+  "___ você mora? — Em Lima.": "«¿**Dónde** vives? —En Lima.»", "___ anos você tem? — Vinte e cinco.": "«¿**Cuántos** años tienes?»",
+  "___ você se chama? — Carlos.": "«¿**Cómo** te llamas?»", "___ mora com você? — A minha família.": "«¿**Quién** vive contigo?»",
+  "___ você faz aniversário? — Em outubro.": "«¿**Cuándo** cumples años?»", "___ é o seu nome?": "«¿**Cuál** es tu nombre?»",
+  "De ___ você é? — Do Peru.": "«¿De **dónde** eres? —Del Perú.»", "___ você faz da vida? — Sou professor.": "«¿**A qué** te dedicas?» (literal: ¿qué haces de la vida?)",
+  "___ são os seus interesses?": "«¿**Cuáles** son tus intereses?»", "Qual é o seu ___? — Silva.": "«¿Cuál es tu **apellido**?»",
+  "Qual é o seu ___? — Me chamam de Zé.": "«¿Cuál es tu **apodo**?»", "Qual é o seu ___? — Rua Santa Maria, 34.": "«¿Cuál es tu **dirección**?»",
+  "Eu ___ em Lima, mas sou de Arequipa.": "«**Vivo** en Lima, pero soy de Arequipa.»", "Eu trabalho ___ professor.": "«Trabajo **como** profesor.»",
+  "Eu ___ chamo Ana.": "«Yo **me** llamo Ana.»", "Ele ___ chama Pedro.": "«Él **se** llama Pedro.»", "Prazer em conhecê-___!": "«¡Encantado de conocer**la**!»",
+  "Son las 7 de la mañana. Saludas:": "«¡Buenos días!» → *Bom dia!*", "Son las 4 de la tarde. Saludas:": "«¡Buenas tardes!» → *Boa tarde!*",
+  "Son las 10 de la noche. Saludas:": "«¡Buenas noches!» → *Boa noite!*", "Una mujer agradece:": "«gracias» no cambia; en portugués una mujer dice *obrigada*.",
+  "Un hombre agradece:": "«gracias» → un hombre dice *obrigado*.", "Te dicen *Obrigado!* Respondes:": "«¡De nada!», igual que en español.",
+  "Te dicen *Prazer em conhecê-lo!* Respondes:": "«¡El gusto es mío!»", "Te despides hasta mañana:": "«¡Hasta mañana!»",
+  "Saludas a un amigo de forma informal:": "«¡Hola! ¿Todo bien?»", "— Tudo bem? — ___": "«—¿Todo bien? —Todo bien, ¿y tú?»",
+  "Quieres pasar entre la gente en el bus:": "«Con permiso.»", "No entendiste. Pides que repitan:": "«¿Puedes repetir, por favor?»",
+  "Te hablan muy rápido:": "«Habla más despacio, por favor.»", "Pides perdón:": "«¡Perdón! / ¡Disculpa!»",
+  "___ domingos brinco no parque.": "«**Los** domingos juego en el parque» (en portugués: *aos*).", "___ segundas eu estudo português.": "«**Los** lunes estudio portugués» (*às*).",
+  "Bom ___ de semana!": "«¡Buen **fin** de semana!»", "Minhas férias começam na semana que ___.": "«Mis vacaciones empiezan la semana que **viene**.»",
+  "A reunião será na ___ quinta-feira.": "«La reunión será el **próximo** jueves.»", "Os bancos só funcionam em dias ___.": "«Los bancos solo funcionan en días **hábiles**.»",
+  "Eu leio um livro todo ___ antes de dormir.": "«Leo un libro todos los **días** antes de dormir.»", "*Até terça!* significa:": "«¡Hasta el martes!»",
+  "*dia útil* significa:": "«día hábil / laborable».", "*Hoje eu trabalho o dia todo* significa:": "«todo el día» frente a «todos los días», igual que en español.",
+  "Fevereiro é o mês do ___.": "«Febrero es el mes del **Carnaval**.»", "Abril é o mês da ___.": "«Abril es el mes de la **Pascua**.»",
+  "Outubro é o mês das ___.": "«Octubre es el mes de los **niños**.»", "Maio é o mês das ___.": "«Mayo es el mes de las **novias**.»", "Março é o mês da ___.": "«Marzo es el mes de la **mujer**.»",
+  "No Brasil, o verão começa em ___.": "«En Brasil el verano empieza en **diciembre**», como en Perú.", "No Brasil, o inverno começa em ___.": "«El invierno empieza en **junio**», como en Perú.",
+  "No Brasil, a primavera começa em ___.": "«La primavera empieza en **septiembre**.»", "As crianças ___ no parque.": "«Los niños **juegan** en el parque» (*brincar*).",
+  "Nós ___ futebol às sextas.": "«**Jugamos** fútbol los viernes» (*jogar*).", "*semana* es:": "«**la** semana», igual que en español.", "*sábado* es:": "«**el** sábado», igual que en español.",
+  "Eu trabalho ___ segunda-feira.": "«Trabajo **el** lunes» → *na*.", "Vamos à praia ___ fim de semana?": "«¿Vamos a la playa **el** fin de semana?» → *no*.",
+  "Nós ___ calor em abril.": "«**Sentimos** calor en abril.»", "Nós ___ ir à praia em novembro.": "«**Podemos** ir a la playa en noviembre.»",
+  "Eu ___ um livro todo dia.": "«**Escribo** un libro todos los días.»", "Gustavo sempre ___ flores para dona Luísa.": "«Gustavo siempre **compra** flores para doña Luisa.»",
+  "Às quintas eu telefono ___ minha mãe.": "«Los jueves llamo **a** mi mamá» → en portugués *telefono **para***.",
+  "Eu vou ___ ônibus para o trabalho.": "«Voy **en** bus al trabajo» → *de ônibus*.", "Nós vamos ___ pé para a escola.": "«Vamos **a** pie a la escuela.»",
+  "O vaqueiro vai ___ cavalo para o rodeio.": "«El vaquero va **a** caballo al rodeo.»", "Ela vai ___ carro para o centro.": "«Va **en** auto al centro» → *de carro*.",
+  "Eles vão ___ avião para os EUA.": "«Van **en** avión a EE. UU.» → *de avião*.", "Vocês vão de táxi ___ casa?": "«¿Van en taxi **a** casa?» → *para casa*.",
+  "Eu vou para ___ praia.": "«Voy a **la** playa.»", "Ele vai para ___ supermercado.": "«Va **al** supermercado» → *para o*.",
+  "Nós vamos para ___ Bahamas.": "«Vamos a **las** Bahamas.»", "Eles vão para ___ Estados Unidos.": "«Van a **los** Estados Unidos.»",
+  "Vou ___ banco.": "«Voy **al** banco» → *ao* (como «al»).", "Ela vai ___ farmácia.": "«Va **a la** farmacia» → *à*.",
+  "Vamos passar ___ rua das Flores.": "«Vamos a pasar **por la** calle de las Flores.»", "Ele passa ___ parque todos os dias.": "«Pasa **por el** parque todos los días.»",
+  "Obrigado ___ ajuda!": "«¡Gracias **por la** ayuda!»", "Venho ___ centro da cidade.": "«Vengo **del** centro de la ciudad.»",
+  "Ela está ___ supermercado.": "«Está **en el** supermercado.»", "Eu vou ___ amanhã.": "«Voy **a** estudiar mañana» → en portugués sin *a*: *vou estudar*.",
+  "Nós ___ viajar no fim de semana.": "«**Vamos** a viajar el fin de semana.»", "*Vou pra praia* es:": "como decir «pa' la playa» al hablar.",
+  "Eu vou ___ casa.": "«Voy **a** casa» → *para casa*.", "— Você trabalha aqui? — ___.": "«—¿Trabajas aquí? —Sí, trabajo.»",
+  "*¿Comes carne?* se dice:": "en español escribimos ¿…?; en portugués solo el ? final.", "A gente ___ pizza às sextas.": "«**Comemos** pizza los viernes» (como «la gente come»).",
+  "Eu ___ TV à noite.": "«**Veo** televisión en la noche.»", "Hoje ___ muito calor.": "«Hoy **hace** mucho calor», igual que en español.",
+  "Eu gosto ___ nadar.": "«Me gusta nadar» → *gosto **de** nadar*.", "Gosto ___ Brasil.": "«Me gusta **el** Brasil» → *do* («del»).",
+  "Gostamos ___ Europa.": "«Nos gusta Europa» → *da* («de la»).", "Ele não gosta ___ Estados Unidos.": "«No le gustan **los** Estados Unidos» → *dos*.",
+  "Gosto ___ primavera.": "«Me gusta **la** primavera» → *da*.", "As crianças gostam ___ verão.": "«A los niños les gusta **el** verano» → *do*.",
+  "O bebê gosta ___ maçã.": "«Al bebé le gusta la manzana» → *de*.", "Você gosta ___ marca Lacoste?": "«¿Te gusta **la** marca Lacoste?» → *da*.",
+  "Gosto ___ Portugal.": "«Me gusta Portugal» → *de*.", "Eu gosto ___ sorvete.": "«Me gusta el helado» (en general) → *de*.",
+  "Eu gosto ___ sorvete dessa loja.": "«Me gusta **el** helado de esa tienda» → *do*.", "Eles não gostam ___ correr.": "«No les gusta correr» → *de*.",
+  "*a academia* es:": "en español una «academia» es una escuela; en Brasil es el gimnasio.", "Eu ___ violão.": "«**Toco** guitarra.»",
+  "Ela ___ tênis aos sábados.": "«**Juega** tenis los sábados.»", "Eu ___ fotos no parque.": "«**Saco** fotos en el parque» → *tiro*.",
+  "— Você gosta de dançar? — ___!": "«—¿Te gusta bailar? —¡Sí, me gusta!» → *Gosto!*", "Eu ___ surfar! (me encanta)": "«¡**Adoro** surfear!»",
+  "*a natação* es:": "«la natación».", "*o violão* es:": "«la guitarra» (en portugués *guitarra* es la eléctrica).",
+  "*os jogos de baralho* son:": "«los juegos de cartas» (*baralho* = baraja).", "Eu ___ na academia todos os dias.": "«**Hago ejercicio** en el gimnasio todos los días» → *malho*."
+};
 const DIAS = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo"];
 const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 const UNIDADES = ["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze",
                   "catorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];
 const DECENAS = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
 const numeroPt = n => n === 100 ? "cem" : n < 20 ? UNIDADES[n] : DECENAS[Math.floor(n / 10)] + (n % 10 ? " e " + UNIDADES[n % 10] : "");
+const UNIDADES_ES = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece",
+                     "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"];
+const VEINTI = ["veinte", "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"];
+const DECENAS_ES = ["", "", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"];
+const numeroEs = n => n === 100 ? "cien" : n < 20 ? UNIDADES_ES[n] : n < 30 ? VEINTI[n - 20] : DECENAS_ES[Math.floor(n / 10)] + (n % 10 ? " y " + UNIDADES_ES[n % 10] : "");
+const espanolNumero = n => `«${numeroEs(n)}» → *${numeroPt(n)}*` + (n > 20 && n % 10 ? (n < 30 ? ": en español va junto; en portugués separado, con **e**." : ": la «y» del español es **e** en portugués.") : ".");
 
 const azar = arr => arr[Math.floor(Math.random() * arr.length)];
 function armar(correcta, distractores) {
@@ -3804,17 +4168,20 @@ function genConjugacion() {
     const pp = Math.floor(Math.random() * 4);
     return { clave: `pron-${v.inf}-${pp}`, sub: "¿Qué pronombre va?", pregunta: `___ ${v.f[pp]} ${comp}.`,
              ...armar(pronombres[pp], pronombres), oir: `${pronombres[pp]} ${v.f[pp]} ${comp}.`,
-             explica: `*${v.f[pp]}* es la forma de ${QUIEN_PT[pp]} (en español: ${QUIEN_ES[pp]}). Formas de *${v.inf}*: ${formas}.` };
+             explica: `*${v.f[pp]}* es la forma de ${QUIEN_PT[pp]} (en español: ${QUIEN_ES[pp]}). Formas de *${v.inf}*: ${formas}.`,
+             espanol: formaEspanol(v.inf, "presente", pp) ? `«${formaEspanol(v.inf, "presente", pp)}» lo dice ${QUIEN_ES[pp]} → *${pronombres[pp]} ${v.f[pp]}*.` : null };
   }
+  const esp = formaEspanol(v.inf, "presente", p);
   return { clave: `conj-${v.inf}-${p}`, sub: `${v.inf} = ${v.es}`, pregunta: `${suj} ___ ${comp}.`, ...armar(v.f[p], v.f),
-           oir: `${suj} ${v.f[p]} ${comp}.`, explica: tabla(suj, p), escribible: true };
+           oir: `${suj} ${v.f[p]} ${comp}.`, explica: tabla(suj, p), escribible: true,
+           espanol: esp ? `«${["yo", "él / ella / usted", "nosotros", "ellos / ustedes"][p]} ${esp}» → *${v.f[p]}*.` : null };
 }
 function genBanco(banco) {
   const e = azar(banco);
   const correcta = e.o[e.r];
   const opciones = mezclar(e.o.slice());
   const oir = sinParentesis(e.f.includes("___") ? rellenar(e.f, correcta) : e.pt ? correcta : null);
-  return { clave: "banco-" + e.f, sub: e.s, pregunta: e.f, opciones, resp: opciones.indexOf(correcta), oir, explica: e.x,
+  return { clave: "banco-" + e.f, sub: e.s, pregunta: e.f, opciones, resp: opciones.indexOf(correcta), oir, explica: e.x, espanol: BANCO_ES[e.f],
            escribible: e.f.includes("___") && !correcta.includes("…") && !correcta.includes(" ") };
 }
 const FRASES_A = [
@@ -3839,8 +4206,10 @@ function genContraccion() {
   const art = sust.split(" ")[0];
   const tabla = CONTRACCIONES[prep].t;
   const genero = { o: "masculino singular", a: "femenino singular", os: "masculino plural", as: "femenino plural" }[art];
+  const enEsp = { em: ["en el", "en la", "en los", "en las"], de: ["del", "de la", "de los", "de las"], a: ["al", "a la", "a los", "a las"],
+                  por: ["por el", "por la", "por los", "por las"] }[prep][["o", "a", "os", "as"].indexOf(art)];
   return { clave: "contr-" + frase, sub: `${prep} + artículo`, pregunta: frase, ...armar(tabla[art], Object.values(tabla)),
-           oir: rellenar(frase, tabla[art]), escribible: true,
+           oir: rellenar(frase, tabla[art]), escribible: true, espanol: `«${enEsp}» → **${tabla[art]}**.`,
            explica: `*${sust}* es ${genero} → ${prep} + ${art} = **${tabla[art]}**.` };
 }
 function genArticulo() {
@@ -3852,6 +4221,8 @@ function genArticulo() {
   const palabra = plural ? plur : sing;
   return { clave: `art-${sing}-${plural}-${definido}`, sub: `Artículo ${definido ? "definido" : "indefinido"} · ${es}${plural ? " (plural)" : ""}`,
            pregunta: `___ ${palabra}`, ...armar(correcta, formas), oir: `${correcta} ${palabra}`, escribible: true,
+           espanol: truco ? `¡cuidado! *${es}* tiene otro género en español: aquí manda el portugués → **${correcta}**.`
+                          : `mismo género que en español: «${(definido ? ["el", "la", "los", "las"] : ["un", "una", "unos", "unas"])[(g === "m" ? 0 : 1) + (plural ? 2 : 0)]} ${es}${plural ? " (plural)" : ""}» → **${correcta}**.`,
            explica: `*${sing}* es **${g === "m" ? "masculino" : "femenino"}**${truco ? ": " + truco : ""}.` };
 }
 function genTiempo() {
@@ -3909,13 +4280,16 @@ function genPosesivo() {
     const correcta = "d" + dueno;
     return { clave: `pos-${cosa}-${dueno}`, sub: `(${dueno}) · ${es}`, pregunta: `${art[0].toUpperCase() + art.slice(1)} ${cosa} ___.`,
              ...armar(correcta, ["dele", "dela", "deles", "delas", POSESIVOS.nós[k]]), oir: `${art[0].toUpperCase() + art.slice(1)} ${cosa} ${correcta}.`, escribible: true,
-             explica: `Paso 1: (${dueno}) → **${correcta}** (de + ${dueno}). Va **después** del sustantivo y depende del **dueño**, no de *${cosa}*.` };
+             explica: `Paso 1: (${dueno}) → **${correcta}** (de + ${dueno}). Va **después** del sustantivo y depende del **dueño**, no de *${cosa}*.`,
+             espanol: `«${["el", "la", "los", "las"][k]} ${es} **de ${{ ele: "él", ela: "ella", eles: "ellos", elas: "ellas" }[dueno]}**» → *${correcta}*.` };
   }
   const dueno = azar(Object.keys(POSESIVOS));
   const correcta = POSESIVOS[dueno][k];
   return { clave: `pos-${cosa}-${dueno}`, sub: `(${dueno}) · ${es}`, pregunta: `${art[0].toUpperCase() + art.slice(1)} ___ ${cosa}.`,
            ...armar(correcta, POSESIVOS[dueno]), oir: `${art[0].toUpperCase() + art.slice(1)} ${correcta} ${cosa}.`, escribible: true,
-           explica: `Paso 1: (${dueno}) → *${POSESIVOS[dueno][0]}*. Paso 2: *${cosa}* es **${genTxt}** → **${correcta}**.` };
+           explica: `Paso 1: (${dueno}) → *${POSESIVOS[dueno][0]}*. Paso 2: *${cosa}* es **${genTxt}** → **${correcta}**.`,
+           espanol: dueno === "nós" ? `«${["nuestro", "nuestra", "nuestros", "nuestras"][k]} ${es}»: cambia igual que en español.`
+                                    : `«${dueno === "eu" ? (n === "p" ? "mis" : "mi") : (n === "p" ? "tus" : "tu")} ${es}»: en español no cambia con el género; en portugués sí → **${correcta}**.` };
 }
 function genHeterogenerico() {
   const [pt, plur, g, es] = azar(HETEROGENERICOS);
@@ -3925,12 +4299,13 @@ function genHeterogenerico() {
   const palabra = plural ? plur : pt;
   return { clave: `het-${pt}-${plural}`, sub: `En español: *${es}*${plural ? " (plural)" : ""}`, pregunta: `___ ${palabra}`,
            ...armar(correcta, formas), oir: `${correcta} ${palabra}`, escribible: true,
-           explica: `*${es}* → **${g === "m" ? "o" : "a"} ${pt}**: en portugués es ${g === "m" ? "masculino" : "femenino"}.` };
+           explica: `*${es}* → **${g === "m" ? "o" : "a"} ${pt}**: en portugués es ${g === "m" ? "masculino" : "femenino"}.`,
+           espanol: `«${es}» es ${g === "m" ? "femenino" : "masculino"} en español, pero en portugués cambia: **${g === "m" ? "o" : "a"} ${pt}**.` };
 }
 function genPlural() {
   const [sing, plur, malos, regla] = azar(PLURALES);
   return { clave: `plu-${sing}`, sub: "¿Cuál es el plural?", pregunta: `**${sing}**`, ...armar(plur, malos),
-           oir: plur, explica: regla, escribible: true };
+           oir: plur, explica: regla, escribible: true, espanol: ES_PLURAL[sing] ? `el plural es «${ES_PLURAL[sing]}» → *${plur}*.` : null };
 }
 function genGeneroFrase() {
   const [sust, g, verbo, adj, es] = azar(FRASES_GENERO);
@@ -3939,14 +4314,22 @@ function genGeneroFrase() {
   return { clave: `gfr-${sust}`, sub: `Artículo y adjetivo · ${es} · ${adj}`, pregunta: `___ ${sust} ${verbo} ___.`,
            ...armar(correcta, [`O … ${adj}`, `A … ${fem}`, `O … ${fem}`, `A … ${adj}`]),
            oir: rellenar(`___ ${sust} ${verbo} ___.`, correcta),
+           espanol: `en español es «${es}» (${g === "m" ? "femenino" : "masculino"}); en portugués *${sust}* es ${g === "m" ? "masculino" : "femenino"}, por eso **${correcta}**.`,
            explica: `*${sust}* es **${g === "m" ? "masculino" : "femenino"}** en portugués (en español: *${es}*), y el adjetivo concuerda.` };
 }
 function genAdjetivo() {
   const a = azar(ADJETIVOS);
   const [suj, verbo, k] = azar(SUJETOS_ADJ);
   const invariable = a[0] === a[1];
+  // El mismo adjetivo en español, con su género y número
+  const base = a[4].split(",")[0].trim();
+  const esFem = base.endsWith("o") ? base.slice(0, -1) + "a" : base;
+  const esPl = w => /[aeiouáéó]$/.test(w) ? w + "s" : w + "es";
+  const esForma = [base, esFem, esPl(base), esPl(esFem)][k];
+  const sujEs = { "O meu pai": "Mi papá es", "A minha irmã": "Mi hermana es", "Os meus amigos": "Mis amigos son", "As minhas tias": "Mis tías son",
+                  "O professor": "El profesor es", "A Ana": "Ana es", "Eles": "Ellos son", "Elas": "Ellas son" }[suj];
   return { clave: `adj-${a[0]}-${k}`, sub: `${a[0]} = ${a[4]}`, pregunta: `${suj} ${verbo} ___.`, ...armar(a[k], a.slice(0, 4)),
-           oir: `${suj} ${verbo} ${a[k]}.`, escribible: true,
+           oir: `${suj} ${verbo} ${a[k]}.`, escribible: true, espanol: `«${sujEs} ${esForma}»: el adjetivo concuerda igual que en español.`,
            explica: invariable ? `*${a[0]}* es igual en masculino y femenino; plural: **${a[2]}**.`
                                : `${a[0]} (masc.) · ${a[1]} (fem.) · ${a[2]} · ${a[3]} (plurales).` };
 }
@@ -3957,6 +4340,7 @@ function genNacionalidad() {
     const correcta = dePais.split(" ")[0];
     return { clave: `pais-${pais}`, sub: "¿do, da o de?", pregunta: `Eu sou ___ ${pais}.`, ...armar(correcta, ["do", "da", "de"]),
              oir: `Eu sou ${dePais}.`, escribible: true,
+             espanol: art ? `«soy ${art === "o" ? "del" : "de la"} ${pais}» → **${correcta}**.` : `«soy de ${pais}» → **de**.`,
              explica: art ? `*${art} ${pais}* → de + ${art} = **${correcta}**.` : `*${pais}* no lleva artículo → **de**.` };
   }
   const mujer = Math.random() < 0.5;
@@ -3965,6 +4349,7 @@ function genNacionalidad() {
   return { clave: `nac-${masc}-${mujer}`, sub: `Nacionalidad (${mujer ? "femenino" : "masculino"})`,
            pregunta: `${mujer ? "Ela" : "Ele"} é ${dePais}. ${mujer ? "Ela" : "Ele"} é ___.`, ...armar(correcta, otras),
            oir: `${mujer ? "Ela" : "Ele"} é ${dePais}. ${mujer ? "Ela" : "Ele"} é ${correcta}.`, escribible: true,
+           espanol: `igual que en español, la nacionalidad cambia con el género (peruano / peruana) → **${correcta}**.`,
            explica: `${masc} (masc.) · ${fem} (fem.)` };
 }
 function genNumero() {
@@ -3974,11 +4359,12 @@ function genNumero() {
   const palabra = numeroPt(n);
   const explica = n > 20 && n % 10 ? "Decenas + **e** + unidades: " + palabra : null;
   const tipo = Math.floor(Math.random() * 3);
+  const espanol = espanolNumero(n);
   if (tipo === 0) return { clave: `num-${n}-a`, sub: "¿Cómo se dice?", pregunta: `**${n}**`, ...armar(palabra, cercanos.map(numeroPt)),
-                           oir: palabra, explica, escribible: true, validas: n === 14 ? ["catorze", "quatorze"] : [palabra] };
+                           oir: palabra, explica, espanol, escribible: true, validas: n === 14 ? ["catorze", "quatorze"] : [palabra] };
   if (tipo === 1) return { clave: `num-${n}-b`, sub: "¿Qué número es?", pregunta: `**${palabra}**`, ...armar(String(n), cercanos.map(String)),
-                           oir: palabra, explica };
-  return { clave: `num-${n}-c`, sub: "🎧 ¿Qué número escuchaste?", escucha: palabra, pregunta: "", ...armar(String(n), cercanos.map(String)), explica };
+                           oir: palabra, explica, espanol };
+  return { clave: `num-${n}-c`, sub: "🎧 ¿Qué número escuchaste?", escucha: palabra, pregunta: "", ...armar(String(n), cercanos.map(String)), explica, espanol };
 }
 function genDiaMes() {
   const lista = Math.random() < 0.5 ? DIAS : MESES;
@@ -3988,6 +4374,13 @@ function genDiaMes() {
   return { clave: `dm-${lista[i]}-${antes}`, sub: lista === DIAS ? "Días de la semana" : "Meses del año",
            pregunta: `${antes ? "Antes" : "Depois"} de ${lista[i]} vem ___.`, ...armar(correcta, lista),
            oir: `${antes ? "Antes" : "Depois"} de ${lista[i]} vem ${correcta}.`, escribible: true,
+           espanol: (() => {
+             const es = lista === DIAS ? ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+                                       : ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+             const j = lista.indexOf(correcta);
+             const prep = (antes ? "antes de" : "después de") + (lista === DIAS ? "l" : "");
+             return `«${prep} ${es[i]} viene ${lista === DIAS ? "el " : ""}${es[j]}» → *${correcta}*.`;
+           })(),
            validas: [correcta, correcta.replace("-feira", "")] };
 }
 function genVocab(lecciones) {
@@ -3995,10 +4388,11 @@ function genVocab(lecciones) {
   const it = azar(pool);
   const vecinos = ITEMS_TODOS.filter(x => x.lec === it.lec && x.pt !== it.pt);
   if (Math.random() < 0.5) {
-    return { clave: `voc-${it.pt}-pt`, sub: "¿Qué significa?", pregunta: it.pt, ...armar(it.es, vecinos.map(x => x.es)), oir: it.pt };
+    return { clave: `voc-${it.pt}-pt`, sub: "¿Qué significa?", pregunta: it.pt, ...armar(it.es, vecinos.map(x => x.es)), oir: it.pt,
+             espanol: `*${it.pt}* = «${it.es}»${it.n ? ". " + it.n : ""}` };
   }
   return { clave: `voc-${it.pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: it.es, ...armar(it.pt, vecinos.map(x => x.pt)),
-           oir: it.pt, escribible: true };
+           oir: it.pt, escribible: true, espanol: `«${it.es}» = *${it.pt}*${it.n ? ". " + it.n : ""}` };
 }
 // Distractores de largo parecido, para que el tamaño no delate la respuesta
 const parecidas = (f, lista) => lista.filter(x => x.pt !== f.pt)
@@ -4007,9 +4401,9 @@ function genFrase() {
   const f = azar(FRASES);
   const otras = parecidas(f, FRASES);
   if (Math.random() < 0.6) {
-    return { clave: `fr-${f.pt}-pt`, sub: "¿Qué significa?", pregunta: f.pt, ...armar(f.es, otras.map(x => x.es)), oir: f.pt };
+    return { clave: `fr-${f.pt}-pt`, sub: "¿Qué significa?", pregunta: f.pt, ...armar(f.es, otras.map(x => x.es)), oir: f.pt, espanol: `«${f.es}»` };
   }
-  return { clave: `fr-${f.pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: f.es, ...armar(f.pt, otras.map(x => x.pt)), oir: f.pt };
+  return { clave: `fr-${f.pt}-es`, sub: "¿Cómo se dice en portugués?", pregunta: f.es, ...armar(f.pt, otras.map(x => x.pt)), oir: f.pt, espanol: `«${f.es}»` };
 }
 function genEscucha() {
   const r = Math.random();
@@ -4019,7 +4413,7 @@ function genEscucha() {
     if (r < 0.4) return { clave: `esc-${it.pt}-a`, sub: "🎧 ¿Qué escuchaste?", escucha: it.pt, pregunta: "",
                           ...armar(it.pt, vecinos.map(x => x.pt)), traduccion: it.es };
     return { clave: `esc-${it.pt}-b`, sub: "🎧 ¿Qué significa lo que escuchaste?", escucha: it.pt, pregunta: "",
-             ...armar(it.es, vecinos.map(x => x.es)) };
+             ...armar(it.es, vecinos.map(x => x.es)), espanol: `*${it.pt}* = «${it.es}»${it.n ? ". " + it.n : ""}` };
   }
   if (r < 0.85) {
     const cortas = FRASES.filter(x => x.pt.length < 45);
@@ -4038,11 +4432,11 @@ function genCurso(lecciones) {
     const correcta = e.opciones[e.resp];
     const opciones = mezclar(e.opciones.slice());
     return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${l.titulo}`, pregunta: e.frase, opciones, resp: opciones.indexOf(correcta),
-             oir: e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", correcta) : null), explica: e.explica };
+             oir: e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", correcta) : null), explica: e.explica, espanol: enEspanol(e) };
   }
   if (!modoEscribir || e.resp.length !== 1) return null;   // los de completar solo en modo escribir
   return { clave: `curso-${l.id}-${i}`, sub: `${l.icono} ${e.pista || l.titulo}`, pregunta: e.frase, soloEscribir: true,
-           validas: [].concat(e.resp[0]), oir: e.frase === "___" ? null : fraseCompleta(e), explica: e.explica || explicarAuto(e) };
+           validas: [].concat(e.resp[0]), oir: e.frase === "___" ? null : fraseCompleta(e), explica: e.explica || explicarAuto(e), espanol: enEspanol(e) };
 }
 function genError() {
   const lista = errores();
@@ -4183,6 +4577,7 @@ function pintarPractica() {
       if (texto) msg += `<div class="frase-oir">${esc(texto)}</div><div class="pron">🗣️ ${esc(pron(texto))}</div>`;
       if (q.traduccion) msg += `<div class="trad">${esc(q.traduccion)}</div>`;
       if (q.explica) msg += `<div class="explica">💡 ${md(q.explica)}</div>`;
+      msg += lineaEspanol(q.espanol);
       cuerpo += `<div class="res pr-res">${msg}</div>
         <div class="controles"><button class="btn ancho" onclick="nuevaPregunta()">Siguiente →</button></div>`;
     }
