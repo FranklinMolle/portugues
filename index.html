@@ -34,6 +34,7 @@
     --error-claro: #fdecea;
     --casi: #e0a800;
     --casi-claro: #fff6d6;
+    --celeste: #eaf1ff;       /* fondo de "En palabras simples" */
     --radio: 14px;
   }
   :root[data-tema="oscuro"] {
@@ -55,6 +56,7 @@
     --error-claro: #3b1e1e;
     --casi: #f0c040;
     --casi-claro: #3a3015;
+    --celeste: #1a2540;
   }
   a { color: var(--azul); }
   * { box-sizing: border-box; }
@@ -159,6 +161,24 @@
   .consejo ul { margin: 4px 0 0; }
   td .pron { font-size: .85rem; }
   .ojo { background: var(--error-claro); border-left: 4px solid var(--error); }
+  /* "En palabras simples" y palabras de gramática que se pueden tocar */
+  .facil { background: var(--celeste); border-left: 4px solid var(--azul); border-radius: 8px; padding: 8px 12px; margin: 6px 0 8px; }
+  .termino { border-bottom: 2px dotted var(--azul); cursor: pointer; }
+  .termino:hover { background: var(--celeste); }
+  #hoja {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: var(--tarjeta); color: var(--texto);
+    border-top: 4px solid var(--azul); box-shadow: 0 -6px 24px rgba(0,0,0,.2); padding: 14px 18px calc(18px + env(safe-area-inset-bottom));
+    max-height: 60vh; overflow-y: auto; transform: translateY(calc(100% + 40px)); visibility: hidden;
+    transition: transform .2s, visibility .2s; border-radius: 14px 14px 0 0;
+  }
+  #hoja.visible { transform: none; visibility: visible; }
+  #hoja h4 { margin: 0 34px 6px 0; color: var(--azul); font-size: 1.05rem; }
+  #hoja p { margin: 6px 0; }
+  #hoja .cerrar { position: absolute; top: 8px; right: 10px; border: 0; background: var(--suave); color: var(--texto); width: 32px; height: 32px; border-radius: 50%; font-size: 1rem; cursor: pointer; }
+  #hoja .ej-termino { background: var(--fondo); border-radius: 8px; padding: 6px 10px; font-size: .93rem; }
+  @media (min-width: 900px) { #hoja { left: auto; right: 24px; bottom: 24px; width: 440px; border-radius: 14px; border: 1px solid var(--borde); border-top: 4px solid var(--azul); } }
+  .glosario .apunte h3 { color: var(--azul); }
+  .glosario-buscar { width: 100%; padding: 10px 14px; border: 1px solid var(--borde); border-radius: 10px; font-size: 1rem; background: var(--tarjeta); color: var(--texto); margin: 8px 0 12px; }
   .resuelto { background: var(--fondo); border-radius: 10px; padding: 10px 12px; margin-top: 8px; border-left: 4px solid var(--verde); }
   .resuelto .r-frase { font-weight: 600; }
   .resuelto .r-exp { margin: 5px 0; font-size: .93rem; }
@@ -241,6 +261,9 @@
   .practica-card .ico { font-size: 2.4rem; }
   .practica-card h3 { margin: 0; font-size: 1.1rem; }
   .practica-card small { opacity: .9; }
+  .practica-card.glosario-card { background: var(--tarjeta); color: var(--texto); border: 2px solid var(--azul); box-shadow: none; margin-top: 10px; padding: 12px 16px; }
+  .practica-card.glosario-card h3 { color: var(--azul); }
+  .practica-card.glosario-card .ico { font-size: 2rem; }
   .chips { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 6px; margin: 10px 0 4px; -webkit-overflow-scrolling: touch; }
   .chip {
     flex: none; border: 0; border-radius: 99px; padding: 8px 12px; background: var(--suave);
@@ -336,6 +359,7 @@
   <main id="app"></main>
 </div>
 <div id="velo" onclick="cerrarMenu()"></div>
+<div id="hoja" role="dialog" aria-label="Palabra de gramática"></div>
 
 <script>
 // ---------------------------------------------------------------
@@ -530,9 +554,9 @@ const LECCIONES = [
         ojo: "En el material aparece *puré* en la fila de la **é** abierta. En portugués se escribe **purê**, con **ê** cerrada." },
       { t: "15. La L al final de sílaba suena U",
         p: "En Brasil, cuando la **l** cierra una sílaba (antes de consonante o al final de la palabra), no se pronuncia como l: suena **u**:",
-        ej: [["calma", "calma → *cauma*"], ["Brasil", "Brasil → *brazíu*"], ["alma", "alma → *auma*"], ["farol", "faro / semáforo → *farou*"],
-             ["sol", "sol → *sou*"], ["futebol", "fútbol → *futebóu*"], ["Portugal", "Portugal → *portugáu*"], ["hotel", "hotel → *otéu*"],
-             ["papel", "papel → *papéu*"], ["azul", "azul → *azú*"], ["O sol do Brasil é muito forte.", "El sol de Brasil es muy fuerte."]],
+        ej: [["calma", "calma"], ["Brasil", "Brasil"], ["alma", "alma"], ["farol", "faro / semáforo"],
+             ["sol", "sol"], ["futebol", "fútbol"], ["Portugal", "Portugal"], ["hotel", "hotel"],
+             ["papel", "papel"], ["azul", "azul"], ["O sol do Brasil é muito forte.", "El sol de Brasil es muy fuerte."]],
         porque: "En español la l siempre suena l (*calma, sol, Brasil*). En Brasil, al final de sílaba se convierte en **u**. Por eso *mal* (mal) y *mau* (malo) suenan **igual**: *mau*.",
         consejos: ["Esta regla explica el plural de la lección *Género y plural*: como la l ya suena casi a vocal, **animal → animais**, **papel → papéis**.",
                    "En Portugal la l final sí suena como l; la **u** es típica de Brasil."] },
@@ -1068,10 +1092,12 @@ const LECCIONES = [
     apuntes: [
       { t: "Pronomes pessoais",
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
-          ["eu", "yo"], ["você (= tu)", "tú / usted"], ["ele / ela", "él / ella"], ["nós (= a gente)", "nosotros"],
-          ["vocês", "ustedes"], ["eles / elas", "ellos / ellas"]] },
+          ["eu", "yo"], ["você (= tu)", "tú / usted"], ["o senhor / a senhora", "usted (con respeto)"], ["ele / ela", "él / ella"],
+          ["nós (= a gente)", "nosotros"], ["vocês", "ustedes"], ["eles / elas", "ellos / ellas"]] },
         lista: ["**a gente** = nosotros, pero se conjuga como *ele*: a gente **é**, a gente **tem**. Es muy común al hablar."],
-        porque: "En Brasil casi no se usa **tu** ni **vós**: se usa **você** y **vocês**, que se conjugan como *ele* y *eles*. Por eso las tablas del curso ponen *Ele / Ela / Você* en la misma fila: ¡llevan la misma forma del verbo!" },
+        porque: "En Brasil casi no se usa **tu** ni **vós**: se usa **você** y **vocês**, que se conjugan como *ele* y *eles*. Por eso las tablas del curso ponen *Ele / Ela / Você* en la misma fila: ¡llevan la misma forma del verbo!",
+        consejos: ["**o senhor** (a un hombre) y **a senhora** (a una mujer) equivalen a *usted*: se usan con respeto, con una persona mayor, un cliente o un jefe. También se conjugan como *ele*: *O senhor **é** daqui?* = ¿Usted es de aquí?",
+                   "¿Por qué los pronombres van junto con **ser, estar y ter**? Porque el pronombre solo dice **quién**, y el verbo dice **qué es, cómo está o qué tiene**. Separados no forman una frase: por eso se aprenden juntos (*eu sou, eu estou, eu tenho*)."] },
       { t: "Verbo SER — cualidad permanente",
         tabla: { cab: ["Pronombre", "SER", "Español"], pron: [1], filas: [
           ["eu", "sou", "yo soy"], ["tu \\*", "és", "tú eres"], ["ele / ela / você", "é", "él / ella es · tú eres"],
@@ -1096,7 +1122,7 @@ const LECCIONES = [
           ["eu", "tenho", "yo tengo"], ["ele / ela / você", "tem", "él / ella tiene · tú tienes"], ["nós", "temos", "nosotros tenemos"],
           ["eles / elas / vocês", "têm", "ellos / ellas tienen · ustedes tienen"]] },
         ej: [["Ela tem cabelo liso.", "Ella tiene el cabello lacio."], ["Ele tem vinte anos.", "Él tiene veinte años."], ["Nós temos um cachorro.", "Tenemos un perro."]],
-        porque: "**tem** (él tiene) y **têm** (ellos tienen) suenan casi igual: el **circunflejo (^)** solo marca el plural al escribir." },
+        porque: "**tem** (él tiene) y **têm** (ellos tienen) suenan igual en casi todo Brasil: el **circunflejo (^)** solo marca el plural al escribir." },
       { t: "TER también es 'hay'", extra: true,
         p: "Al hablar, en Brasil **tem** se usa como 'hay'. En textos formales se usa **há**:",
         ej: [["Tem um banco aqui perto?", "¿Hay un banco cerca?"], ["Há um menino jogando bola.", "Hay un niño jugando a la pelota."], ["Não tem problema!", "¡No hay problema!"]] },
@@ -1314,7 +1340,7 @@ const LECCIONES = [
           ["**SER**", "características: altura, peso, carácter", "Ela **é** alta e engraçada."],
           ["**TER**", "partes del cuerpo: cabello, ojos, nariz", "Ele **tem** olhos verdes e cabelo cacheado."],
           ["**ESTAR**", "cómo está ahora", "Ela **está** bronzeada. (volvió de la playa)"]] },
-        porque: "Es la misma lógica de la lección anterior: SER = permanente, ESTAR = temporal, TER = lo que posees. Con partes del cuerpo normalmente no se pone artículo: *Ela tem cabelo liso*." },
+        porque: "Es la misma lógica de la lección anterior: SER = permanente, ESTAR = temporal, TER = lo que posees. Con *ter* y partes del cuerpo, el artículo es opcional: *Ela tem cabelo liso* y *Ela tem o cabelo liso* están bien las dos." },
       { t: "Características físicas",
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["alto / alta", "alto / alta"], ["baixo / baixa", "bajo / baja"], ["gordo / gorda", "gordo / gorda"], ["magro / magra", "delgado / delgada"],
@@ -1568,7 +1594,7 @@ const LECCIONES = [
           ["el lapicero, el bolígrafo", "a caneta"], ["el alma", "a alma"], ["el lunes, el martes...", "a segunda, a terça..."],
           ["el carruaje", "a carruagem"], ["el chantaje", "a chantagem"], ["el garaje", "a garagem"], ["el homenaje", "a homenagem"],
           ["el lenguaje", "a linguagem"], ["el mensaje", "a mensagem"], ["el paisaje", "a paisagem"], ["el tatuaje", "a tatuagem"], ["el viaje", "a viagem"]] },
-        porque: "Todas las palabras en **-agem** son **femeninas**, aunque en español *-aje* sea masculino. Con esa sola regla ya cubres 9 palabras de la lista.",
+        porque: "Todas las palabras en **-agem** son **femeninas**, aunque en español *-aje* sea masculino. Con esa sola regla ya cubres 10 palabras de la lista.",
         ojo: "*El alma* en español en realidad es femenina (se dice *el* solo por el sonido: *el alma pura*). En portugués es **a alma**." },
       { t: "Femenino en español → MASCULINO en portugués",
         tabla: { cab: ["Español", "Português"], pron: [1], filas: [
@@ -1710,7 +1736,7 @@ const LECCIONES = [
           ["a + o", "ao", "Vou **ao** parque."], ["a + a", "à", "Vou **à** praia."], ["a + os", "aos", "**aos** domingos"], ["a + as", "às", "**às** segundas"]] },
         ej: [["Aos domingos brinco no parque com meus pais e não tenho aulas.", "Los domingos juego en el parque con mis padres y no tengo clases."],
              ["Às sextas eu jogo futebol.", "Los viernes juego fútbol."], ["Todas as quintas eu estudo português.", "Todos los jueves estudio portugués."]],
-        porque: "Es igual que *em + o = no*, pero con la preposición **a**. El acento de **à / às** se llama **crase** y marca esa unión (a + a)." },
+        porque: "Es igual que *em + o = no*, pero con la preposición **a**. Esa unión (a + a) se llama **crase** y se marca con el acento grave (`): **à / às**." },
       { t: "Meses do ano",
         tabla: { cab: ["Português", "Español"], pron: [0], filas: [
           ["janeiro", "enero"], ["fevereiro", "febrero"], ["março", "marzo"], ["abril", "abril"], ["maio", "mayo"], ["junho", "junio"],
@@ -1901,7 +1927,7 @@ const LECCIONES = [
         ej: [["Eu falo com você agora.", "Hablo contigo ahora."], ["Eu trabalho de segunda a sexta.", "Trabajo de lunes a viernes."],
              ["A água ferve a 100 graus.", "El agua hierve a 100 grados."], ["Amanhã eu viajo para Lima.", "Mañana viajo a Lima."]] },
       { t: "Las tres conjugaciones: -AR, -ER, -IR",
-        p: "Todos los verbos en infinitivo terminan en **-AR**, **-ER** o **-IR**. Para conjugar: quita esa terminación (te queda la *raíz*) y agrega la terminación de cada persona:",
+        p: "Casi todos los verbos en infinitivo terminan en **-AR**, **-ER** o **-IR** (la excepción más conocida es *pôr*, poner). Para conjugar: quita esa terminación (te queda la *raíz*) y agrega la terminación de cada persona:",
         tabla: { cab: ["Pronombre", "TRABALHAR", "COMER", "PARTIR"], filas: [
           ["eu", "trabalh**o**", "com**o**", "part**o**"], ["ele / ela / você / a gente", "trabalh**a**", "com**e**", "part**e**"],
           ["nós", "trabalh**amos**", "com**emos**", "part**imos**"], ["eles / elas / vocês", "trabalh**am**", "com**em**", "part**em**"]] },
@@ -2152,7 +2178,7 @@ const LECCIONES = [
         p: "También se puede usar **a**, que se junta con el artículo: **ao, à, aos, às**. Suena un poco más formal o indica una visita corta:",
         ej: [["Vou ao banco.", "Voy al banco."], ["Ela vai à farmácia.", "Ella va a la farmacia."], ["Nós vamos ao cinema hoje.", "Vamos al cine hoy."],
              ["Vocês vão à praia amanhã?", "¿Ustedes van a la playa mañana?"], ["Eu vou à academia três vezes por semana.", "Voy al gimnasio tres veces por semana."]],
-        porque: "a + o = **ao** (como *al* en español) y a + a = **à** (con acento grave, se llama *crase*)." },
+        porque: "a + o = **ao** (como *al* en español) y a + a = **à**: esa unión se llama *crase* y se marca con el acento grave (`)." },
       { t: "IR + verbo = futuro", extra: true,
         p: "Para hablar del futuro cercano: **ir + infinitivo**, ¡sin la *a* del español!",
         ej: [["Eu vou estudar amanhã.", "Voy a estudiar mañana."], ["Nós vamos viajar no fim de semana.", "Vamos a viajar el fin de semana."],
@@ -2987,6 +3013,185 @@ const LECCIONES = [
 ];
 
 // ---------------------------------------------------------------
+// EN PALABRAS SIMPLES: explicación «para un niño» al inicio de cada bloque de teoría
+// Clave: el título exacto del bloque (un bloque también puede traer su propio campo "facil")
+// ---------------------------------------------------------------
+const FACIL = {
+  // Alfabeto y pronunciación
+  "Cómo leer la pronunciación 🗣️": "Debajo de cada palabra en portugués hay una línea con 🗣️: es la palabra **escrita como suena**, para que la leas como si fuera español. Por ejemplo, *leite* se escribe así, pero se dice *léichi*. La letra con tilde (á, é...) es la parte que dices más fuerte.",
+  "O alfabeto": "Las letras son las mismas que en español; lo que cambia es **cómo se llaman**. Así como en español decimos «be, ce, de», en portugués dicen *bê, cê, dê*. Te sirve para **deletrear**: decir tu nombre letra por letra.",
+  "Fonética: los sonidos peculiares": "La mayoría de las letras se leen igual que en español, pero **algunas suenan distinto**. Esta tabla es la lista de esas letras «traviesas». No tienes que aprenderla de golpe: abajo cada una tiene su propio bloque, con ejemplos y audio.",
+  "1. J, GE, GI → suena «zh»": "En español la *j* suena fuerte, desde la garganta (*jamón*). En portugués **no**: suena suave, como la *y* de los argentinos cuando dicen *yo* (*zho*). Fíjate en la letra que va **después** de la g: si es **e** o **i** (*ge, gi*), suena *zh*; si es *a, o, u* (*ga, go, gu*), suena como la g de *gato*.",
+  "2. DE, DI → suena «dyi»": "Cuando la **d** va antes del sonido **i**, se ablanda y suena *dyi*: *dia* se dice *dyía*. La *e* al final de una palabra también suena *i*, por eso *tarde* se dice *tárdyi*. Con *da, do, du*, la d suena normal, como en español.",
+  "3. R inicial y RR → suena «j» suave": "La r tiene **dos sonidos**. Al **inicio** de la palabra (*Rio*) o cuando es **doble** (*carro*), suena como una **j suave**, como el aire que echas para empañar un espejo: *Jíu*, *cáju*. Cuando está **sola entre dos vocales** (*caro*), suena suave, como la r de *pero* en español.",
+  "4. TE, TI → suena «chi»": "Es la misma idea que con la d: cuando la **t** va antes del sonido **i**, suena **ch**, como en *chico*. *tia* → *chía*, *leite* → *léichi*. Con *ta, to, tu*, la t suena normal: *todo*.",
+  "5. CH, X → suena «sh»": "En español *ch* suena como en *chocolate*. En portugués **nunca**: suena **sh**, como cuando pides silencio (*shhh*). Así, *chá* (té) se dice *shá*. La **x** casi siempre suena igual: *xícara* → *shícara*.",
+  "6. LH → suena «lli»": "La **lh** es como decir **li** muy rápido, pegado a la vocal que sigue: *filho* → *fíliu*. Truco: muchas palabras que en español tienen **j** en portugués tienen **lh**: *hijo → filho*, *mujer → mulher*, *ojo → olho*.",
+  "7. CE, CI, S, SS, Ç → suena «s»": "Buenas noticias: todas estas suenan **s**, igual que en español. La única trampa es la **s sola entre dos vocales**, que suena *z* (*casa* → *káza*). Por eso, cuando quieren que suene *s* entre vocales, escriben **dos s**: *massa*.",
+  "El uso de la Ç (cedilha)": "La **ç** es una c con una **colita** debajo (la cedilla). Esa colita es una orden: «aquí suena *s*». Solo hace falta antes de **a, o, u**, porque ahí una c sola sonaría *k* (*ca, co, cu*). Por eso *cabeça* se dice *cabésa*.",
+  "8. NH → suena «ñ»": "**nh = ñ**. Así de simple. El portugués no tiene la letra ñ: en su lugar escribe *nh*. *Espanha* = España, *vinho* = vino (*víñu*).",
+  "9. Z (y S entre vocales) → «z» zumbada": "La **z** del portugués **zumba** como una abeja: *zzz*. Pon la mano en tu garganta y di *zzz*: sentirás que vibra. En Perú la z suena como s (*zapato* = *sapato*), pero en portugués hay que hacerla zumbar. La **s entre vocales** zumba igual: *casa* → *káza*.",
+  "10. V → con los dientes sobre el labio": "En español la **b** y la **v** suenan igual. En portugués **no**: la **v** se hace poniendo los **dientes de arriba sobre el labio de abajo**, como si fueras a decir *f*, pero con voz. La **b** se hace juntando los dos labios.",
+  "11. ÃO, AM → nasal «aun»": "Un sonido **nasal** es el que sale **también por la nariz**. La **ão** (*não*, *pão*) suena *aun*, dejando salir el aire por la nariz. Prueba decir *aun* tapándote la nariz: notarás que suena distinto. El final **-am** de los verbos (*falam*) suena igual.",
+  "12. ÃE, ÕE, EM → otras nasales": "Son más sonidos nasales (con aire por la nariz), como la *ão*: **ãe** suena *ain* (*mãe*), **õe** suena *oin* (*põe*) y **em** al final suena *ein* (*bem* → *béin*). La m del final no se pronuncia: solo avisa que la vocal es nasal.",
+  "13. La O: cerrada, abierta y débil": "La **o** puede sonar de tres maneras: **cerrada** (*ô*: boca poco abierta, como la o del español), **abierta** (*ó*: boca más abierta, como al decir «¡oh!» con sorpresa) y **débil** (al final de palabra suena casi *u*: *sapato* → *sapátu*).",
+  "14. Los acentos: abierta (´) y cerrada (^)": "En español la tilde solo te dice **qué parte de la palabra suena más fuerte** (*café*). En portugués también, pero además te dice **cómo abrir la boca**: **´** = boca abierta (*café*, *avó*); **^** = boca más cerrada (*você*, *avô*).",
+  "15. La L al final de sílaba suena U": "Primero, tres palabras: las **vocales** son *a, e, i, o, u*; todas las demás letras (*b, c, d, l, m, s, t*...) son **consonantes**; y una **sílaba** es cada golpe de voz de una palabra (*cal-ma* tiene dos). Ahora la regla: **mira qué viene justo después de la l**. Si viene una **vocal** (*la, le, li, lo, lu*), la l suena l normal: *bola*. Si viene una **consonante** (*cal-ma*) o la palabra **se acaba** (*Brasil*), la l suena **u**: *cáuma*, *brazíu*.",
+  "16. Nasales al final: -am, -em, -im, -om, -um": "Cuando una palabra termina en **vocal + m** (*sim, bom, um*), **no cierres los labios** al final. Esa m solo avisa que la vocal suena por la nariz. *sim* (sí) se dice *sin*, pero sin tocar el paladar con la lengua.",
+  "17. La til (~): ã y õ, vocales nasales": "La **til** es la rayita ondulada **~**, la misma de la ñ. En portugués va encima de la **a** o la **o** (*ã, õ*) y quiere decir: «esta vocal suena por la nariz». *irmã* (hermana) se dice *irmán*.",
+  "18. Vocales finales débiles: la e suena i, la o suena u": "Toda palabra tiene una parte que se dice más fuerte (***LI**-vro*). Si la última parte **no** es la fuerte, se dice suave y rápido: por eso en Brasil la **o** final suena **u** (*livro* → *lívru*) y la **e** final suena **i** (*nome* → *nómi*).",
+  "19. D y B siempre firmes (y la B no es V)": "En español, cuando dices *cada* o *nada* rápido, la d casi desaparece. En portugués **no**: la d y la b se dicen siempre **completas y firmes**, apretando bien la lengua (d) o los labios (b), como al inicio de una palabra.",
+  "20. La X: cuatro sonidos": "La **x** es la letra más cambiante: puede sonar *sh*, *z*, *ks* o *s*. La más común es **sh** (*peixe*). Hay dos reglas fáciles: si la palabra **empieza con ex + vocal**, suena *z* (*exame*); si va **después de ai o ei**, suena *sh* (*caixa*, *peixe*). Las demás se aprenden escuchando.",
+  "21. Diptongación: -ás, -ês, -ós, -uz suenan ais, eis, ois, uis": "Un **diptongo** son dos vocales dichas en un solo golpe de voz, como *ai* en *aire*. En Brasil, cuando la parte **fuerte** de la palabra está al final y termina en **s** o **z**, aparece una **i** que no está escrita: *três* → *trêis*, *luz* → *luis*. Es como si la i se colara.",
+  "Tabla del curso: los 37 sonidos": "Es la tabla de tu clase, con las 37 reglas juntas. Úsala como **repaso rápido**: si no recuerdas una regla, la columna «Teoría» te dice en qué bloque está explicada con calma.",
+  // Saludos
+  "Cumprimentos": "Saludar en portugués es casi igual que en español. Una diferencia: se dice en **singular**: *Bom dia* (literal: «buen día»), no «buenos días». Y **bom** va con *dia* (masculino), **boa** con *tarde* y *noite* (femeninos), igual que *buen* día y *buenas* noches.",
+  "¿Cuándo uso cada uno?": "Piensa en el reloj: en la mañana, *Bom dia*; en la tarde, *Boa tarde*; en la noche, *Boa noite*. Y piensa en la persona: con amigos, *Oi!*; con alguien que no conoces mucho, *Olá*.",
+  "Obrigado / Obrigada": "*Obrigado* quiere decir «gracias», pero cambia según **quién habla**: si eres hombre dices *obrigad**o***; si eres mujer, *obrigad**a***. No importa a quién le agradeces.",
+  "Primer encuentro: preguntas y expresiones": "Son las preguntas que te harán al conocer a alguien: tu nombre, de dónde eres, a qué te dedicas. Apréndelas como frases completas, igual que de niño aprendiste «¿cómo te llamas?».",
+  "Diálogo: Robert y Carlos": "Lee el diálogo como una pequeña obra de teatro: dos personas que se conocen. Escucha cada línea 🔊 y repítela imitando la voz.",
+  "Si no entiendes": "Son frases de rescate: úsalas cuando no entiendas algo. Nadie se molesta si le pides que repita o que hable más despacio.",
+  // Presentarse
+  "Presentándote a un grupo": "Presentarte es como llenar una ficha con 6 datos: nombre, de dónde eres, nacionalidad, edad, profesión y dónde vives. Cada dato tiene su frase fija: aprende las 6 frases y ya puedes presentarte.",
+  "Diálogos del curso": "Mira cómo las personas del diálogo usan las frases de la ficha. En cada línea pregúntate: ¿qué dato está diciendo?",
+  "Eu me chamo: el verbo chamar-se": "*Eu me chamo* = «yo me llamo». Funciona igual que en español: el *me* va **antes** del verbo, como cuando dices «me llamo».",
+  "Preguntas para conocer a alguien": "Cada pregunta tiene su respuesta modelo. Apréndelas en parejas, como una conversación: pregunta → respuesta.",
+  "Pronombres interrogativos": "Son las palabras para **preguntar**: ¿cómo?, ¿dónde?, ¿qué?, ¿cuándo?, ¿quién? En portugués casi todas se parecen al español (*como, onde, quando*) y van al inicio de la pregunta, igual que en español.",
+  "Ser DE + lugar: ¿do, da o de?": "Cuando dices de dónde eres, el *de* se pega al *o* / *a* que lleva el país: *de + o Peru* = **do Peru**. Es lo mismo que en español *de + el = del*: «soy **del** Perú».",
+  "Nacionalidades": "Como en español: si eres hombre, *peruano*; si eres mujer, *peruana*. Y se escriben con minúscula: *brasileiro*, no *Brasileiro*.",
+  "Profesiones": "Para decir tu trabajo usas *sou* (soy) + profesión, **sin** *um / uma*: *Sou professor* (no *Sou um professor*). Igual que en español: «soy profesor».",
+  "Verbo fazer (hacer)": "*fazer* = hacer. Es un verbo que no sigue las reglas normales (es **irregular**): con *eu* se dice *faço* (hago). Apréndelo de memoria, porque se usa todo el tiempo.",
+  "Conhecer: personajes del curso": "Cada personaje se presenta a su manera. Fíjate qué datos da cada uno y con qué frase los dice.",
+  "Cartão de visita (tarjeta de presentación)": "Una tarjeta de presentación tiene los mismos datos que una presentación: nombre, profesión, dirección y teléfono.",
+  // Pronombres + SER, ESTAR y TER
+  "Pronomes pessoais": "Los **pronombres personales** son las palabras que dicen **quién**: *yo, tú, él, nosotros...* Los usamos para no repetir nombres: en vez de «Ana come», decimos «ella come». En portugués: *eu* (yo), *você* (tú), *ele / ela* (él / ella), *nós* (nosotros), *vocês* (ustedes), *eles / elas* (ellos / ellas). Se aprenden junto con los verbos, porque el verbo cambia según quién lo hace.",
+  "Verbo SER — cualidad permanente": "*Ser* es para lo que **eres siempre** (o casi siempre): tu nombre, tu país, tu profesión, tu forma de ser. Si en español dices «soy» o «es», en portugués dices *sou* o *é*.",
+  "Verbo ESTAR — cualidad temporal": "*Estar* es para lo que **pasa ahora** y puede cambiar: cómo te sientes hoy, dónde estás en este momento. Si en español dices «estoy» o «está», en portugués dices *estou* o *está*.",
+  "SER o ESTAR: comparando": "Mira la diferencia con la misma palabra: *é nervoso* = es una persona nerviosa (siempre); *está nervoso* = está nervioso ahora (por un examen, por ejemplo). Igual que en español.",
+  "Verbo TER (possuir, pertencer)": "*Ter* = tener. Se usa para lo que tienes (un perro, un auto), para la edad (*tenho 20 anos*) y para partes del cuerpo (*tem olhos verdes*), igual que en español.",
+  "TER también es 'hay'": "En Brasil, al hablar, *tem* también quiere decir **hay**: *Tem um banco aqui?* = ¿Hay un banco aquí? Es como si preguntaras «¿tiene un banco aquí?».",
+  "Diálogo con el verbo ESTAR": "En este diálogo casi todo usa *estar*. Búscalo en cada línea y piensa: ¿habla de cómo se siente alguien, de dónde está algo o de algo que pasa ahora?",
+  "ESTAR + gerundio (-ndo)": "El **gerundio** es la forma del verbo que termina en **-ndo** y dice que algo está pasando **justo ahora**: *estoy comiendo*. En portugués es igual, y aún más fácil: quitas la -r y pones -ndo: *falar → falando*.",
+  // Verbos en -AR
+  "Conjugação do verbo FALAR": "Un **verbo** es una palabra de acción: hablar, comer, vivir. **Conjugar** es cambiarle el final según quién lo hace: yo habl**o**, él habl**a**. En portugués es casi igual: *eu falo, ele fala, nós falamos, eles falam*.",
+  "El mismo modelo para muchos verbos": "La buena noticia: todos estos verbos se conjugan **igual que *falar***. Aprendes uno y ya sabes cientos: quitas el *-ar* y pones los mismos finales.",
+  "Conjugação do verbo GOSTAR": "En español decimos «**me** gusta el café» (el café me gusta a mí). En portugués se dice al revés, como si dijeras «**yo gusto de** café»: *Eu gosto de café*. La persona va primero y siempre hay un **de**.",
+  "Gostar de + artículo = do, da, dos, das": "El *de* de *gostar* se pega al artículo que viene después, como en español *de + el = del*: *de + o* = **do**, *de + a* = **da**. *Gosto do Brasil* = «gusto del Brasil».",
+  "Negar, preguntar y responder": "Para decir que **no**, pon *não* antes del verbo: *Não falo*. Para preguntar, no cambies nada: solo sube la voz al final, como en español: *Você fala inglês?*",
+  "Falar EM": "*falar em* = mencionar, hablar de alguien o de algo. *Ela fala muito no namorado* = Ella habla mucho de su novio.",
+  // Descripciones
+  "¿Qué verbo uso para describir?": "Para describir a una persona usas tres verbos, como en español: **ser** para cómo es (*é alta*), **ter** para lo que tiene (*tem olhos verdes*) y **estar** para cómo está hoy (*está cansada*).",
+  "Características físicas": "Son las palabras para describir el **cuerpo**: alto, bajo, delgado... Casi todas cambian la última letra para una mujer: *alto → alta*, igual que en español.",
+  "El cabello y los ojos": "Para el cabello y los ojos usas **ter** (tener): *Ela tem cabelo liso* = Ella tiene el cabello lacio. Cuidado: *longo* es «largo» y *largo* es «ancho».",
+  "Características psicológicas (personalidad)": "Son palabras para decir **cómo es por dentro** una persona: chistosa, amable, aburrida... Van con **ser**: *Ele é engraçado*.",
+  "Vocabulário útil": "Una lista para describir cada parte de la cara y del cuerpo. No hace falta memorizarla toda: elige las palabras que te sirvan para describirte a ti y a tu familia.",
+  "Concordancia: masculino, femenino y plural": "**Concordancia** es que las palabras **combinen**, como un uniforme: si hablas de una mujer, la palabra que la describe también va en femenino (*ela é alta*); si son varios, va en plural (*eles são altos*).",
+  "Diminutivo -inho / -inha": "El **diminutivo** es la forma pequeñita o cariñosa de una palabra: en español *gordito, bajito*; en portugués *gordinho, baixinho*. Suena más suave y amable.",
+  "Ejemplos de descripción": "Mira cómo se arma una descripción completa: primero *ser* (cómo es), luego *ter* (lo que tiene) y al final *estar* (cómo está hoy).",
+  // Artículos y contracciones
+  "Artigo definido": "Los **artículos** son las palabritas que van antes de las cosas: *el, la, los, las*. En portugués son aún más cortos: **o, a, os, as**. *o livro* = el libro, *a casa* = la casa.",
+  "Artigo indefinido": "Cuando hablas de **uno cualquiera** (no de uno conocido), usas *un, una*: en portugués **um, uma, uns, umas**. *um livro* = un libro (cualquiera).",
+  "Tres cosas que cambian respecto al español": "Tres diferencias con el español: el artículo *o* suena *u*; se pega a palabras como *de* y *em* (*do, na*); y los brasileños lo ponen antes de los nombres de personas: *a Ana*, *o José*.",
+  "Contrações: EM + artículo": "**em** = en. Cuando va antes de *o, a, os, as*, se juntan en una sola palabra: *em + a casa* = **na** casa (en la casa). Es como el *del* del español, pero con más palabras.",
+  "Contrações: DE + artículo": "Lo mismo pasa con **de**: *de + o* = **do** (del), *de + a* = **da** (de la). En español solo tenemos *del*; en portugués hay *do, da, dos, das*.",
+  "Los ejemplos del curso, paso a paso": "Para encontrar la contracción, mira la palabra que viene después: ¿es masculina o femenina? ¿una o varias? Con eso eliges *no / na / nos / nas* o *do / da / dos / das*.",
+  "Contracciones con um / uma": "*em + um* = **num** y *em + uma* = **numa**: «en un» y «en una» juntos. *Trabalho numa escola* = Trabajo en una escuela.",
+  "Sufixos e correspondências": "Un **sufijo** es el final de una palabra. Muchos finales del español tienen su pareja en portugués: *-dad → -dade* (*ciudad → cidade*), *-ción → -ção* (*canción → canção*). Con eso puedes adivinar muchas palabras.",
+  "O gênero e algumas inversões": "Algunas palabras son **masculinas en un idioma y femeninas en el otro**: *la leche* → *o leite*, *el viaje* → *a viagem*. Por eso conviene aprenderlas con su artículo.",
+  // Género y plural
+  "Heterogenéricos: ¿qué son?": "El **género** dice si una palabra es masculina (*el, o*) o femenina (*la, a*). Un **heterogenérico** es una palabra que **cambia de género** al pasar al portugués: *el árbol* → *a árvore*. Es como si se cambiara de equipo.",
+  "Masculino en español → FEMENINO en portugués": "Estas palabras son masculinas en español pero **femeninas** en portugués. Truco: todas las que terminan en **-agem** son femeninas (*a viagem, a mensagem*).",
+  "Femenino en español → MASCULINO en portugués": "Y estas son al revés: femeninas en español y **masculinas** en portugués. Truco: las que terminan en **-ume** son masculinas (*o costume, o legume*).",
+  "Verduras: ¿o o a?": "Las verduras también tienen sus trampas: *la palta* es **o abacate** (masculino), mientras que *la lechuga* es **a alface** (femenino, igual que en español).",
+  "Juego del curso: frases que muestran el género": "Para que se vea si una palabra es masculina o femenina, la frase necesita un **artículo** (*o / a*) y una palabra que cambie según el género (*delicioso / deliciosa*).",
+  "O plural das palavras": "**Plural** es cuando hay **más de uno**: *una casa → dos casas*. Casi siempre se agrega **-s**, igual que en español. Las palabras en *-ão* tienen tres formas, y el truco es pensar el plural en español.",
+  "Reglas del plural": "Mira **cómo termina** la palabra y busca su fila en la tabla. Casi todas son como en español: *casa → casas*, *mulher → mulheres*. Las distintas son las que terminan en *-m* (→ *-ns*) y en *-l* (→ *-is*).",
+  // Días, meses y la semana
+  "Dias da semana": "En portugués, de lunes a viernes los días se cuentan con números: el **domingo es el día 1**, así que el lunes es el 2.º (*segunda*), el martes el 3.º (*terça*)... hasta el viernes, el 6.º (*sexta*). Sábado y domingo se dicen como en español.",
+  "Dia é masculino, semana é feminino": "Los días de lunes a viernes son **femeninos** porque terminan en *feira*: *a segunda-feira*. Sábado y domingo son **masculinos**: *o sábado*.",
+  "Exemplos com dias da semana": "Frases para ver los días en acción. Fíjate en la palabrita antes del día: *na* segunda (femenino), *no* domingo (masculino).",
+  "Hábitos: aos domingos, às segundas": "Para algo que haces **todas las semanas**, se dice *aos domingos* («a los domingos»), *às segundas*. En español decimos «**los** domingos juego fútbol»; en portugués, «**a los** domingos».",
+  "Meses do ano": "Los meses se parecen mucho al español: *janeiro, fevereiro, março*... Se escriben con minúscula y van sin artículo: *em março* = en marzo.",
+  "Exemplos com os meses": "Cada frase te cuenta algo de Brasil en ese mes (el Carnaval en febrero, la Pascua en abril). Úsalas para recordar los meses.",
+  "Expressões úteis para a semana": "Frases cortas para hablar de tu semana: *fim de semana* (fin de semana), *semana que vem* (la semana que viene). Apréndelas como frases completas.",
+  "Exemplos das expressões": "Mira cómo se usan esas expresiones dentro de frases reales.",
+  "¿Todo dia o o dia todo?": "*todo dia* = cada día (todos los días). *o dia todo* = el día entero, completo. ¡El orden de las palabras cambia el significado!",
+  "Fechas": "Para una fecha: *no dia 12* (el día 12). Para un mes: *em março* (en marzo), sin artículo.",
+  "Actividad del curso: ¿qué haces cada día?": "Piensa en tu semana: ¿qué haces el lunes? ¿y el martes? Arma frases como las del ejemplo: *às segundas* + lo que haces.",
+  "Verbos en -ER e -IR": "Los verbos que terminan en *-er* y en *-ir* usan finales un poquito distintos a los de *-ar*: *escrevo, escreve, escrevemos, escrevem*. La diferencia más grande está en *nós* (nosotros).",
+  // Presente del indicativo
+  "¿Para qué sirve el presente?": "El **presente** es el tiempo del verbo para lo que pasa **ahora** (*hablo contigo*) y para lo que haces **siempre** o seguido (*trabajo de lunes a viernes*). Igual que en español.",
+  "Las tres conjugaciones: -AR, -ER, -IR": "Casi todos los verbos terminan en **-ar, -er o -ir**, como en español. **Conjugar** es: quitar ese final (lo que queda se llama **raíz**) y poner el final de cada persona. *falar* → *fal-* → *falo, fala, falamos, falam*.",
+  "¿Cómo sé qué terminación usar?": "Mira las **dos últimas letras** del verbo. Con *eu* siempre termina en **-o**. Para las otras personas, el verbo «repite» su vocal: *falar* usa **a** (*fala*), *comer* usa **e** (*come*).",
+  "Ejemplo paso a paso": "Es como una receta de cocina: 1) mira cómo termina el verbo; 2) quítale ese final; 3) mira quién hace la acción; 4) pon el final de esa persona.",
+  "¡Es igual que en español!": "¡Ya sabes hacerlo! En español dices *él come, nosotros comemos*; en portugués es *ele come, nós comemos*. La diferencia principal: «ellos com**en**», con **n**, es *eles com**em***, con **m**.",
+  "TRABALHAR (trabajar) — modelo -AR": "*trabalhar* es el **molde** de los verbos en **-ar**. Úsalo para conjugar cualquier otro verbo que termine en -ar.",
+  "COMER (comer) — modelo -ER": "*comer* es el **molde** de los verbos en **-er**. Fíjate que es casi idéntico al español: *como, come, comemos, comem*.",
+  "PARTIR (partir, salir) — modelo -IR": "*partir* es el **molde** de los verbos en **-ir**. Es igual que el de -er, salvo con *nós*: *partimos*.",
+  "Más verbos regulares para practicar": "Una lista de verbos **regulares**, es decir, que siguen el molde sin cambiar. Practica conjugando cada uno con *eu* y con *nós*.",
+  "Afirmar, negar y preguntar": "Con el mismo verbo haces 3 tipos de frase: **decir algo** (*Eu como*), **negarlo** (*Eu não como*) y **preguntar** (*Você come?*, subiendo la voz al final).",
+  "A GENTE = NÓS": "*a gente* quiere decir «nosotros», pero el verbo va como si fuera «él»: *a gente come* (no *a gente comemos*). En Brasil se usa muchísimo al hablar.",
+  "Expresiones de frecuencia": "Son palabras que dicen **cada cuánto** haces algo: *sempre* (siempre), *às vezes* (a veces), *nunca* (nunca).",
+  "Verbos irregulares: FAZER e IR": "Estos dos verbos son **irregulares**: no siguen el molde y hay que memorizarlos. Es como en español *ir → voy*: no sigue ninguna regla.",
+  "Expresiones con FAZER": "*fazer* se usa en muchas frases fijas, como «hacer» en español: *fazer compras* (hacer compras), *faz frio* (hace frío).",
+  "Otros irregulares muy usados": "Más verbos rebeldes. La buena noticia: casi todos solo cambian con *eu* (*quero, posso, vejo*); con las demás personas se portan normal.",
+  // Verbo IR y preposiciones
+  "O verbo IR no presente": "*ir* es irregular, pero se parece mucho al español: *voy → vou, va → vai, vamos → vamos, van → vão*.",
+  "Las tres preposiciones: IR DE, IR PARA, IR A": "Las **preposiciones** son palabritas que unen: *de, a, para*. Con *ir* eliges según lo que digas después: **cómo** vas (*de ônibus*) o **adónde** vas (*para a praia*).",
+  "IR DE + transporte": "Para decir **en qué** vas, usa **de** (no *em*): *vou de ônibus* = voy en bus. Es el error más común de los hispanohablantes.",
+  "Excepciones: A PÉ y A CAVALO": "Si vas caminando o sobre un animal, usa **a**: *a pé* (a pie), *a cavalo* (a caballo). Igual que en español.",
+  "IR PARA + destino": "Para decir **adónde** vas, usa **para** + el lugar con su artículo: *vou para a praia* (voy a la playa).",
+  "IR A + destino (con contracción)": "También puedes usar **a**, que se pega al artículo: *a + o = ao*, como *a + el = al* en español. *Vou ao banco* = voy al banco.",
+  "IR + verbo = futuro": "Para hablar de lo que **vas a hacer**: *vou* + verbo, **sin la a**. En español «voy **a** estudiar»; en portugués, *vou estudar*.",
+  "Contrações: A, DE, EM, POR + artículo": "Una **contracción** es cuando dos palabras se juntan en una, como *de + el = del*. En portugués hay muchas: *ao, na, do, pelo*... Esta tabla las tiene todas juntas.",
+  "Más ejemplos con POR (pelo, pela)": "*por + o* = **pelo** y *por + a* = **pela**: «por el» y «por la». La frase más usada: *Obrigado pela ajuda* (gracias por la ayuda).",
+  // Pasatiempos y el verbo GOSTAR
+  "Vocabulário de passatempo": "Los **pasatiempos** son lo que haces en tu tiempo libre: bailar, nadar, leer. Apréndelos con su artículo (*a natação*, *o cinema*), porque lo vas a necesitar con *gostar*.",
+  "Los pasatiempos como acciones": "Muchas veces el pasatiempo se dice como **acción** (un verbo): *nadar*, *dançar*, *ler*. Así puedes decir *Gosto de nadar*.",
+  "¿GOSTAR siempre pide DE?": "Sí: *gostar* **siempre** lleva *de*. Lo único que cambia es si ese *de* se junta con *o / a* (*do, da*) o se queda solo.",
+  "1. Gostar DE (sin artículo)": "Se queda **de** solo cuando después viene un **verbo** (*gosto de nadar*) o algo **en general** (*gosto de sorvete* = me gusta el helado, cualquier helado).",
+  "2. Gostar DO(S) / DA(S) (con artículo)": "Se convierte en **do / da** cuando lo que viene después lleva artículo: un país como *o Brasil* (*gosto do Brasil*), una estación (*gosto da primavera*) o algo concreto (*gosto do sorvete dessa loja*).",
+  "Afirmativo, negativo e interrogativo": "Para preguntar: *Você gosta de...?* Para decir sí: *Sim, eu gosto*. Para decir no: *Não, eu não gosto*. El *não* va antes del verbo.",
+  "Mi tiempo libre: un texto modelo": "Un texto completo sobre el tiempo libre. Léelo y después escribe el tuyo cambiando los pasatiempos.",
+  // Verbos regulares: listas y tiempos
+  "¿Qué es un verbo regular?": "Un verbo **regular** es «obediente»: siempre sigue el mismo molde y solo cambia el final. Un verbo **irregular** es «rebelde»: cambia por dentro (*fazer → faço*) y hay que memorizarlo.",
+  "Verbos regulares terminados en -AR": "Verbos en **-ar** que se conjugan igual que *falar*. Fíjate en los que no se parecen al español (*achar, ficar, ligar*): esos son los que más hay que practicar.",
+  "Ejemplos con verbos -AR": "Frases con los verbos de la lista. Busca el verbo en cada frase y mira cómo termina.",
+  "Verbos regulares terminados en -ER": "Verbos en **-er** que se conjugan como *comer*. Ojo: algunos que en español terminan en *-ir* aquí terminan en *-er*: *vivir → viver*.",
+  "Ejemplos con verbos -ER": "Frases con los verbos en -er. Fíjate en cómo termina cada uno: *-o, -e, -emos, -em*.",
+  "Verbos regulares terminados en -IR": "Verbos en **-ir** que se conjugan como *partir*. Recuerda: solo se diferencian de los -er con *nós* (*-imos*).",
+  "Ejemplos con verbos -IR": "Frases con los verbos en -ir. Busca los que terminan en *-imos*: son de *nós*.",
+  "Los ejemplos del curso en PASADO": "El **pasado** es para lo que **ya pasó**: «ayer hablé». En portugués: *falei* (hablé), *falou* (habló). Fíjate en el final de *ele*: *-ou, -eu, -iu*.",
+  "Los ejemplos del curso en FUTURO": "El **futuro** es para lo que **va a pasar**: «hablaré». Es el más fácil: no quitas nada, pegas el final al verbo entero: *falar + ei = falarei*. Igual que en español: *hablar + é = hablaré*.",
+  "¿Cómo sé qué pronombre va? Mira la terminación": "El final del verbo es una **pista** de quién lo hace: si termina en *-mos*, es *nós* (nosotros), como en español *comemos*. Si termina en *-o*, es *eu* (yo), como en *como*.",
+  "Ejercicio del curso: ¿cómo se resuelve?": "En el ejercicio falta **quién** hace la acción. Lee el verbo, piénsalo en español y pregúntate: «¿quién diría esto?». Si es *comemos* → nosotros → *nós*.",
+  "Los 10, explicados uno por uno": "Aquí están los 10 ejercicios resueltos uno por uno. Primero intenta tú y después mira la explicación.",
+  "Verbos útiles (y falsos amigos)": "Verbos que vas a usar mucho. Cuidado con los **falsos amigos**, que se parecen al español pero significan otra cosa: *acordar* es despertar, *pegar* es agarrar.",
+  // Pronombres posesivos
+  "Os pronomes possessivos": "Los **posesivos** dicen **de quién es** algo: *mi* libro, *tu* casa, *nuestro* auto. En portugués: *meu, seu, nosso*... y cambian según la cosa: *meu livro* (masculino), *minha casa* (femenino).",
+  "Con pronunciación y traducción": "La lista de posesivos con su traducción. Escúchalos y repite: *meu* suena *méu*, *minha* suena *míña*.",
+  "La regla de oro: concuerda con la COSA": "El posesivo «se viste» igual que **la cosa**, no que el dueño. Un hombre dice *minha mãe* porque *mãe* es femenino. Es como en español con «nuestro»: *nuestro* papá, *nuestra* mamá.",
+  "DELE, DELA, DELES, DELAS": "Para decir que algo es **de él** o **de ella**, los brasileños dicen *dele* (de + ele) y *dela* (de + ela), **después** de la cosa: *o carro dele* = el carro de él.",
+  "Exemplos do curso": "El posesivo puede ir antes de la cosa (*o meu livro* = mi libro) o después de *ser* (*é meu* = es mío). En portugués es la **misma palabra** para «mi» y para «mío».",
+  "Más ejemplos": "Más frases para practicar. Antes de leer la traducción, intenta adivinar de quién es cada cosa.",
+  // Números
+  "Uno y dos tienen femenino": "El 1 y el 2 cambian si cuentas cosas femeninas: *um livro*, pero *uma casa*; *dois livros*, pero *duas casas*. Los demás números no cambian.",
+  "Cómo se forman": "Se arman como en español, pero en vez de «y» se dice **e**: «veintiuno» = *vinte e um* (veinte y uno).",
+  "Cem o cento": "Es como «cien» y «ciento» en español: *cem* es 100 justo; *cento* cuando sigue otro número: *cento e um* (ciento uno).",
+  "La edad y el teléfono": "Para la edad se usa *ter* (tener), como en español: *Tenho 20 anos*. El teléfono se dice número por número.",
+  // Colores
+  "Concordancia": "Los colores que terminan en **-o** cambian a **-a** con cosas femeninas, igual que en español: *carro vermelho, casa vermelha* (auto rojo, casa roja).",
+  "Los que no cambian": "Los que **no** terminan en -o se quedan igual: *carro azul, casa azul*. Como en español: *auto verde, casa verde*.",
+  // Familia
+  "Posesivos": "Para hablar de tu familia usas *meu* (mi) con hombres (*meu pai*) y *minha* (mi) con mujeres (*minha mãe*).",
+  // Comida
+  "Las comidas del día": "Las comidas del día: *café da manhã* (desayuno; literal, «café de la mañana»), *almoço* (almuerzo), *lanche* (merienda) y *jantar* (cena).",
+  "En el restaurante": "Frases para pedir en un restaurante. *Eu gostaria de...* (me gustaría) es la forma educada de pedir algo.",
+  // Falsos amigos
+  "Truco": "Un **falso amigo** es una palabra que **se parece** a una del español pero significa otra cosa. Como alguien que parece tu amigo, pero no lo es: *oficina* parece «oficina», pero es **taller**."
+};
+
+// ---------------------------------------------------------------
 // COMPARACIÓN CON EL ESPAÑOL (línea 🇪🇸 debajo de cada explicación)
 // Clave: "frase del ejercicio|respuesta correcta"  ·  "R|frase" para los ejemplos resueltos
 // ---------------------------------------------------------------
@@ -3426,6 +3631,196 @@ function pronPalabra(palabra) {
 }
 const pron = texto => sinMd(texto).replace(/[A-Za-zÀ-ÿ]+/g, pronPalabra);
 
+// ---------- palabras de gramática (se pueden tocar en la teoría) ----------
+// f = formas que se buscan en el texto. El orden importa: las más específicas van primero.
+const GLOSARIO = [
+  { id: "tonica", t: "Sílaba tónica (sílaba fuerte)", f: "sílabas? (?:tónicas?|fuertes?)|tónicas?|tónicos?",
+    d: "Es la sílaba que **suena más fuerte** en una palabra, la que «golpeas» con la voz. Para encontrarla, di la palabra como si llamaras a alguien de lejos: *¡ca-MI-sa!* La tilde (á, é, ô...) la marca cuando hace falta.",
+    ej: "ca-**MI**-sa · ca-**FÉ** · **LI**-vro" },
+  { id: "atona", t: "Sílaba átona (sílaba débil)", f: "sílabas? (?:átonas?|débil(?:es)?)|átonas?|átonos?|débil(?:es)?",
+    d: "Es cualquier sílaba que **no** es la fuerte: se dice más suave y rápido. En Brasil, las vocales átonas del final cambian: la *o* suena *u* y la *e* suena *i*.",
+    ej: "En **LI**-vro, la sílaba *vro* es átona → *lívru*." },
+  { id: "silaba", t: "Sílaba", f: "sílabas?",
+    d: "Cada **golpecito de voz** al decir una palabra. Truco: di la palabra despacio y aplaude: cada aplauso es una sílaba.",
+    ej: "*sol* = 1 sílaba · *ca-sa* = 2 · *cho-co-la-te* = 4" },
+  { id: "abierta", t: "Vocal abierta y vocal cerrada", f: "vocal(?:es)? (?:abiertas?|cerradas?)|abiertas?|cerradas?",
+    d: "**Abierta:** abres más la boca, como al decir «¡eh!» u «¡oh!» con sorpresa (*é, ó*). **Cerrada:** abres menos la boca, como la *e* y la *o* normales del español (*ê, ô*).",
+    ej: "*avó* (abuela, ó abierta) · *avô* (abuelo, ô cerrada)" },
+  { id: "vocal", t: "Vocal", f: "vocal(?:es)?",
+    d: "Las vocales son las **5 letras que puedes decir solas**, con la boca abierta y sin cortar el aire: **a, e, i, o, u**. Toda sílaba tiene al menos una.",
+    ej: "En *casa*, las vocales son *a* y *a*." },
+  { id: "consonante", t: "Consonante", f: "consonantes?",
+    d: "Son **todas las letras que no son vocales**: b, c, d, f, g, h, j, l, m, n, p, q, r, s, t, v, x, z... Casi no se pueden decir solas: para nombrarlas les agregamos una vocal (*b* → «be»).",
+    ej: "En *sol*, la *s* y la *l* son consonantes; la *o* es vocal." },
+  { id: "diptongo", t: "Diptongo y diptongación", f: "diptongos?|diptongación",
+    d: "Un **diptongo** son dos vocales que se dicen **juntas, en un solo golpe de voz**: *ai* en *aire*, *ei* en *peine*. **Diptongación** es cuando aparece un diptongo que no está escrito: en Brasil *três* suena *trêis*.",
+    ej: "*pai* (papá) · *seis* · *depois* (después)" },
+  { id: "nasal", t: "Sonido nasal", f: "nasal(?:es)?",
+    d: "Un sonido es nasal cuando el aire sale **también por la nariz**. Haz la prueba: tápate la nariz y di *mmm*: no puedes, porque la *m* es nasal. En portugués hay vocales nasales: *ão, ã, em, im*...",
+    ej: "*não* (*naun*) · *mãe* (*main*) · *bem* (*bein*)" },
+  { id: "til", t: "Til (~)", f: "til",
+    d: "Es la rayita ondulada **~** que va sobre la *a* o la *o*: **ã, õ**. Significa «esta vocal suena por la nariz». Es el mismo dibujito que tiene la ñ.",
+    ej: "*irmã* (hermana) · *limões* (limones)" },
+  { id: "tilde", t: "Tilde (acento escrito)", f: "tildes?|circunflejo|acento agudo|acento grave",
+    d: "La rayita que se escribe sobre una vocal. En español solo hay una (´). En portugués hay tres: **´ agudo** (vocal abierta: *café*), **^ circunflejo** (vocal cerrada: *você*) y **` grave** (solo en *à*, la crase).",
+    ej: "*café* · *você* · *Vou à praia.*" },
+  { id: "cedilla", t: "Cedilla (ç)", f: "cedilla|cedilha",
+    d: "La **colita** que se pone debajo de la c: **ç**. Es una orden: «aquí la c suena *s*». Solo va antes de *a, o, u*.",
+    ej: "*cabeça* (*cabésa*) · *açúcar*" },
+  { id: "posesivo", t: "Posesivo", f: "pronombres? posesivos?|posesivos?",
+    d: "Palabra que dice **de quién es** algo: *mi, tu, nuestro*. En portugués: *meu, seu, nosso*... Cambia según la cosa que se tiene: *meu livro*, *minha casa*.",
+    ej: "*o meu carro* = mi auto · *a casa dela* = la casa de ella" },
+  { id: "interrogativo", t: "Interrogativo (palabra para preguntar)", f: "pronombres? interrogativos?|interrogativos?",
+    d: "Palabras para **preguntar**: ¿qué?, ¿quién?, ¿dónde?, ¿cuándo?, ¿cómo? En portugués: *o que, quem, onde, quando, como*. Van al inicio de la pregunta.",
+    ej: "*Onde você mora?* = ¿Dónde vives?" },
+  { id: "pronombre", t: "Pronombre", f: "pronombres?",
+    d: "Palabra que usamos **en lugar de un nombre**, para no repetirlo. En vez de «Ana come, Ana duerme», decimos «Ana come, **ella** duerme». Los pronombres personales dicen **quién**: *eu* (yo), *você* (tú), *ele / ela* (él / ella), *nós* (nosotros), *eles* (ellos)...",
+    ej: "*Ela é brasileira.* = Ella es brasileña." },
+  { id: "sujeto", t: "Sujeto", f: "sujetos?",
+    d: "Es **quién hace la acción**. Para encontrarlo, pregúntale «¿quién?» al verbo. En *Ana come pan*: ¿quién come? Ana → Ana es el sujeto.",
+    ej: "*Eu falo.* (sujeto: eu) · *Nós comemos.* (sujeto: nós)" },
+  { id: "infinitivo", t: "Infinitivo", f: "infinitivos?",
+    d: "Es el verbo **sin conjugar**, tal como aparece en el diccionario. En español termina en *-ar, -er, -ir* (*hablar, comer, vivir*), y en portugués también (*falar, comer, partir*).",
+    ej: "*falar* (hablar) · *beber* · *abrir*" },
+  { id: "conjugar", t: "Conjugar", f: "conjugar|conjugan?|conjugas|conjugación|conjugaciones|conjugad[oa]s?",
+    d: "Es **cambiar el final del verbo según quién hace la acción**. En español: yo habl**o**, tú habl**as**, él habl**a**. Eso es conjugar, y en portugués se hace igual.",
+    ej: "eu fal**o** · ele fal**a** · nós fal**amos**" },
+  { id: "raiz", t: "Raíz (del verbo)", f: "raíz|raíces",
+    d: "La parte del verbo que **no cambia** al conjugarlo. Se obtiene quitando *-ar, -er* o *-ir*: *falar* → **fal-**. A la raíz le pegas la terminación.",
+    ej: "**fal**o · **fal**a · **fal**amos" },
+  { id: "terminacion", t: "Terminación", f: "terminación|terminaciones",
+    d: "El **final** de una palabra, la parte que cambia. En *habl-o, habl-as, habl-a*, las terminaciones son *-o, -as, -a*.",
+    ej: "En *falamos*, la terminación *-amos* te dice que es «nosotros»." },
+  { id: "irregular", t: "Verbo irregular", f: "irregular(?:es)?",
+    d: "Un verbo «rebelde»: **no sigue el modelo** y cambia por dentro, así que hay que memorizarlo. En español: *ir → voy* (¡no *iro*!). En portugués: *ir → vou*, *fazer → faço*.",
+    ej: "*ser → sou* · *ter → tenho* · *poder → posso*" },
+  { id: "regular", t: "Verbo regular", f: "regular(?:es)?",
+    d: "Un verbo «obediente»: **sigue el modelo de su grupo** (-ar, -er, -ir) sin cambiar la raíz. Si sabes conjugar uno, sabes conjugarlos todos.",
+    ej: "*falar → falo* · *morar → moro* · *estudar → estudo*" },
+  { id: "verbo", t: "Verbo", f: "verbos?",
+    d: "La palabra que dice **la acción** (o cómo está algo): *comer, hablar, ser, estar*. Truco: es lo que puedes poner después de «yo»: yo **como**, yo **hablo**, yo **soy**.",
+    ej: "*Eu falo português.* · *Ela é alta.*" },
+  { id: "gerundio", t: "Gerundio", f: "gerundios?",
+    d: "La forma del verbo que termina en **-ndo**. Dice que algo está pasando **justo ahora**. En español: *comiendo, hablando*; en portugués: *comendo, falando*.",
+    ej: "*Estou estudando.* = Estoy estudiando." },
+  { id: "presente", t: "Presente", f: "presente",
+    d: "El tiempo del verbo para lo que pasa **ahora** o lo que haces **siempre**: *hablo, como, vivo*.",
+    ej: "*Eu trabalho de segunda a sexta.*" },
+  { id: "pasado", t: "Pasado (pretérito)", f: "pasado|pretérito",
+    d: "El tiempo del verbo para lo que **ya pasó**: *hablé, comí*. En portugués: *falei, comi*.",
+    ej: "*Ontem eu falei com ela.* = Ayer hablé con ella." },
+  { id: "futuro", t: "Futuro", f: "futuro",
+    d: "El tiempo del verbo para lo que **va a pasar**: *hablaré* o *voy a hablar*. En Brasil se usa más la segunda: *vou falar*.",
+    ej: "*Amanhã eu vou estudar.* = Mañana voy a estudiar." },
+  { id: "indicativo", t: "Indicativo", f: "indicativo",
+    d: "El modo «normal» del verbo, el que usas para contar cosas reales: *como, comí, comeré*. El nombre asusta, pero es lo que usas casi siempre.",
+    ej: "Presente del indicativo: *eu falo, ele fala*..." },
+  { id: "habito", t: "Hábito (acción habitual)", f: "hábitos?|habitual(?:es)?",
+    d: "Algo que haces **siempre o seguido**, como costumbre: tomar café cada mañana, jugar fútbol los sábados.",
+    ej: "*Aos sábados eu jogo futebol.* = Los sábados juego fútbol." },
+  { id: "articulo", t: "Artículo", f: "artículos?(?: (?:in)?definidos?)?",
+    d: "Las palabritas que van **antes del sustantivo**: *el, la, los, las* (definidos: algo conocido) y *un, una, unos, unas* (indefinidos: uno cualquiera). En portugués: *o, a, os, as* y *um, uma, uns, umas*.",
+    ej: "*o livro* = el libro · *uma casa* = una casa" },
+  { id: "sustantivo", t: "Sustantivo", f: "sustantivos?",
+    d: "El **nombre** de una cosa, persona, animal o lugar: *casa, perro, Ana, Lima*. Truco: es la palabra a la que le puedes poner «el» o «la» delante.",
+    ej: "*a casa* · *o cachorro* · *a Ana*" },
+  { id: "adjetivo", t: "Adjetivo", f: "adjetivos?",
+    d: "La palabra que dice **cómo es** algo o alguien: *alto, bonita, rojo, cansado*. Acompaña al sustantivo y combina con él: *casa bonita*, *carro bonito*.",
+    ej: "*Ela é alta.* · *o carro vermelho*" },
+  { id: "preposicion", t: "Preposición", f: "preposición|preposiciones",
+    d: "Palabras cortitas que **unen** a otras y dicen dónde, de dónde, hacia dónde, con qué...: *de, en, a, para, por, con*. En portugués: *de, em, a, para, por, com*.",
+    ej: "*Vou para a praia.* · *Sou de Lima.*" },
+  { id: "contraccion", t: "Contracción", f: "contracción|contracciones|contraemos|contraer",
+    d: "Cuando **dos palabras se juntan en una**. En español solo tenemos dos: *de + el = del* y *a + el = al*. En portugués hay muchas: *de + o = do*, *em + a = na*, *por + o = pelo*.",
+    ej: "*Estou na praia.* (em + a) · *Gosto do Brasil.* (de + o)" },
+  { id: "crase", t: "Crase (à)", f: "crase",
+    d: "El nombre de la unión **a + a = à**. Se marca con el acento grave (`), la rayita inclinada hacia la izquierda.",
+    ej: "*Vou à praia.* (a + a praia) · *às segundas* (a + as)" },
+  { id: "heterogenerico", t: "Heterogenérico", f: "heterogenéricos?",
+    d: "Una palabra que es **masculina en un idioma y femenina en el otro**. Es como si cambiara de equipo al cruzar la frontera.",
+    ej: "*el viaje* → *a viagem* · *la leche* → *o leite*" },
+  { id: "genero", t: "Género (masculino y femenino)", f: "géneros?|masculin[oa]s?|femenin[oa]s?",
+    d: "Toda palabra es **masculina** (lleva *el* / *o*) o **femenina** (lleva *la* / *a*). No tiene que ver con ser hombre o mujer: una mesa no es mujer, pero es femenina (*a mesa*).",
+    ej: "*o carro* (masculino) · *a casa* (femenino)" },
+  { id: "plural", t: "Singular y plural", f: "singular(?:es)?|plural(?:es)?",
+    d: "**Singular** = una sola cosa (*casa*). **Plural** = más de una (*casas*). Casi siempre el plural se hace agregando **-s**, como en español.",
+    ej: "*o livro* → *os livros*" },
+  { id: "concordancia", t: "Concordancia", f: "concordancia|concuerdan?|concordar",
+    d: "Que las palabras de una frase **combinen** en género y número, como un uniforme: si la cosa es femenina, el artículo y el adjetivo también (*a casa bonita*). Si son varias, todo en plural (*as casas bonitas*).",
+    ej: "*o carro novo* · *as casas novas*" },
+  { id: "diminutivo", t: "Diminutivo", f: "diminutivos?",
+    d: "La forma **pequeñita o cariñosa** de una palabra. En español: *casita, perrito*. En portugués: *casinha, cachorrinho* (con **-inho / -inha**).",
+    ej: "*baixo* → *baixinho* (bajito)" },
+  { id: "falso", t: "Falso amigo", f: "falsos? amigos?",
+    d: "Palabra que **se parece** a una del español pero **significa otra cosa**. ¡Te engaña, como un falso amigo!",
+    ej: "*oficina* = taller · *largo* = ancho · *apelido* = apodo" },
+  { id: "sufijo", t: "Sufijo", f: "sufijos?",
+    d: "Un pedacito que se pega **al final** de una palabra: *-ción, -dad, -ito*. Muchos sufijos del español tienen su pareja en portugués.",
+    ej: "*canción* → *canção* · *ciudad* → *cidade*" },
+  { id: "complemento", t: "Complemento", f: "complementos?",
+    d: "Lo que **completa** al verbo y le da sentido. En *Voy a la playa*, «a la playa» es el complemento: dice adónde.",
+    ej: "*Vou para o centro.*" },
+  { id: "paladar", t: "Paladar", f: "paladar",
+    d: "El «techo» de la boca. Pasa la lengua hacia atrás desde los dientes de arriba: esa parte dura es el paladar.",
+    ej: "La *n* del español se hace tocando el paladar con la lengua." },
+  { id: "aspirada", t: "Aspirada", f: "aspirad[oa]s?",
+    d: "Que se dice **echando aire**, como cuando empañas un vidrio para limpiarlo: una *j* muy suave.",
+    ej: "*Rio* → *Jíu*, con una j suave y aspirada." },
+  { id: "deletrear", t: "Deletrear", f: "deletrear",
+    d: "Decir una palabra **letra por letra**. Sirve para dar tu nombre, tu apellido o tu correo.",
+    ej: "*Ana* → *á, êni, á*" }
+];
+const RE_GLOSARIO = GLOSARIO.map(g => ({ g, re: new RegExp("(^|[^A-Za-zÀ-ÿ])(" + g.f + ")(?![A-Za-zÀ-ÿ])", "i") }));
+// Subraya la primera aparición de cada palabra de gramática (una vez por bloque) para que se pueda tocar
+function conTerminos(html, usados = new Set()) {
+  const marcas = [];
+  return html.split(/(<[^>]+>)/).map(parte => {
+    if (parte.startsWith("<")) return parte;
+    for (const { g, re } of RE_GLOSARIO) {
+      if (usados.has(g.id)) continue;
+      parte = parte.replace(re, (todo, antes, palabra) => {
+        usados.add(g.id);
+        marcas.push(`<span class="termino" onclick="verTermino('${g.id}', event)">${palabra}</span>`);
+        return antes + "\u0001" + (marcas.length - 1) + "\u0002";   // marca temporal, para que otra palabra no la toque
+      });
+    }
+    return parte;
+  }).join("").replace(/\u0001(\d+)\u0002/g, (_, i) => marcas[i]);
+}
+function verTermino(id, ev) {
+  if (ev) ev.stopPropagation();
+  const g = GLOSARIO.find(x => x.id === id);
+  if (!g) return;
+  const hoja = document.getElementById("hoja");
+  hoja.innerHTML = `<button class="cerrar" onclick="cerrarTermino()" aria-label="Cerrar">✕</button>
+    <h4>📘 ${esc(g.t)}</h4>
+    <p>${md(g.d)}</p>
+    ${g.ej ? `<div class="ej-termino">👉 ${md(g.ej)}</div>` : ""}
+    <p><a href="#/glosario" onclick="cerrarTermino()">Ver todas las palabras de gramática →</a></p>`;
+  hoja.classList.add("visible");
+}
+function cerrarTermino() { const h = document.getElementById("hoja"); if (h) h.classList.remove("visible"); }
+document.addEventListener("click", e => {
+  const h = document.getElementById("hoja");
+  if (h && h.classList.contains("visible") && !h.contains(e.target) && !e.target.closest(".termino")) cerrarTermino();
+});
+window.addEventListener("hashchange", cerrarTermino);
+function pintarGlosario() {
+  const lista = GLOSARIO.slice().sort((a, b) => a.t.localeCompare(b.t, "es"));
+  $app.innerHTML = `<div class="angosto glosario">
+    <button class="volver" onclick="location.hash='#/'">← Inicio</button>
+    <h2 style="margin:6px 0 0">📖 Palabras de gramática</h2>
+    <div class="intro">Las palabras «técnicas» que aparecen en la teoría, explicadas en palabras simples. En la teoría las verás <span class="termino">subrayadas así</span>: tócalas y aparece su explicación.</div>
+    <input class="glosario-buscar" placeholder="🔍 Buscar (ej.: consonante)" oninput="filtrarGlosario(this.value)" autocomplete="off">
+    ${lista.map(g => `<div class="apunte" data-busca="${esc(sinTildes(sinMd(g.t + " " + g.d).toLowerCase()))}">
+      <h3>${esc(g.t)}</h3><p>${md(g.d)}</p>${g.ej ? `<div class="facil">👉 ${md(g.ej)}</div>` : ""}</div>`).join("")}
+  </div>`;
+}
+function filtrarGlosario(q) {
+  const t = sinTildes(q.toLowerCase().trim());
+  document.querySelectorAll(".glosario .apunte").forEach(a => { a.style.display = !t || a.dataset.busca.includes(t) ? "" : "none"; });
+}
+
 // ---------- voz ----------
 function vozPortugues() {
   const voces = speechSynthesis.getVoices();
@@ -3502,6 +3897,7 @@ function pintarProgreso() {
 // Rutas: #/  ·  #/l/<lección>  ·  #/l/<lección>/<pestaña>
 function ruta() {
   if (location.hash === "#/audio") { leccion = null; pintarAudio(); return; }
+  if (location.hash === "#/glosario") { leccion = null; pintarGlosario(); window.scrollTo(0, 0); return; }
   const mp = location.hash.match(/^#\/practica(?:\/(\w+))?/);
   if (mp) {
     leccion = null;
@@ -3536,7 +3932,8 @@ function pintarMenu() {
   const menu = document.getElementById("menu");
   if (!menu) return;
   const enPractica = location.hash.startsWith("#/practica");
-  const enInicio = !leccion && !enPractica;
+  const enGlosario = location.hash === "#/glosario";
+  const enInicio = !leccion && !enPractica && !enGlosario;
   const item = l => {
     const activa = leccion && leccion.id === l.id;
     const hecha = (progreso[l.id] || 0) >= APROBADO;
@@ -3557,6 +3954,7 @@ function pintarMenu() {
   menu.innerHTML = `
     <a class="m-item ${enInicio ? "activo" : ""}" href="#/"><span class="m-ico">🏠</span><span class="m-txt">Inicio</span></a>
     <a class="m-item ${enPractica ? "activo" : ""}" href="#/practica"><span class="m-ico">🚌</span><span class="m-txt">Práctica sin fin</span></a>
+    <a class="m-item ${enGlosario ? "activo" : ""}" href="#/glosario"><span class="m-ico">📖</span><span class="m-txt">Palabras de gramática</span></a>
     <div class="m-titulo">📘 Mi curso</div>
     ${LECCIONES.filter(l => l.grupo === "curso").map(item).join("")}
     <div class="m-titulo">➕ Práctica extra</div>
@@ -3622,7 +4020,15 @@ function pintarInicio() {
         <h3>Práctica sin fin</h3>
         <small>Preguntas infinitas, una por una. Ideal para el transporte.${errores().length ? ` · 🔁 ${errores().length} errores por repasar` : ""}</small>
       </div>
-    </div>    <h2 class="seccion">📘 Mi curso</h2>
+    </div>
+    <div class="practica-card glosario-card" onclick="location.hash='#/glosario'">
+      <div class="ico">📖</div>
+      <div>
+        <h3>Palabras de gramática</h3>
+        <small>¿Qué es una consonante, una sílaba, un verbo o un artículo? Explicado en palabras simples.</small>
+      </div>
+    </div>
+    <h2 class="seccion">📘 Mi curso</h2>
     <div class="grid">${LECCIONES.filter(l => l.grupo === "curso").map(tarjetaLeccion).join("")}</div>
     <h2 class="seccion">➕ Práctica extra</h2>
     <div class="grid">
@@ -3729,12 +4135,17 @@ function htmlApuntes() {
   const r = leccion.resolver;
   const bloques = r ? leccion.apuntes.concat([{ id: "resolver", t: "🧩 Cómo resolver los ejercicios", p: r.p, lista: r.pasos,
                                                 resueltos: r.resueltos, consejos: r.consejos }]) : leccion.apuntes;
-  return `<div class="teoria">` + bloques.map(a => `
+  return `<div class="teoria">` + bloques.map(a => {
+    const usados = new Set();                       // cada palabra de gramática se subraya una vez por bloque
+    const mdT = s => conTerminos(md(s), usados);
+    const facil = a.facil || FACIL[a.t];
+    return `
     <div class="apunte" ${a.id ? `id="${a.id}"` : ""}>
       ${a.t ? `<h3>${esc(a.t)}${a.extra ? `<span class="etiqueta-extra">➕ Extra</span>` : ""}</h3>` : ""}
-      ${a.p ? `<p>${md(a.p)}</p>` : ""}
+      ${facil ? `<div class="facil">🧒 <strong>En palabras simples:</strong> ${mdT(facil)}</div>` : ""}
+      ${a.p ? `<p>${mdT(a.p)}</p>` : ""}
       ${a.tabla ? tabla(a.tabla) : ""}
-      ${a.lista ? `<ul>${a.lista.map(x => `<li>${md(x)}</li>`).join("")}</ul>` : ""}
+      ${a.lista ? `<ul>${a.lista.map(x => `<li>${mdT(x)}</li>`).join("")}</ul>` : ""}
       ${a.ej ? `<div class="lista">${a.ej.map(([pt, es, pr]) => filaAudio(pt, es, null, null, pr)).join("")}</div>` : ""}
       ${a.dialogo ? `<div class="lista dialogo">${a.dialogo.map(([quien, pt, es, pr]) => filaAudio(pt, es, null, quien, pr)).join("")}</div>` : ""}
       ${a.resueltos ? a.resueltos.map((x, i) => {
@@ -3745,17 +4156,18 @@ function htmlApuntes() {
         return `
         <div class="resuelto">
           <div class="r-frase">${i + 1}. ${md(x.f)}</div>
-          <div class="r-exp">👉 ${md(x.x)}${EN_ESPANOL["R|" + x.f] ? `<br>🇪🇸 <strong>En español:</strong> ${md(EN_ESPANOL["R|" + x.f])}` : ""}</div>
+          <div class="r-exp">👉 ${conTerminos(md(x.x))}${EN_ESPANOL["R|" + x.f] ? `<br>🇪🇸 <strong>En español:</strong> ${md(EN_ESPANOL["R|" + x.f])}` : ""}</div>
           <div class="r-resp">
             <button class="altavoz" data-pt="${esc(frase)}" onclick="hablar(this.dataset.pt)" aria-label="Escuchar">🔊</button>
             <span>✅ <strong>${esc(x.r)}</strong> → <em>${esc(frase)}</em></span>
           </div>
         </div>`;
       }).join("") : ""}
-      ${a.consejos ? `<div class="consejo">💡 <strong>Consejos</strong><ul>${a.consejos.map(x => `<li>${md(x)}</li>`).join("")}</ul></div>` : ""}
-      ${a.porque ? `<div class="porque">🤔 <strong>¿Por qué?</strong> ${md(a.porque)}</div>` : ""}
-      ${a.ojo ? `<div class="ojo">⚠️ <strong>Ojo:</strong> ${md(a.ojo)}</div>` : ""}
-    </div>`).join("") + `</div>` + siguientePaso("ejercicios", "Practicar con ejercicios →");
+      ${a.consejos ? `<div class="consejo">💡 <strong>Consejos</strong><ul>${a.consejos.map(x => `<li>${mdT(x)}</li>`).join("")}</ul></div>` : ""}
+      ${a.porque ? `<div class="porque">🤔 <strong>¿Por qué?</strong> ${mdT(a.porque)}</div>` : ""}
+      ${a.ojo ? `<div class="ojo">⚠️ <strong>Ojo:</strong> ${mdT(a.ojo)}</div>` : ""}
+    </div>`;
+  }).join("") + `</div>` + siguientePaso("ejercicios", "Practicar con ejercicios →");
 }
 
 // Vocabulario
@@ -3869,7 +4281,7 @@ function comprobarCompletar(i) {
           : `❌ Respuesta: <strong>${esc(correcta)}</strong>`;
   msg += `<div class="pron">🗣️ ${esc(pron(correcta))}</div>`;
   const explica = e.explica || explicarAuto(e);
-  if (explica) msg += `<div class="explica">💡 ${md(explica)}</div>`;
+  if (explica) msg += `<div class="explica">💡 ${conTerminos(md(explica))}</div>`;
   msg += lineaEspanol(enEspanol(e));
   res.innerHTML = msg;
   caja.querySelector(".controles").remove();
@@ -3889,7 +4301,7 @@ function marcar(i, k) {
   const oir = e.oir || sinParentesis(e.frase.includes("___") ? e.frase.replace("___", e.opciones[e.resp]) : null);
   let msg = ok ? "✅ ¡Correcto!" : `❌ La correcta es: <strong>${esc(e.opciones[e.resp])}</strong>`;
   if (oir) msg += `<div class="pron">🗣️ ${esc(pron(oir))}</div>`;
-  if (e.explica) msg += `<div class="explica">💡 ${md(e.explica)}</div>`;
+  if (e.explica) msg += `<div class="explica">💡 ${conTerminos(md(e.explica))}</div>`;
   msg += lineaEspanol(enEspanol(e));
   caja.querySelector(".res").innerHTML = msg;
   if (oir) hablar(oir);
@@ -4947,7 +5359,7 @@ function pintarPractica() {
       let msg = pr.ok ? "✅ ¡Correcto!" : pr.casi ? `🟡 ¡Casi! Revisa las tildes: <strong>${esc(correcta)}</strong>` : `❌ Correcta: <strong>${esc(correcta)}</strong>`;
       if (texto) msg += `<div class="frase-oir">${esc(texto)}</div><div class="pron">🗣️ ${esc(pron(texto))}</div>`;
       if (q.traduccion) msg += `<div class="trad">${esc(q.traduccion)}</div>`;
-      if (q.explica) msg += `<div class="explica">💡 ${md(q.explica)}</div>`;
+      if (q.explica) msg += `<div class="explica">💡 ${conTerminos(md(q.explica))}</div>`;
       msg += lineaEspanol(q.espanol);
       cuerpo += `<div class="res pr-res">${msg}</div>
         <div class="controles"><button class="btn ancho" onclick="nuevaPregunta()">Siguiente →</button></div>`;
