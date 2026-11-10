@@ -263,6 +263,45 @@
   .pr-res .trad { color: var(--gris); font-size: .9rem; }
   .btn.ancho { width: 100%; padding: 16px; font-size: 1.1rem; }
 
+  /* Menú lateral con todo el contenido */
+  .menu {
+    background: var(--tarjeta); border-right: 1px solid var(--borde); padding: 12px 10px 40px;
+    overflow-y: auto; font-size: .92rem;
+  }
+  .menu a { display: flex; align-items: center; gap: 8px; color: var(--texto); text-decoration: none; border-radius: 8px; cursor: pointer; }
+  .menu .m-item { padding: 8px 10px; margin: 1px 0; }
+  .menu .m-item:hover, .menu .m-sub a:hover { background: var(--verde-claro); }
+  .menu .m-item.activo { background: var(--verde-claro); font-weight: 700; color: var(--verde); }
+  .menu .m-ico { flex: none; width: 1.4em; text-align: center; }
+  .menu .m-txt { flex: 1; line-height: 1.3; }
+  .menu .m-check { flex: none; width: 20px; height: 20px; border-radius: 50%; background: #1f9d55; color: #fff;
+                   font-size: .75rem; display: flex; align-items: center; justify-content: center; }
+  .menu .m-titulo { font-weight: 700; color: var(--gris); font-size: .78rem; text-transform: uppercase; letter-spacing: .6px;
+                    margin: 16px 10px 6px; padding-top: 12px; border-top: 1px solid var(--borde); }
+  .menu .m-sub { margin: 2px 0 8px 22px; border-left: 2px solid var(--borde); padding-left: 6px; }
+  .menu .m-sub a { padding: 6px 8px; font-size: .86rem; }
+  .menu .m-sub a.activo { color: var(--verde); font-weight: 700; }
+  .menu .m-sub .m-bloques { margin: 0 0 4px 14px; }
+  .menu .m-sub .m-bloques a { font-size: .8rem; color: var(--gris); padding: 4px 8px; }
+  #btnMenu { font-size: 1.1rem; }
+  #velo { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 25; }
+  #velo.visible { display: block; }
+  .apunte { scroll-margin-top: calc(var(--alto-header, 110px) + 12px); }
+  @media (max-width: 420px) { .txt-vel { display: none; } }
+  @media (max-width: 899px) {
+    /* Celular: el menú se abre con ☰ por encima del contenido */
+    .menu { position: fixed; top: 0; left: 0; bottom: 0; width: 84%; max-width: 330px; z-index: 30;
+            transform: translateX(-105%); transition: transform .25s; box-shadow: 4px 0 20px rgba(0,0,0,.25);
+            padding-top: calc(16px + env(safe-area-inset-top)); }
+    .menu.abierto { transform: none; }
+  }
+  @media (min-width: 900px) {
+    #btnMenu { display: none; }
+    .layout { display: flex; align-items: flex-start; }
+    .menu { position: sticky; top: var(--alto-header, 110px); height: calc(100vh - var(--alto-header, 110px)); width: 300px; flex: none; }
+    .layout > main { flex: 1; min-width: 0; }
+  }
+
   /* Computadora: aprovechar el ancho de la pantalla */
   @media (min-width: 900px) {
     main { max-width: none; padding: 24px 40px 60px; }                  /* usa todo el ancho de la pantalla */
@@ -281,6 +320,7 @@
 <body>
 <header>
   <div class="barra-top">
+    <button class="btn-icono" id="btnMenu" onclick="abrirMenu()" aria-label="Abrir menú">☰</button>
     <h1>🇧🇷 Aprende Portugués</h1>
     <button class="btn-icono" id="btnVelocidad" onclick="cambiarVelocidad()">🐇 Normal</button>
     <button class="btn-icono" id="btnTema" onclick="cambiarTema()" aria-label="Cambiar tema">🌙</button>
@@ -290,7 +330,11 @@
     <div class="barra"><div id="barraProgreso" style="width:0"></div></div>
   </div>
 </header>
-<main id="app"></main>
+<div class="layout">
+  <nav id="menu" class="menu" aria-label="Contenido"></nav>
+  <main id="app"></main>
+</div>
+<div id="velo" onclick="cerrarMenu()"></div>
 
 <script>
 // ---------------------------------------------------------------
@@ -3152,7 +3196,7 @@ function cambiarVelocidad() {
   pintarVelocidad();
 }
 function pintarVelocidad() {
-  document.getElementById("btnVelocidad").textContent = velocidadLenta ? "🐢 Lento" : "🐇 Normal";
+  document.getElementById("btnVelocidad").innerHTML = velocidadLenta ? "🐢<span class='txt-vel'> Lento</span>" : "🐇<span class='txt-vel'> Normal</span>";
 }
 
 // ---------- tema claro / oscuro ----------
@@ -3180,6 +3224,7 @@ function pintarProgreso() {
   const hechas = LECCIONES.filter(l => (progreso[l.id] || 0) >= APROBADO).length;
   document.getElementById("txtProgreso").textContent = `Lecciones completadas: ${hechas} de ${LECCIONES.length}`;
   document.getElementById("barraProgreso").style.width = (hechas / LECCIONES.length * 100) + "%";
+  pintarMenu();   // actualiza las ✓ de lecciones completadas
 }
 
 // ---------- navegación ----------
@@ -3213,6 +3258,60 @@ function ruta() {
   pintarInicio();
 }
 window.addEventListener("hashchange", ruta);
+window.addEventListener("hashchange", () => { cerrarMenu(); pintarMenu(); });
+
+// ---------- menú lateral ----------
+function pintarMenu() {
+  const menu = document.getElementById("menu");
+  if (!menu) return;
+  const enPractica = location.hash.startsWith("#/practica");
+  const enInicio = !leccion && !enPractica;
+  const item = l => {
+    const activa = leccion && leccion.id === l.id;
+    const hecha = (progreso[l.id] || 0) >= APROBADO;
+    let html = `<a class="m-item ${activa ? "activo" : ""}" href="#/l/${l.id}">
+      <span class="m-ico">${l.icono}</span><span class="m-txt">${esc(l.titulo)}</span>${hecha ? `<span class="m-check" title="Completada">✓</span>` : ""}</a>`;
+    if (activa && l.id !== "repaso") {
+      html += `<div class="m-sub">` + pestanasDe(l).map(p => {
+        let sub = `<a class="${pestana === p.id ? "activo" : ""}" href="#/l/${l.id}/${p.id}">${p.ico} ${p.txt}</a>`;
+        if (p.id === "apuntes" && pestana === "apuntes") {
+          const titulos = l.apuntes.map(a => a.t).concat(l.resolver ? ["🧩 Cómo resolver los ejercicios"] : []);
+          sub += `<div class="m-bloques">${titulos.map((t, i) => `<a onclick="irBloque(${i})">${esc(t)}</a>`).join("")}</div>`;
+        }
+        return sub;
+      }).join("") + `</div>`;
+    }
+    return html;
+  };
+  menu.innerHTML = `
+    <a class="m-item ${enInicio ? "activo" : ""}" href="#/"><span class="m-ico">🏠</span><span class="m-txt">Inicio</span></a>
+    <a class="m-item ${enPractica ? "activo" : ""}" href="#/practica"><span class="m-ico">🚌</span><span class="m-txt">Práctica sin fin</span></a>
+    <div class="m-titulo">📘 Mi curso</div>
+    ${LECCIONES.filter(l => l.grupo === "curso").map(item).join("")}
+    <div class="m-titulo">➕ Práctica extra</div>
+    ${LECCIONES.filter(l => l.grupo !== "curso").map(item).join("")}
+    <a class="m-item ${leccion && leccion.id === "repaso" ? "activo" : ""}" href="#/l/repaso"><span class="m-ico">🏆</span><span class="m-txt">Repaso general</span></a>`;
+  // Desplaza solo el menú (no la página) para que se vea la lección abierta
+  const activo = menu.querySelector(".m-item.activo");
+  if (activo && (activo.offsetTop < menu.scrollTop || activo.offsetTop > menu.scrollTop + menu.clientHeight - 80)) {
+    menu.scrollTop = activo.offsetTop - 80;
+  }
+}
+function irBloque(i) {
+  cerrarMenu();
+  const b = document.querySelectorAll(".apunte")[i];
+  if (b) b.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function abrirMenu() { document.getElementById("menu").classList.add("abierto"); document.getElementById("velo").classList.add("visible"); }
+function cerrarMenu() {
+  const m = document.getElementById("menu"), v = document.getElementById("velo");
+  if (m) m.classList.remove("abierto");
+  if (v) v.classList.remove("visible");
+}
+function medirHeader() {
+  document.documentElement.style.setProperty("--alto-header", document.querySelector("header").offsetHeight + "px");
+}
+window.addEventListener("resize", medirHeader);
 
 function pestanasDe(l) { return PESTANAS.filter(p => p.hay(l)); }
 function prepararPestana() {
@@ -3225,6 +3324,7 @@ function cambiarPestana(p) {
   history.replaceState(null, "", `#/l/${leccion.id}/${p}`);
   prepararPestana();
   pintarLeccion();
+  pintarMenu();
   window.scrollTo(0, 0);
 }
 
@@ -4597,8 +4697,10 @@ function pintarPractica() {
 // ---------- inicio ----------
 pintarVelocidad();
 pintarTema();
+medirHeader();
 pintarProgreso();
 ruta();
+pintarMenu();
 </script>
 </body>
 </html>
